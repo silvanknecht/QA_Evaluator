@@ -75,58 +75,68 @@ app.post("/evaluate", (req, res) => {
     let url = systemUrl + "?query=";
 
     currentEval.status = "questioning the system";
-    for (let q of dataset.questions) {
-      let question;
-      for (let lang of q.question) {
-        if (lang.language === "en") {
-          question = lang.string;
-          //question = question.replace(/ /g, "%20");
-          break;
-        }
-      }
 
-      fetch(url + encodeURI(question), {
-        method: "POST"
-      })
-        .then(function(response) {
-          if (response.status !== 200) {
-            console.log(
-              "Looks like there was a problem. Status Code: " + response.status
-            );
+    askQuestion(url, 0, totalQuestions, currentEval, dataset);
 
-            currentEval.errors.push(q.id);
-            updatesStatus(currentEval, totalQuestions);
-
-            return;
-          }
-          // Examine the text in the response
-          response.json().then(function(data) {
-            currentEval.results.push({ id: q.id, data: data });
-            updatesStatus(currentEval, totalQuestions);
-
-            if (currentEval.count === totalQuestions) {
-              let filePath = `logs/systemAnswers/${currentEval.name}-${
-                currentEval.id
-              }.json`;
-              let dataToSave = JSON.stringify(currentEval.results);
-              currentEval.status = "starting calculations...";
-              saveFile(filePath, dataToSave);
-              evaluate(currentEval, dataset);
-            }
-            console.log(currentEval.count);
-          });
-        })
-        .catch(function(err) {
-          currentEval.errors.push(q.id);
-          updatesStatus(currentEval, totalQuestions);
-          console.log("Fetch Error :-S", err);
-        });
-    }
     res.json({ currentEval });
   } else {
     res.json({ message: "Dataset not available!" });
   }
 });
+
+function askQuestion(url, questionIndex, totalQuestions, currentEval, dataset) {
+  let q = dataset.questions[questionIndex];
+  let question = (function() {
+    for (let lang of q.question) {
+      if (lang.language === "en") return lang.string;
+    }
+  })();
+
+  fetch(url + encodeURI(question), {
+    method: "POST"
+  })
+    .then(function(response) {
+      if (response.status !== 200) {
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+
+        currentEval.errors.push(q.id);
+        updatesStatus(currentEval, totalQuestions);
+
+        return;
+      }
+      // Examine the text in the response
+      response.json().then(function(data) {
+        currentEval.results.push({ id: q.id, data: data });
+        updatesStatus(currentEval, totalQuestions);
+
+        if (currentEval.count === totalQuestions) {
+          let filePath = `logs/systemAnswers/${currentEval.name}-${
+            currentEval.id
+          }.json`;
+          let dataToSave = JSON.stringify(currentEval.results);
+          currentEval.status = "starting calculations...";
+          saveFile(filePath, dataToSave);
+          evaluate(currentEval, dataset);
+        } else {
+          askQuestion(
+            url,
+            ++questionIndex,
+            totalQuestions,
+            currentEval,
+            dataset
+          );
+        }
+        console.log(currentEval.count);
+      });
+    })
+    .catch(function(err) {
+      currentEval.errors.push(q.id);
+      updatesStatus(currentEval, totalQuestions);
+      console.log("Fetch Error :-S", err);
+    });
+}
 
 // updating the status of an evaluation
 function updatesStatus(currentEval, totalQuestions) {
@@ -265,6 +275,11 @@ function calculateResult(currentEval) {
       (2 * currentEval.evalResults.grc * currentEval.evalResults.QALDgpr) /
       (currentEval.evalResults.grc + currentEval.evalResults.QALDgpr);
   }
+  let filePath = `logs/evaluatedAnswers/${currentEval.name}-${
+    currentEval.id
+  }.json`;
+  let dataToSave = JSON.stringify(currentEval.results);
+  saveFile(filePath, dataToSave);
 
   fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
     if (err) {
@@ -322,10 +337,12 @@ app.get("/runningEvals/:id?", (req, res) => {
     res.json(runningEvals);
   } else {
     let jsonToReturn = runningEvals[String(req.params.id)];
-    if (jsonToReturn === undefined)
-      res.status(404).json({
-        message: "Evaluation with id: " + req.params.id + " not found!"
-      });
+    if (jsonToReturn === undefined) {
+      res.redirect("/finishedEvals/" + req.params.id);
+      // res.status(404).json({
+      //   message: "Evaluation with id: " + req.params.id + " not found!"
+      // });
+    }
     res.json(runningEvals[String(req.params.id)]);
   }
 });
@@ -336,6 +353,7 @@ app.get("/finishedEvals/:id?", (req, res) => {
   if (req.params.id === undefined) {
     res.json(evaluations);
   } else {
+    console.log(req.params.id);
     let jsonToReturn = evaluations[String(req.params.id)];
     if (jsonToReturn === undefined)
       res.status(404).json({
