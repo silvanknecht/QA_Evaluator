@@ -5,9 +5,11 @@ const fs = require("fs");
 const Joi = require("joi");
 
 const app = express();
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+server.listen(port, () => console.log(`App listening on port ${port}!`));
 
 //set the template engine ejs
 app.set("view engine", "ejs");
@@ -74,7 +76,7 @@ app.post("/evaluate", (req, res) => {
     console.log("Evaluation with dataset: " + choosenDataset + " has started.");
     let url = systemUrl + "?query=";
 
-    currentEval.status = "questioning the system";
+    currentEval.status = "questioning";
 
     askQuestion(url, 0, totalQuestions, currentEval, dataset);
 
@@ -101,47 +103,78 @@ function askQuestion(url, questionIndex, totalQuestions, currentEval, dataset) {
           "Looks like there was a problem. Status Code: " + response.status
         );
 
-        currentEval.errors.push(q.id);
+        currentEval.errors.push({ questionId: q.id, error: response.status });
+        currentEval.count++;
         updatesStatus(currentEval, totalQuestions);
+        nextQuestion(currentEval, totalQuestions, dataset, questionIndex, url);
 
         return;
       }
       // Examine the text in the response
       response.json().then(function(data) {
         currentEval.results.push({ id: q.id, data: data });
+        currentEval.count++;
         updatesStatus(currentEval, totalQuestions);
+        nextQuestion(currentEval, totalQuestions, dataset, questionIndex, url);
 
-        if (currentEval.count === totalQuestions) {
-          let filePath = `logs/systemAnswers/${currentEval.name}-${
-            currentEval.id
-          }.json`;
-          let dataToSave = JSON.stringify(currentEval.results);
-          currentEval.status = "starting calculations...";
-          saveFile(filePath, dataToSave);
-          evaluate(currentEval, dataset);
-        } else {
-          askQuestion(
-            url,
-            ++questionIndex,
-            totalQuestions,
-            currentEval,
-            dataset
-          );
-        }
         console.log(currentEval.count);
       });
     })
     .catch(function(err) {
-      currentEval.errors.push(q.id);
-      updatesStatus(currentEval, totalQuestions);
       console.log("Fetch Error :-S", err);
+      currentEval.errors.push({ questionId: q.id, error: err });
+      //updatesStatus(currentEval, totalQuestions);
+      currentEval.count++;
+      nextQuestion(currentEval, totalQuestions, dataset, questionIndex, url);
     });
+}
+
+// next question or end the evaluation
+function nextQuestion(
+  currentEval,
+  totalQuestions,
+  dataset,
+  questionIndex,
+  url
+) {
+  if (currentEval.count === totalQuestions) {
+    if (currentEval.results.length === 0) {
+      fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          currentEval.status = "failed";
+          obj = JSON.parse(data);
+          delete currentEval.results;
+          obj[String(currentEval.id)] = currentEval;
+          fs.writeFile(
+            "./logs/evaluations.json",
+            JSON.stringify(obj),
+            "utf8",
+            function() {}
+          );
+        }
+      });
+      delete runningEvals[String(currentEval.id)];
+      return console.log("Evaluation aborted, no restults found");
+    }
+    let filePath = `logs/systemAnswers/${currentEval.name}-${
+      currentEval.id
+    }.json`;
+    let dataToSave = JSON.stringify(currentEval.results);
+    currentEval.status = "calculating";
+    saveFile(filePath, dataToSave);
+    evaluate(currentEval, dataset);
+  } else {
+    askQuestion(url, ++questionIndex, totalQuestions, currentEval, dataset);
+  }
 }
 
 // updating the status of an evaluation
 function updatesStatus(currentEval, totalQuestions) {
   currentEval.progress =
-    ((++currentEval.count * 100) / totalQuestions).toFixed(3) + "%";
+    ((currentEval.count * 100) / totalQuestions).toFixed(0) + "%";
+  io.sockets.emit("updateStatus", JSON.stringify(currentEval));
 }
 
 function saveFile(filePath, content) {
@@ -281,6 +314,7 @@ function calculateResult(currentEval) {
   let dataToSave = JSON.stringify(currentEval.results);
   saveFile(filePath, dataToSave);
 
+  // TODO:  remove doublicated Code
   fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
     if (err) {
       console.log(err);
@@ -296,7 +330,8 @@ function calculateResult(currentEval) {
       );
     }
   });
-  currentEval.status = "done";
+  currentEval.status = "successful";
+  io.sockets.emit("evalEnded", JSON.stringify(currentEval));
   delete runningEvals[String(currentEval.id)];
 
   console.log("grc", currentEval.evalResults.grc);
@@ -349,18 +384,25 @@ app.get("/runningEvals/:id?", (req, res) => {
 
 // returns all finished evaluations
 app.get("/finishedEvals/:id?", (req, res) => {
-  let evaluations = require("./logs/evaluations.json");
-  if (req.params.id === undefined) {
-    res.json(evaluations);
-  } else {
-    console.log(req.params.id);
-    let jsonToReturn = evaluations[String(req.params.id)];
-    if (jsonToReturn === undefined)
-      res.status(404).json({
-        message: "Evaluation with id: " + req.params.id + " not found!"
-      });
-    res.json(evaluations[String(req.params.id)]);
-  }
+  let evaluations;
+  fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
+    if (err) {
+      console.log(err);
+    } else {
+      evaluations = JSON.parse(data);
+      if (req.params.id === undefined) {
+        res.json(evaluations);
+      } else {
+        console.log(req.params.id);
+        let jsonToReturn = evaluations[String(req.params.id)];
+        if (jsonToReturn === undefined)
+          res.status(404).json({
+            message: "Evaluation with id: " + req.params.id + " not found!"
+          });
+        res.json(evaluations[String(req.params.id)]);
+      }
+    }
+  });
 });
 
 // returns the answers of a system without evaluations
