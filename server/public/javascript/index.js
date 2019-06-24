@@ -40,7 +40,7 @@ exForm.addEventListener("submit", () => {
     systemUrl: exSystemUrl.value
   };
 
-  fetch(url + "evaluate", {
+  fetch(url + "evaluations/evaluate", {
     method: "POST",
     body: JSON.stringify(data),
     headers: {
@@ -49,9 +49,11 @@ exForm.addEventListener("submit", () => {
   })
     .then(res => res.json())
     .then(response => {
-      addToRunEval(response.currentEval);
+      if (response) addToRunEval(response);
     })
-    .catch(error => console.error("Error:", error));
+    .catch(error => {
+      console.error("Error:", error);
+    });
 });
 
 fetch(url + "runningEvals", {
