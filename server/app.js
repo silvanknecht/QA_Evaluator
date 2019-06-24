@@ -139,7 +139,7 @@ function nextQuestion(
 ) {
   if (currentEval.count === totalQuestions) {
     if (currentEval.results.length === 0) {
-      fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
+      fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
         if (err) {
           console.log(err);
         } else {
@@ -148,7 +148,7 @@ function nextQuestion(
           delete currentEval.results;
           obj[String(currentEval.id)] = currentEval;
           fs.writeFile(
-            "./logs/evaluations.json",
+            "./data/evaluations.json",
             JSON.stringify(obj),
             "utf8",
             function() {}
@@ -158,7 +158,7 @@ function nextQuestion(
       delete runningEvals[String(currentEval.id)];
       return console.log("Evaluation aborted, no restults found");
     }
-    let filePath = `logs/systemAnswers/${currentEval.name}-${
+    let filePath = `./data/systemAnswers/${currentEval.name}-${
       currentEval.id
     }.json`;
     let dataToSave = JSON.stringify(currentEval.results);
@@ -292,6 +292,7 @@ function calculateResult(currentEval) {
 
   /** Add global Recall, Precicion and FMeasure to the Pipeline */
   let totalQuestions = currentEval.results.length - currentEval.errors.length;
+
   currentEval.evalResults = {};
   currentEval.evalResults.grc = recallTot / totalQuestions;
   currentEval.evalResults.gpr = precisionTot / totalQuestions;
@@ -308,14 +309,14 @@ function calculateResult(currentEval) {
       (2 * currentEval.evalResults.grc * currentEval.evalResults.QALDgpr) /
       (currentEval.evalResults.grc + currentEval.evalResults.QALDgpr);
   }
-  let filePath = `logs/evaluatedAnswers/${currentEval.name}-${
+  let filePath = `./data/evaluatedAnswers/${currentEval.name}-${
     currentEval.id
   }.json`;
   let dataToSave = JSON.stringify(currentEval.results);
   saveFile(filePath, dataToSave);
 
   // TODO:  remove doublicated Code
-  fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
+  fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
     if (err) {
       console.log(err);
     } else {
@@ -323,7 +324,7 @@ function calculateResult(currentEval) {
       delete currentEval.results;
       obj[String(currentEval.id)] = currentEval;
       fs.writeFile(
-        "./logs/evaluations.json",
+        "./data/evaluations.json",
         JSON.stringify(obj),
         "utf8",
         function() {}
@@ -385,7 +386,7 @@ app.get("/runningEvals/:id?", (req, res) => {
 // returns all finished evaluations
 app.get("/finishedEvals/:id?", (req, res) => {
   let evaluations;
-  fs.readFile("./logs/evaluations.json", "utf8", (err, data) => {
+  fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
     if (err) {
       console.log(err);
     } else {
@@ -408,7 +409,7 @@ app.get("/finishedEvals/:id?", (req, res) => {
 // returns the answers of a system without evaluations
 app.get("/systemAnswers/:name/:id", (req, res) => {
   try {
-    let systemAnswers = require(`./logs/systemAnswers/${req.params.name}-${
+    let systemAnswers = require(`./data/systemAnswers/${req.params.name}-${
       req.params.id
     }.json`);
     res.json(systemAnswers);
