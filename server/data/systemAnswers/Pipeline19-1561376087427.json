@@ -1,0 +1,70 @@
+[
+  {
+    "id": "20",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Baltic_Romani"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Modern_Swedish"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Seto_dialect"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Laiuse_Romani_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Russian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/VÃµro_language"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

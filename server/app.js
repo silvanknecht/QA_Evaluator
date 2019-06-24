@@ -94,6 +94,7 @@ function askQuestion(url, questionIndex, totalQuestions, currentEval, dataset) {
     }
   })();
 
+  console.log("============ url: ", url);
   fetch(url + encodeURI(question), {
     method: "POST"
   })
@@ -230,9 +231,22 @@ function evaluate(currentEval, dataset) {
             if (answer.head.vars === undefined) {
               givenAnswers.push(answer.boolean);
             } else {
-              vars = answer.head.vars[0];
-              for (let s of answer.results.bindings) {
-                givenAnswers.push(s[vars].value);
+              for (let vars of answer.head.vars) {
+                for (let s of answer.results.bindings) {
+                  let i = 0;
+                  if (givenAnswers.length === 0) {
+                    givenAnswers.push(s[vars].value);
+                  } else {
+                    // Filter for answers that are already in the givenAnswers array
+                    for (; i < givenAnswers.length; i++) {
+                      if (givenAnswers[i] == s[vars].value) {
+                        break;
+                      } else if (i === givenAnswers.length - 1) {
+                        givenAnswers.push(s[vars].value);
+                      }
+                    }
+                  }
+                }
               }
             }
           } else {

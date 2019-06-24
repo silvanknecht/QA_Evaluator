@@ -4,7 +4,7 @@
   },
   "questions": [
     {
-      "id": "1",
+      "id": "20",
       "answertype": "number",
       "aggregation": false,
       "onlydbo": true,
@@ -12,62 +12,62 @@
       "question": [
         {
           "language": "de",
-          "string": "Was sind die Einnahmen von IBM? ",
-          "keywords": "Einnahmen ,  ibm "
+          "string": "Wieviel Kalorien hat ein Baguette?",
+          "keywords": "Baguett,  Kalorien"
         },
         {
           "language": "ru",
-          "string": "Какие является  доход из IBM? ",
-          "keywords": "доход ,  IBM "
+          "string": "Как многие калорий делает  багет иметь? ",
+          "keywords": "калорий ,   багет "
         },
         {
           "language": "pt",
-          "string": "o que é a receita do IBM? ",
-          "keywords": "receita ,  ibm "
+          "string": "Como muitos calorias faz uma baguete ter? ",
+          "keywords": "calorias ,   baguete "
         },
         {
           "language": "hi_IN",
-          "string": "क्या है  राजस्व का आईबीएम? ",
-          "keywords": "राजस्व ,  आईबीएम "
+          "string": "बैगूएट की कितनी कैलोरी होती है?",
+          "keywords": "कैलोरी,  बैगूएट"
         },
         {
           "language": "en",
-          "string": "What is the revenue of IBM?",
-          "keywords": "revenue,  ibm"
-        },
-        {
-          "language": "it",
-          "string": "Che cosa è il reddito di IBM? ",
-          "keywords": "reddito ,  ibm "
+          "string": "What languages are spoken in Estonia?",
+          "keywords": "calories,  baguette"
         },
         {
           "language": "fa",
-          "string": "یچ  تسا  نیا  دمآرد  زا  ؟ما یب یآ  ",
-          "keywords": "دمآرد  ,  ما یب یآ  "
+          "string": "یک باگت چقدر کالری دارد؟",
+          "keywords": "باگت، کالری"
+        },
+        {
+          "language": "it",
+          "string": "Quante calorie ha una baguette?",
+          "keywords": "calorie,  baguette"
         },
         {
           "language": "fr",
-          "string": "Quelle est la revenu de IBM? ",
-          "keywords": "revenu ,  ibm "
+          "string": "Combien de calories a une baguette?",
+          "keywords": "nombre de calories,  baguette"
         },
         {
           "language": "ro",
-          "string": "Ce este  venituri de IBM? ",
-          "keywords": "venituri ,  ibm "
+          "string": "Câte calorii are o baghetă?",
+          "keywords": "calorii,  baghetă"
         },
         {
           "language": "es",
-          "string": "Qué es el ingresos de IBM? ",
-          "keywords": "ingresos ,  ibm "
+          "string": "¿Cuántas calorías tiene una baguette?",
+          "keywords": "calorías,  baguette"
         },
         {
           "language": "nl",
-          "string": "Wat is de omzet van IBM? ",
-          "keywords": "omzet ,  ibm "
+          "string": "Hoeveel calorieën heeft een baguette?",
+          "keywords": "calorieën,  baguette"
         }
       ],
       "query": {
-        "sparql": "PREFIX res: <http://dbpedia.org/resource/> PREFIX onto: <http://dbpedia.org/ontology/> SELECT ?number WHERE { res:IBM onto:revenue ?number }"
+        "sparql": "SELECT DISTINCT ?n WHERE { <http://dbpedia.org/resource/Baguette> <http://dbpedia.org/property/calories> ?n }"
       },
       "answers": [
         {
@@ -79,90 +79,7 @@
               {
                 "c": {
                   "type": "literal",
-                  "value": "8.1741E10"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    },{
-      "id": "2",
-      "answertype": "number",
-      "aggregation": false,
-      "onlydbo": true,
-      "hybrid": false,
-      "question": [
-        {
-          "language": "de",
-          "string": "Was sind die Einnahmen von IBM? ",
-          "keywords": "Einnahmen ,  ibm "
-        },
-        {
-          "language": "ru",
-          "string": "Какие является  доход из IBM? ",
-          "keywords": "доход ,  IBM "
-        },
-        {
-          "language": "pt",
-          "string": "o que é a receita do IBM? ",
-          "keywords": "receita ,  ibm "
-        },
-        {
-          "language": "hi_IN",
-          "string": "क्या है  राजस्व का आईबीएम? ",
-          "keywords": "राजस्व ,  आईबीएम "
-        },
-        {
-          "language": "en",
-          "string": "What is the revenue of IBM?",
-          "keywords": "revenue,  ibm"
-        },
-        {
-          "language": "it",
-          "string": "Che cosa è il reddito di IBM? ",
-          "keywords": "reddito ,  ibm "
-        },
-        {
-          "language": "fa",
-          "string": "یچ  تسا  نیا  دمآرد  زا  ؟ما یب یآ  ",
-          "keywords": "دمآرد  ,  ما یب یآ  "
-        },
-        {
-          "language": "fr",
-          "string": "Quelle est la revenu de IBM? ",
-          "keywords": "revenu ,  ibm "
-        },
-        {
-          "language": "ro",
-          "string": "Ce este  venituri de IBM? ",
-          "keywords": "venituri ,  ibm "
-        },
-        {
-          "language": "es",
-          "string": "Qué es el ingresos de IBM? ",
-          "keywords": "ingresos ,  ibm "
-        },
-        {
-          "language": "nl",
-          "string": "Wat is de omzet van IBM? ",
-          "keywords": "omzet ,  ibm "
-        }
-      ],
-      "query": {
-        "sparql": "PREFIX res: <http://dbpedia.org/resource/> PREFIX onto: <http://dbpedia.org/ontology/> SELECT ?number WHERE { res:IBM onto:revenue ?number }"
-      },
-      "answers": [
-        {
-          "head": {
-            "vars": ["c"]
-          },
-          "results": {
-            "bindings": [
-              {
-                "c": {
-                  "type": "literal",
-                  "value": "8.1741E10"
+                  "value": "263"
                 }
               }
             ]

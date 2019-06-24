@@ -13,7 +13,7 @@ const finEvalsTableBody = document
   .getElementsByTagName("tbody")[0];
 
 // Live data
-let socket = io.connect("http://localhost:3000");
+let socket = io.connect(url);
 socket.on("updateStatus", function(data) {
   console.log(JSON.parse(data));
   let json = JSON.parse(data);
