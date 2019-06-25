@@ -1,1 +1,379 @@
-{"1561357787683":{"id":1561357787683,"name":"GAnswer2","dataset":"qald-9","systemUrl":"http://ganswer.gstore-pku.com/api/qald.jsp","runningUrl":"http://localhost:3000/runningEvals/1561357787683","errors":[{"questionId":"42","error":504},{"questionId":"162","error":{"message":"request to http://ganswer.gstore-pku.com/api/qald.jsp?query=How%20deep%20is%20Lake%20Chiemsee? failed, reason: connect ETIMEDOUT 59.108.48.18:80","type":"system","errno":"ETIMEDOUT","code":"ETIMEDOUT"}}],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.36843470193039585,"gpr":0.3501211077221207,"QALDgpr":0.678888231009792,"gfm":0.33977649653343744,"QALDgfm":0.477648249969966}},"1561358552942":{"id":1561358552942,"name":"GAnswer2-div150","dataset":"qald-9","systemUrl":"http://ganswer.gstore-pku.com/api/qald.jsp","runningUrl":"http://localhost:3000/runningEvals/1561358552942","errors":[{"questionId":"42","error":504}],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.36101655356938117,"gpr":0.3430716894458364,"QALDgpr":0.6652193404525478,"gfm":0.33293535901934135,"QALDgfm":0.4680311711115104}},"1561368823036":{"id":1561368823036,"name":"Pipeline19","dataset":"testData20","systemUrl":"http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://146.136.58.102:3000/runningEvals/1561368823036","errors":[],"totalQuestions":12,"count":12,"progress":"100%","status":"successful","evalResults":{"grc":0.5047348484848485,"gpr":0.47291666666666665,"QALDgpr":0.7229166666666668,"gfm":0.45871913580246915,"QALDgfm":0.5944378021186877}},"1561375632993":{"id":1561375632993,"name":"Pipeline19","dataset":"testData20","systemUrl":"http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://146.136.58.102:3000/runningEvals/1561375632993","errors":[],"totalQuestions":12,"count":12,"progress":"100%","status":"successful","evalResults":{"grc":0.5047348484848485,"gpr":0.47291666666666665,"QALDgpr":0.7229166666666668,"gfm":0.45871913580246915,"QALDgfm":0.5944378021186877}},"1561385064389":{"id":1561385064389,"name":"Pipeline19","dataset":"qald-9","systemUrl":"http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://146.136.58.102:3000/runningEvals/1561385064389","errors":[],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.08726604278074866,"gpr":0.07778083028083028,"QALDgpr":0.7711141636141636,"gfm":0.07880362160967445,"QALDgfm":0.15678852119252149}},"1561394529763":{"id":1561394529763,"name":"Pipeline19","dataset":"qald-9","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://localhost:3000/runningEvals/1561394529763","errors":[{"questionId":"60","error":500}],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.10083270101652456,"gpr":0.08645325359035039,"QALDgpr":0.7688856860227827,"gfm":0.08825559462483151,"QALDgfm":0.1782848831299152}},"1561401049362":{"id":1561401049362,"name":"Pipeline19","dataset":"qald-9","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://localhost:3000/runningEvals/1561401049362","errors":[],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.10615493166963756,"gpr":0.0888560990980346,"QALDgpr":0.7421894324313679,"gfm":0.09171653452258738,"QALDgfm":0.18574312936980486}},"1561406921533":{"id":1561406921533,"name":"Pipeline20","dataset":"qald-9","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/","runningUrl":"http://localhost:3000/runningEvals/1561406921533","errors":[],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.05454545454545454,"gpr":0.052,"QALDgpr":0.8786666666666667,"gfm":0.0508641975308642,"QALDgfm":0.1027146382647097}},"1561406777877":{"id":1561406777877,"name":"Pipeline19","dataset":"qald-9","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/","runningUrl":"http://localhost:3000/runningEvals/1561406777877","errors":[],"totalQuestions":150,"count":150,"progress":"100%","status":"successful","evalResults":{"grc":0.10615493166963756,"gpr":0.0888560990980346,"QALDgpr":0.7555227657647012,"gfm":0.09171653452258738,"QALDgfm":0.18615421476826374}},"1561453663909":{"id":1561453663909,"startTimestamp":1561453663909,"endTimestamp":1561453862143,"name":"TestEx","dataset":"testData20","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/","runningUrl":"http://localhost:3000/runningEvals/1561453663909","errors":[],"totalQuestions":12,"processedQuestions":12,"progress":"100%","status":"successful","evalResults":{"grc":0.4318181818181818,"gpr":0.39999999999999997,"QALDgpr":0.65,"gfm":0.38580246913580246,"QALDgfm":0.5189075630252101}},"1561455397364":{"id":1561455397364,"startTimestamp":1561455397364,"endTimestamp":1561455422326,"name":"TestEx","dataset":"1question","systemUrl":"http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/","runningUrl":"http://localhost:3000/runningEvals/1561455397364","errors":[],"totalQuestions":1,"processedQuestions":1,"progress":"100%","status":"successful","evalResults":{"grc":0,"gpr":0,"QALDgpr":1,"gfm":0,"QALDgfm":0}}}
+{
+  "1561357787683": {
+    "id": 1561357787683,
+    "name": "GAnswer2",
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561357787683",
+    "errors": [
+      { "questionId": "42", "error": 504 },
+      {
+        "questionId": "162",
+        "error": {
+          "message": "request to http://ganswer.gstore-pku.com/api/qald.jsp?query=How%20deep%20is%20Lake%20Chiemsee? failed, reason: connect ETIMEDOUT 59.108.48.18:80",
+          "type": "system",
+          "errno": "ETIMEDOUT",
+          "code": "ETIMEDOUT"
+        }
+      }
+    ],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.36843470193039585,
+      "gpr": 0.3501211077221207,
+      "QALDgpr": 0.678888231009792,
+      "gfm": 0.33977649653343744,
+      "QALDgfm": 0.477648249969966
+    }
+  },
+  "1561358552942": {
+    "id": 1561358552942,
+    "name": "GAnswer2-div150",
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561358552942",
+    "errors": [{ "questionId": "42", "error": 504 }],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.36101655356938117,
+      "gpr": 0.3430716894458364,
+      "QALDgpr": 0.6652193404525478,
+      "gfm": 0.33293535901934135,
+      "QALDgfm": 0.4680311711115104
+    }
+  },
+  "1561368823036": {
+    "id": 1561368823036,
+    "name": "Pipeline19",
+    "dataset": "testData20",
+    "systemUrl": "http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://146.136.58.102:3000/runningEvals/1561368823036",
+    "errors": [],
+    "totalQuestions": 12,
+    "count": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.5047348484848485,
+      "gpr": 0.47291666666666665,
+      "QALDgpr": 0.7229166666666668,
+      "gfm": 0.45871913580246915,
+      "QALDgfm": 0.5944378021186877
+    }
+  },
+  "1561375632993": {
+    "id": 1561375632993,
+    "name": "Pipeline19",
+    "dataset": "testData20",
+    "systemUrl": "http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://146.136.58.102:3000/runningEvals/1561375632993",
+    "errors": [],
+    "totalQuestions": 12,
+    "count": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.5047348484848485,
+      "gpr": 0.47291666666666665,
+      "QALDgpr": 0.7229166666666668,
+      "gfm": 0.45871913580246915,
+      "QALDgfm": 0.5944378021186877
+    }
+  },
+  "1561385064389": {
+    "id": 1561385064389,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://146.136.56.151:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://146.136.58.102:3000/runningEvals/1561385064389",
+    "errors": [],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.08726604278074866,
+      "gpr": 0.07778083028083028,
+      "QALDgpr": 0.7711141636141636,
+      "gfm": 0.07880362160967445,
+      "QALDgfm": 0.15678852119252149
+    }
+  },
+  "1561394529763": {
+    "id": 1561394529763,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561394529763",
+    "errors": [{ "questionId": "60", "error": 500 }],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.10083270101652456,
+      "gpr": 0.08645325359035039,
+      "QALDgpr": 0.7688856860227827,
+      "gfm": 0.08825559462483151,
+      "QALDgfm": 0.1782848831299152
+    }
+  },
+  "1561401049362": {
+    "id": 1561401049362,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561401049362",
+    "errors": [],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.10615493166963756,
+      "gpr": 0.0888560990980346,
+      "QALDgpr": 0.7421894324313679,
+      "gfm": 0.09171653452258738,
+      "QALDgfm": 0.18574312936980486
+    }
+  },
+  "1561406921533": {
+    "id": 1561406921533,
+    "name": "Pipeline20",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561406921533",
+    "errors": [],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.05454545454545454,
+      "gpr": 0.052,
+      "QALDgpr": 0.8786666666666667,
+      "gfm": 0.0508641975308642,
+      "QALDgfm": 0.1027146382647097
+    }
+  },
+  "1561406777877": {
+    "id": 1561406777877,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561406777877",
+    "errors": [],
+    "totalQuestions": 150,
+    "count": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.10615493166963756,
+      "gpr": 0.0888560990980346,
+      "QALDgpr": 0.7555227657647012,
+      "gfm": 0.09171653452258738,
+      "QALDgfm": 0.18615421476826374
+    }
+  },
+  "1561453663909": {
+    "id": 1561453663909,
+    "startTimestamp": 1561453663909,
+    "endTimestamp": 1561453862143,
+    "name": "TestEx",
+    "dataset": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561453663909",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.4318181818181818,
+      "gpr": 0.39999999999999997,
+      "QALDgpr": 0.65,
+      "gfm": 0.38580246913580246,
+      "QALDgfm": 0.5189075630252101
+    }
+  },
+  "1561455397364": {
+    "id": 1561455397364,
+    "startTimestamp": 1561455397364,
+    "endTimestamp": 1561455422326,
+    "name": "TestEx",
+    "dataset": "1question",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561455397364",
+    "errors": [],
+    "totalQuestions": 1,
+    "processedQuestions": 1,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": { "grc": 0, "gpr": 0, "QALDgpr": 1, "gfm": 0, "QALDgfm": 0 }
+  },
+  "1561414782069": {
+    "id": 1561414782069,
+    "startTimestamp": 1561414782069,
+    "endTimestamp": 1561416604528,
+    "name": "Pipeline22",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20ClsNliodCls,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561414782069",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.034545454545454546,
+      "gpr": 0.03866666666666667,
+      "QALDgpr": 0.9453333333333334,
+      "gfm": 0.03530864197530864,
+      "QALDgfm": 0.0666551212271153
+    }
+  },
+  "1561414600691": {
+    "id": 1561414600691,
+    "startTimestamp": 1561414600691,
+    "endTimestamp": 1561416630089,
+    "name": "Pipeline18",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20ClsNliodCls,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561414600691",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.047878787878787875,
+      "gpr": 0.04533333333333333,
+      "QALDgpr": 0.8986666666666667,
+      "gfm": 0.04419753086419753,
+      "QALDgfm": 0.09091390276177061
+    }
+  },
+  "1561414767763": {
+    "id": 1561414767763,
+    "startTimestamp": 1561414767763,
+    "endTimestamp": 1561418367363,
+    "name": "Pipeline21",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20ClsNliodCls,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561414767763",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.05650603828795319,
+      "gpr": 0.037134465152967734,
+      "QALDgpr": 0.7838011318196344,
+      "gfm": 0.03602873549074564,
+      "QALDgfm": 0.1054126356176891
+    }
+  },
+  "1561414632952": {
+    "id": 1561414632952,
+    "startTimestamp": 1561414632952,
+    "endTimestamp": 1561418575515,
+    "name": "Pipeline17",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20ClsNliodCls,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561414632952",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.11230877782348372,
+      "gpr": 0.08532786207635368,
+      "QALDgpr": 0.758661195409687,
+      "gfm": 0.08920806108388137,
+      "QALDgfm": 0.19565384400629557
+    }
+  },
+  "1561444643230": {
+    "id": 1561444643230,
+    "startTimestamp": 1561444643230,
+    "endTimestamp": 1561447807638,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20ClsNliodCls,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561444643230",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.0570188588007737,
+      "gpr": 0.037552765806562506,
+      "QALDgpr": 0.7975527658065624,
+      "gfm": 0.03651057249432177,
+      "QALDgfm": 0.10642887554471822
+    }
+  },
+  "1561448121593": {
+    "id": 1561448121593,
+    "startTimestamp": 1561448121593,
+    "endTimestamp": 1561448850487,
+    "name": "gAnswer2",
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561448121593",
+    "errors": [
+      { "questionId": "42", "error": 502 },
+      {
+        "questionId": "183",
+        "error": {
+          "message": "request to http://ganswer.gstore-pku.com/api/qald.jsp?query=Who%20was%20Tom%20Hanks%20married%20to? failed, reason: connect ETIMEDOUT 59.108.48.18:80",
+          "type": "system",
+          "errno": "ETIMEDOUT",
+          "code": "ETIMEDOUT"
+        }
+      },
+      { "questionId": "165", "error": 504 }
+    ],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.3596629616794291,
+      "gpr": 0.3410950119960391,
+      "QALDgpr": 0.6883172342182613,
+      "gfm": 0.33060672565195737,
+      "QALDgfm": 0.472455903275679
+    }
+  },
+  "1561448290572": {
+    "id": 1561448290572,
+    "startTimestamp": 1561448290572,
+    "endTimestamp": 1561452074254,
+    "name": "Pipeline19",
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561448290572",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.10615493166963756,
+      "gpr": 0.0888560990980346,
+      "QALDgpr": 0.7555227657647012,
+      "gfm": 0.09171653452258738,
+      "QALDgfm": 0.18615421476826374
+    }
+  }
+}
