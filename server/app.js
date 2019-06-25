@@ -22,8 +22,11 @@ const pages = require("./routes/pages");
 const evaluations = require("./routes/evaluations");
 const runningEvals = require("./routes/runningEvals");
 const finishedEvals = require("./routes/finishedEvals");
+const systemAnswers = require("./routes/systemAnswers");
+
 
 app.use("/", pages);
 app.use("/evaluations", evaluations);
 app.use("/runningEvals", runningEvals);
 app.use("/finishedEvals", finishedEvals);
+app.use("/systemAnswers", systemAnswers);

@@ -147,6 +147,14 @@ function nextQuestion(
       delete runningEvals[String(currentEval.id)];
       return console.log("Evaluation aborted, no restults found");
     }
+
+    // save system answers before evaluation (in case something goes wrong with the evaluation)
+    let filePath = `./data/systemAnswers/${currentEval.name}-${
+      currentEval.id
+    }.json`;
+    let dataToSave = JSON.stringify(currentEval.results);
+    saveFile(filePath, dataToSave);
+
     currentEval.status = "calculating";
     evaluate(currentEval, dataset);
   } else {
@@ -323,7 +331,7 @@ function calculateResult(currentEval) {
     if (err) {
       console.log(err);
     } else {
-      obj = JSON.parse(data); //now it an object
+      obj = JSON.parse(data);
       delete currentEval.results;
       obj[String(currentEval.id)] = currentEval;
       fs.writeFile(
