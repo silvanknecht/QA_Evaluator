@@ -25,12 +25,13 @@ module.exports = {
 
       let currentEval = {
         id: date,
+        name,
         startTimestamp: date,
         endTimestamp: null,
-        name,
         dataset: choosenDataset,
         systemUrl,
-        runningUrl: "http://localhost:3000/runningEvals/" + date,
+        runningUrl: evaluationUrl + "runningEvals/" + date,
+        evaluatorVersion,
         results: [],
         errors: [],
         totalQuestions,
@@ -154,8 +155,6 @@ function nextQuestion(
     }.json`;
     let dataToSave = JSON.stringify(currentEval.results);
     saveFile(filePath, dataToSave);
-
-    currentEval.status = "calculating";
     evaluate(currentEval, dataset);
   } else {
     askQuestion(url, ++questionIndex, totalQuestions, currentEval, dataset);
@@ -182,6 +181,7 @@ function saveFile(filePath, content) {
 
 function evaluate(currentEval, dataset) {
   console.log("=== Evaluation started ===");
+  currentEval.status = "evaluating";
   let evalCount = 0;
   for (let r of currentEval.results) {
     for (let q of dataset.questions) {
@@ -274,6 +274,7 @@ function evaluate(currentEval, dataset) {
 }
 
 function calculateResult(currentEval) {
+  currentEval.status = "calculating";
   /** Calculate recall, precision and f-measure for every question.
               Calculate F-measure for the entire pipeline*/
   let recallTot = 0;

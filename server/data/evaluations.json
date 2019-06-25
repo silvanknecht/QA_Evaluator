@@ -181,42 +181,6 @@
       "QALDgfm": 0.18615421476826374
     }
   },
-  "1561453663909": {
-    "id": 1561453663909,
-    "startTimestamp": 1561453663909,
-    "endTimestamp": 1561453862143,
-    "name": "TestEx",
-    "dataset": "testData20",
-    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
-    "runningUrl": "http://localhost:3000/runningEvals/1561453663909",
-    "errors": [],
-    "totalQuestions": 12,
-    "processedQuestions": 12,
-    "progress": "100%",
-    "status": "successful",
-    "evalResults": {
-      "grc": 0.4318181818181818,
-      "gpr": 0.39999999999999997,
-      "QALDgpr": 0.65,
-      "gfm": 0.38580246913580246,
-      "QALDgfm": 0.5189075630252101
-    }
-  },
-  "1561455397364": {
-    "id": 1561455397364,
-    "startTimestamp": 1561455397364,
-    "endTimestamp": 1561455422326,
-    "name": "TestEx",
-    "dataset": "1question",
-    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
-    "runningUrl": "http://localhost:3000/runningEvals/1561455397364",
-    "errors": [],
-    "totalQuestions": 1,
-    "processedQuestions": 1,
-    "progress": "100%",
-    "status": "successful",
-    "evalResults": { "grc": 0, "gpr": 0, "QALDgpr": 1, "gfm": 0, "QALDgfm": 0 }
-  },
   "1561414782069": {
     "id": 1561414782069,
     "startTimestamp": 1561414782069,

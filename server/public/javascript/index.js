@@ -87,15 +87,16 @@ fetch(url + "finishedEvals", {
   .catch(error => console.error("Error:", error));
 
 function addToRunEval(response) {
-  let { id, name, dataset, progress } = response;
+  let { id, startTimestamp, name, dataset, progress } = response;
   let tr = document.createElement("tr");
   tr.setAttribute("id", `trRun${id}`);
 
   // Date
   let th = document.createElement("th");
   th.setAttribute("scope", "row");
+  let gmt2 = startTimestamp + 7200000;
   let text1 = document.createTextNode(
-    new Date(id)
+    new Date(gmt2)
       .toISOString()
       .slice(0, 19)
       .replace("T", " ")
@@ -144,14 +145,30 @@ function addToRunEval(response) {
 }
 
 function addToFinEval(response) {
-  let { id, name, dataset, status, errors, evalResults } = response;
+  let {
+    id,
+    startTimestamp,
+    name,
+    dataset,
+    status,
+    errors,
+    evalResults
+  } = response;
   let tr = document.createElement("tr");
 
   // Date
   let th = document.createElement("th");
   th.setAttribute("scope", "row");
+
+  // TODO: fix because old data doesn't hav the startTimestamp value
+  let gmt2;
+  if (startTimestamp === undefined) {
+    gmt2 = id + 7200000;
+  } else {
+    gmt2 = startTimestamp + 7200000;
+  }
   let text1 = document.createTextNode(
-    new Date(id)
+    new Date(gmt2)
       .toISOString()
       .slice(0, 19)
       .replace("T", " ")
