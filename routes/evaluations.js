@@ -15,17 +15,21 @@ router.post(
   },
   function(req, res, next) {
     let choosenDataset = req.body.dataset;
-
-    try {
-      let dataset = require("../datasets/" + choosenDataset);
-      res.locals.dataset = dataset;
-      next();
-    } catch (error) {
-      console.log("Dataset couldn't be loaded", error);
-      return res.status(500);
+    if (!datasets.hasOwnProperty(choosenDataset)) {
+      try {
+        let dataset = require("../datasets/" + choosenDataset);
+        datasets[choosenDataset] = dataset;
+        console.log("dataset has been loaded!")
+      } catch (error) {
+        console.log("Dataset couldn't be loaded", error);
+        return res.status(500);
+      }
+    }else{
+      console.log("dataset already loaded!")
     }
+    next();
   },
-  evaluationsController.evaluate
+  evaluationsController.startEvaluation
 );
 
 // schema for body validatino
@@ -37,7 +41,7 @@ const schema = Joi.object().keys({
     .min(3)
     .max(25)
     .required(),
-  dataset: Joi.valid(datasets)
+  dataset: Joi.valid(availableDatasets)
 });
 
 module.exports = router;

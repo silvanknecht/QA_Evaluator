@@ -405,5 +405,27 @@
       "gfm": 0.08290668119099492,
       "QALDgfm": 0.1616409507349877
     }
+  },
+  "1561531783223": {
+    "id": 1561531783223,
+    "name": "19-v3",
+    "startTimestamp": 1561531783223,
+    "endTimestamp": 1561536177278,
+    "dataset": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561531783223",
+    "evaluatorVersion": "3.0.0",
+    "errors": [{ "questionId": "133", "error": 500 }],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.1001559714795009,
+      "gpr": 0.08274103936043752,
+      "QALDgpr": 0.760593388353726,
+      "gfm": 0.08562067233817522,
+      "QALDgfm": 0.17700383704313752
+    }
   }
 }

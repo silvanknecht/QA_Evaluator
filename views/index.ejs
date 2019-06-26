@@ -93,36 +93,35 @@
             </caption>
             <thead class="thead-dark">
               <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Dataset</th>
-                <th scope="col">Progress</th>
-                <th scope="col">State</th>
+                <th class="pressable" scope="col"onclick="sortTable(0, 'runEvalsTable')">Date</th>
+                <th class="pressable" scope="col"onclick="sortTable(0, 'runEvalsTable')">Id</th>
+                <th class="pressable" scope="col"onclick="sortTable(1, 'runEvalsTable')">Name</th>
+                <th class="pressable" scope="col"onclick="sortTable(2, 'runEvalsTable')">Dataset</th>
+                <th class="pressable" scope="col"onclick="sortTable(3, 'runEvalsTable')">Progress</th>
+                <th class="pressable" scope="col"onclick="sortTable(4, 'runEvalsTable')">State</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
-        </div>
-        <div class="col-md-12">
-          <h2>Finished</h2>
-          <table id="finEvalsTable" class="table">
-            <caption>
-              Finished evalutations
-            </caption>
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Dataset</th>
-                <th scope="col">QALD F-Measure</th>
-                <th scope="col">Errors</th>
-                <th scope="col">State</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+
+      <h2>Finished</h2>
+      <table id="finEvalsTable" class="table">
+        <caption>
+          Finished evalutations
+        </caption>
+        <thead class="thead-dark">
+          <tr>
+            <th class="pressable" scope="col" onclick="sortTable(0, 'finEvalsTable')">Date</th>
+            <th class="pressable" scope="col" onclick="sortTable(0, 'finEvalsTable')">Id</th>
+            <th class="pressable" scope="col" onclick="sortTable(1, 'finEvalsTable')">Name</th>
+            <th class="pressable" scope="col" onclick="sortTable(2, 'finEvalsTable')">Dataset</th>
+            <th class="pressable" scope="col" onclick="sortTable(3, 'finEvalsTable')">QALD F-Measure</th>
+            <th class="pressable" scope="col" onclick="sortTable(4, 'finEvalsTable')">Errors</th>
+            <th class="pressable" scope="col" onclick="sortTable(5, 'finEvalsTable')">State</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
         </div>
       </div>
     </div>
