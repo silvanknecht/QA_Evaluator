@@ -23,10 +23,12 @@ socket.on("updateStatus", data => {
   console.log(JSON.parse(data));
   let json = JSON.parse(data);
   const progBar = document.getElementById(`progBar${json.id}`);
-  progBar.style.width = json.progress;
-  progBar.innerHTML = json.progress;
-  if (json.progress === "100%") {
-    progBar.classList.remove("progress-bar-animated");
+  const statRun = document.getElementById(`statRun${json.id}`);
+
+  if (!(json.status == "successful") && !(json.status === "failed")) {
+    statRun.innerHTML = json.status;
+    progBar.style.width = json.progress;
+    progBar.innerHTML = json.progress;
   }
 });
 socket.on("evalStarted", data => {
@@ -123,7 +125,7 @@ function addToRunEval(response) {
   tr.appendChild(createSimpleField(name));
   tr.appendChild(createSimpleField(dataset));
   tr.appendChild(createProgressField(id, progress));
-  tr.appendChild(createSimpleField(status));
+  tr.appendChild(createSimpleField(status, "statRun", id));
 
   runEvalsTableBody.appendChild(tr);
 }
@@ -150,7 +152,11 @@ function addToFinEval(response) {
   tr.appendChild(createSimpleField(id));
   tr.appendChild(createSimpleField(name));
   tr.appendChild(createSimpleField(dataset));
-  tr.appendChild(createQgfmField(status, evalResults));
+  tr.appendChild(createResultField(status, evalResults.grc));
+  tr.appendChild(createResultField(status, evalResults.gpr));
+  tr.appendChild(createResultField(status, evalResults.gfm));
+  tr.appendChild(createResultField(status, evalResults.QALDgpr));
+  tr.appendChild(createResultField(status, evalResults.QALDgfm));
   tr.appendChild(createSimpleField(errors.length));
   tr.appendChild(createSimpleField(status));
 
@@ -159,8 +165,9 @@ function addToFinEval(response) {
 
 // Table funtions
 
-function createSimpleField(value) {
+function createSimpleField(value, name = 0, id = 0) {
   let td = document.createElement("td");
+  if (name !== 0 && id !== 0) td.setAttribute("id", `${name}${id}`);
   let text = document.createTextNode(value);
   td.appendChild(text);
   return td;
@@ -207,11 +214,11 @@ function createProgressField(id, progress) {
   return td;
 }
 
-function createQgfmField(status, evalResults) {
+function createResultField(status, value) {
   let td = document.createElement("td");
   let text;
   if (status !== "failed") {
-    text = document.createTextNode(Number(evalResults.QALDgfm).toFixed(4));
+    text = document.createTextNode(Number(value).toFixed(4));
   } else {
     text = document.createTextNode("-");
   }

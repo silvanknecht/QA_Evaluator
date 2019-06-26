@@ -427,5 +427,71 @@
       "gfm": 0.08562067233817522,
       "QALDgfm": 0.17700383704313752
     }
+  },
+  "1561562774971": {
+    "id": 1561562774971,
+    "name": "P20",
+    "startTimestamp": 1561562774971,
+    "endTimestamp": 1561562924651,
+    "dataset": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561562774971",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.4318181818181818,
+      "gpr": 0.39999999999999997,
+      "QALDgpr": 0.65,
+      "gfm": 0.38580246913580246,
+      "QALDgfm": 0.5189075630252101
+    }
+  },
+  "1561563109740": {
+    "id": 1561563109740,
+    "name": "P20",
+    "startTimestamp": 1561563109740,
+    "endTimestamp": 1561563251299,
+    "dataset": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561563109740",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.4318181818181818,
+      "gpr": 0.39999999999999997,
+      "QALDgpr": 0.65,
+      "gfm": 0.38580246913580246,
+      "QALDgfm": 0.5189075630252101
+    }
+  },
+  "1561562949137": {
+    "id": 1561562949137,
+    "name": "P19",
+    "startTimestamp": 1561562949137,
+    "endTimestamp": 1561563384714,
+    "dataset": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "runningUrl": "http://localhost:3000/runningEvals/1561562949137",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.5047348484848485,
+      "gpr": 0.47291666666666665,
+      "QALDgpr": 0.7229166666666668,
+      "gfm": 0.45871913580246915,
+      "QALDgfm": 0.5944378021186877
+    }
   }
 }

@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const fs = require("fs");
 
 module.exports = {
-  startEvaluation: function(req, res, next) {
+  startEvaluation: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
 
@@ -26,55 +26,75 @@ module.exports = {
     };
     runningEvals[String(date)] = currentEval;
     console.log("Evaluation with dataset: " + dataset + " has started.");
-
-    module.exports.findNextQuestion(currentEval);
     io.sockets.emit("evalStarted", JSON.stringify(currentEval));
     res.json(currentEval);
 
+    while (currentEval.processedQuestions < currentEval.totalQuestions) {
+      currentEval.status = "questioning";
+      let { q, questionUrl } = module.exports.findNextQuestion(currentEval);
+      let response = await module.exports.askQuestion(questionUrl);
+      let data = await response.json();
+
+      // Examine the text in the response
+      if (response.status !== 200) {
+        console.log(
+          "Looks like there was a problem. Status Code: " + response.status
+        );
+
+        currentEval.errors.push({
+          questionId: q.id,
+          error: response.status
+        });
+        currentEval.processedQuestions++;
+        currentEval.progress = module.exports.updateProgress(currentEval);
+        io.sockets.emit("updateStatus", JSON.stringify(currentEval));
+      } else {
+        currentEval.results.push({ id: q.id, data: data });
+        currentEval.processedQuestions++;
+        currentEval.progress = module.exports.updateProgress(currentEval);
+        io.sockets.emit("updateStatus", JSON.stringify(currentEval));
+
+        console.log(
+          "processedQuestions: ",
+          currentEval.processedQuestions + " / " + currentEval.totalQuestions
+        );
+      }
+    }
+
+    if (currentEval.results.length === 0) {
+      fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          currentEval.status = "failed";
+          io.sockets.emit("evalEnded", JSON.stringify(currentEval));
+          obj = JSON.parse(data);
+          delete currentEval.results;
+          obj[String(currentEval.id)] = currentEval;
+          fs.writeFile(
+            "./data/evaluations.json",
+            JSON.stringify(obj),
+            "utf8",
+            () => {}
+          );
+        }
+      });
+      delete runningEvals[String(currentEval.id)];
+      console.log("Evaluation aborted, no restults found");
+    }
+
+    // save system answers before evaluation (in case something goes wrong with the evaluation)
+    let filePath = `./data/systemAnswers/${currentEval.name}-${
+      currentEval.id
+    }.json`;
+    let dataToSave = JSON.stringify(currentEval.results);
+    saveFile(filePath, dataToSave);
+    module.exports.evaluate(currentEval);
+    return;
   }, // next question or end the evaluation
   findNextQuestion: function(currentEval) {
-    let { id, name, processedQuestions, totalQuestions, results } = currentEval;
-
-    if (processedQuestions === totalQuestions) {
-      // if the evaluation doesn't find any
-      if (results.length === 0) {
-        fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
-          if (err) {
-            console.log(err);
-          } else {
-            currentEval.status = "failed";
-            io.sockets.emit("evalEnded", JSON.stringify(currentEval));
-            obj = JSON.parse(data);
-            delete currentEval.results;
-            obj[String(id)] = currentEval;
-            fs.writeFile(
-              "./data/evaluations.json",
-              JSON.stringify(obj),
-              "utf8",
-              () => {}
-            );
-          }
-        });
-        delete runningEvals[String(id)];
-        console.log("Evaluation aborted, no restults found");
-        return;
-      }
-
-      // save system answers before evaluation (in case something goes wrong with the evaluation)
-      let filePath = `./data/systemAnswers/${name}-${id}.json`;
-      let dataToSave = JSON.stringify(results);
-      saveFile(filePath, dataToSave);
-      module.exports.evaluate(currentEval);
-      return;
-    } else {
-      module.exports.askQuestion(processedQuestions, currentEval);
-      return;
-    }
-  },
-  askQuestion: function(questionIndex, currentEval) {
-    let { dataset, systemUrl, totalQuestions } = currentEval;
-    currentEval.status = "questioning";
-    let q = datasets[dataset].questions[questionIndex];
+    let { dataset, processedQuestions, systemUrl } = currentEval;
+    let q = datasets[dataset].questions[processedQuestions];
     let question = (() => {
       for (let lang of q.question) {
         if (lang.language === "en") return lang.string;
@@ -82,51 +102,22 @@ module.exports = {
     })();
 
     let questionUrl = systemUrl + "?query=" + encodeURI(question);
+    return { q, questionUrl };
+  },
+  askQuestion: function(questionUrl) {
     console.log("============ Question asked ============");
     console.log("RequestUrl: ", questionUrl);
-    fetch(questionUrl, {
+    return fetch(questionUrl, {
       method: "POST"
-    })
-      .then(response => {
-        if (response.status !== 200) {
-          console.log(
-            "Looks like there was a problem. Status Code: " + response.status
-          );
-
-          currentEval.errors.push({ questionId: q.id, error: response.status });
-          currentEval.processedQuestions++;
-          module.exports.updatesStatus(currentEval);
-          module.exports.findNextQuestion(currentEval);
-          return;
-        }
-        // Examine the text in the response
-        response.json().then(data => {
-          currentEval.results.push({ id: q.id, data: data });
-          currentEval.processedQuestions++;
-          module.exports.updatesStatus(currentEval);
-          module.exports.findNextQuestion(currentEval);
-
-          console.log(
-            "processedQuestions: ",
-            currentEval.processedQuestions + " / " + totalQuestions
-          );
-          return data;
-        });
-      })
-      .catch(err => {
-        console.log("Fetch Error :-S", err);
-        currentEval.errors.push({ questionId: q.id, error: err });
-        //updatesStatus(currentEval, totalQuestions);
-        currentEval.processedQuestions++;
-        module.exports.findNextQuestion(currentEval);
-      });
+    });
   }, // updating the status of an evaluation
-  updatesStatus: function(currentEval) {
+  updateProgress: function(currentEval) {
     let { processedQuestions, totalQuestions } = currentEval;
 
-    currentEval.progress =
+    let progress =
       ((processedQuestions * 100) / totalQuestions).toFixed(0) + "%";
-    io.sockets.emit("updateStatus", JSON.stringify(currentEval));
+
+    return progress;
   },
   evaluate: function(currentEval) {
     let { dataset, results } = currentEval;
