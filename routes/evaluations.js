@@ -29,7 +29,7 @@ router.post(
     }
     next();
   },
-  evaluationsController.startEvaluation
+  evaluationsController.evaluateSystem
 );
 
 // schema for body validatino

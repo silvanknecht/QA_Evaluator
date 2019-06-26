@@ -152,11 +152,22 @@ function addToFinEval(response) {
   tr.appendChild(createSimpleField(id));
   tr.appendChild(createSimpleField(name));
   tr.appendChild(createSimpleField(dataset));
-  tr.appendChild(createResultField(status, evalResults.grc));
-  tr.appendChild(createResultField(status, evalResults.gpr));
-  tr.appendChild(createResultField(status, evalResults.gfm));
-  tr.appendChild(createResultField(status, evalResults.QALDgpr));
-  tr.appendChild(createResultField(status, evalResults.QALDgfm));
+
+  // TODO: needs better solution
+  if (evalResults !== undefined) {
+    tr.appendChild(createResultField(evalResults.grc));
+    tr.appendChild(createResultField(evalResults.gpr));
+    tr.appendChild(createResultField(evalResults.gfm));
+    tr.appendChild(createResultField(evalResults.QALDgpr));
+    tr.appendChild(createResultField(evalResults.QALDgfm));
+  } else {
+    tr.appendChild(createResultField("-"));
+    tr.appendChild(createResultField("-"));
+    tr.appendChild(createResultField("-"));
+    tr.appendChild(createResultField("-"));
+    tr.appendChild(createResultField("-"));
+  }
+
   tr.appendChild(createSimpleField(errors.length));
   tr.appendChild(createSimpleField(status));
 
@@ -214,11 +225,11 @@ function createProgressField(id, progress) {
   return td;
 }
 
-function createResultField(status, value) {
+function createResultField(value) {
   let td = document.createElement("td");
   let text;
-  if (status !== "failed") {
-    text = document.createTextNode(Number(value).toFixed(4));
+  if (value !== "-") {
+    text = document.createTextNode(Number(value).toFixed(3));
   } else {
     text = document.createTextNode("-");
   }

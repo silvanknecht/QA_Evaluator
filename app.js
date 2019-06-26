@@ -16,7 +16,7 @@ app.use(express.static(__dirname + "/public"));
 // global variables
 global.runningEvals = {};
 global.evaluationUrl = `http://localhost:${port}/`;
-global.availableDatasets = ["qald-9", "testData20", "1question"];
+global.availableDatasets = ["qald-9", "testData20", "smallTest"];
 global.datasets = {}; //datasets are loaded only when they were used at least once
 global.evaluatorVersion = "3.0.0";
 // 1.0.0: evaluation dublicated answers are also answers,
