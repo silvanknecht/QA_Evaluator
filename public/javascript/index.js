@@ -19,7 +19,7 @@ const finEvalsTableBody = document
 
 // Live data
 let socket = io.connect(url, { reconnection: true });
-socket.on("updateStatus", data => {
+socket.on("update", data => {
   console.log(JSON.parse(data));
   let json = JSON.parse(data);
   const progBar = document.getElementById(`progBar${json.id}`);

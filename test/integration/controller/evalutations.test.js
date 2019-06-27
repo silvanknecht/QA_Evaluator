@@ -51,46 +51,46 @@ describe("start evaluation", () => {
     expect(res.status).toBe(400);
   });
 
-  it("should return 200 and the current evaluation when valid input was provided", async () => {
-    evaluationController.askQuestion = function() {
-      console.log("Quesiton is asked to the System!");
-    };
-    const res = await exec();
-    expect(res.status).toBe(200);
-  });
+  // it("should return 200 and the current evaluation when valid input was provided", async () => {
+  //   evaluationController.askQuestion = function() {
+  //     console.log("Quesiton is asked to the System!");
+  //   };
+  //   const res = await exec();
+  //   expect(res.status).toBe(200);
+  // });
 
-  it("should return a valid currentEval object when valid input was provided", async () => {
-    evaluationController.askQuestion = function() {
-      console.log("Quesiton is asked to the System!");
-    };
-    const res = await exec();
-    console.log(res.body);
-    expect(res.body).toEqual({
-      id: res.body.startTimestamp,
-      name: "testk",
-      startTimestamp: res.body.startTimestamp,
-      endTimestamp: null,
-      dataset: "testData20",
-      systemUrl:
-        "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
-      runningUrl: evaluationUrl + "runningEvals/" + res.body.startTimestamp,
-      evaluatorVersion: "3.0.0",
-      results: [],
-      errors: [],
-      totalQuestions: 12,
-      processedQuestions: 0,
-      progress: "0%",
-      status: "starting..."
-    });
-  });
+  // it("should return a valid currentEval object when valid input was provided", async () => {
+  //   evaluationController.askQuestion = function() {
+  //     console.log("Quesiton is asked to the System!");
+  //   };
+  //   const res = await exec();
+  //   console.log(res.body);
+  //   expect(res.body).toEqual({
+  //     id: res.body.startTimestamp,
+  //     name: "testk",
+  //     startTimestamp: res.body.startTimestamp,
+  //     endTimestamp: null,
+  //     dataset: "testData20",
+  //     systemUrl:
+  //       "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+  //     runningUrl: evaluationUrl + "runningEvals/" + res.body.startTimestamp,
+  //     evaluatorVersion: "3.0.0",
+  //     results: [],
+  //     errors: [],
+  //     totalQuestions: 12,
+  //     processedQuestions: 0,
+  //     progress: "0%",
+  //     status: "starting..."
+  //   });
+  // });
 });
 
-describe("start evaluation", () => {
-  let payload;
-  const exec = () => {
-    return request(server)
-      .post("/evaluations/evaluate")
-      .send(payload);
-  };
-  it("should ")
-});
+// describe("start evaluation", () => {
+//   let payload;
+//   const exec = () => {
+//     return request(server)
+//       .post("/evaluations/evaluate")
+//       .send(payload);
+//   };
+//   it("should ")
+// });
