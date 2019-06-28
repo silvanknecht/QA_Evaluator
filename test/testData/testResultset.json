@@ -1,0 +1,468 @@
+[
+  {
+    "id": "1",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["c"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "c": {
+                      "type": "literal",
+                      "value": "8.1741E10"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "24",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["c"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "c": {
+                      "type": "literal",
+                      "value": "245"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "99",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["uri"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Mountain_Time_Zone"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "107",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["uri"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/George_VI"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "6",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {},
+              "results": {},
+              "boolean": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "173",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["date"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "date": {
+                      "type": "literal",
+                      "value": "1995-01-01"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "156",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["uri"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Kentucky"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "203",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["string"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "string": {
+                      "type": "literal",
+                      "value": "Homicide"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "32",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["string"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "string": {
+                      "type": "literal",
+                      "value": "Angela Dorothea Kasner"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "198",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["uri"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Peter_Kreeft"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Epictetus"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Seyhan_Kurt"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Allan_Bloom"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Diogenes_of_Sinope"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Georg_Wilhelm_Friedrich_Hegel"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Lucian"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Euclid_of_Megara"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Pyrrho"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/John_Henry_Newman__Western_philosophy__1"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Niccolò_Machiavelli"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Aristippus"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Edmund_Burke"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Traian_Brăileanu"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Karl_Popper"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Hannah_Arendt"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Aristotle"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Yaşar_Nuri_Öztürk"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Plato"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Antisthenes"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Leo_Strauss"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Søren_Kierkegaard"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "141",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["uri"]
+              },
+              "results": {
+                "bindings": [
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Laiuse_Romani_language"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_Sign_Language"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Seto_dialect"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Russian_Sign_Language"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Baltic_Romani"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Võro_language"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_language"
+                    }
+                  },
+                  {
+                    "uri": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Modern_Swedish"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

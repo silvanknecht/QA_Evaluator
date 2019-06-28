@@ -160,7 +160,7 @@ class Evaluation {
           }
         }
 
-        resolve(this.results);
+        resolve("Questions evaluated!");
       } else {
         console.log("Evaluation aborted, no restults found");
         reject("Evaluation aborted, no restults found");

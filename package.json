@@ -28,7 +28,7 @@
     "globals": {
       "evaluationUrl": "asdfsdfsdf",
       "evaluatorVersion": "testVersion",
-      "datasets":{}
+      "datasets": {}
     }
   }
 }
