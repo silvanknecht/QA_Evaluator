@@ -493,5 +493,81 @@
       "gfm": 0.45871913580246915,
       "QALDgfm": 0.5944378021186877
     }
+  },
+  "1561738218919": {
+    "id": 1561738218919,
+    "name": "gAnswer2",
+    "startTimestamp": 1561738218919,
+    "endTimestamp": 1561738926769,
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561738218919",
+    "evaluatorVersion": "3.0.0",
+    "errors": [
+      { "questionId": "42", "error": "Gateway Time-out" },
+      {
+        "questionId": "29",
+        "error": "request to http://ganswer.gstore-pku.com/api/qald.jsp?query=Which%20countries%20in%20the%20European%20Union%20adopted%20the%20Euro? failed, reason: connect ETIMEDOUT 59.108.48.18:80"
+      },
+      {
+        "questionId": "179",
+        "error": "request to http://ganswer.gstore-pku.com/api/qald.jsp?query=What%20were%20the%20names%20of%20the%20three%20ships%20by%20Columbus? failed, reason: connect ETIMEDOUT 59.108.48.18:80"
+      }
+    ],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.36592834341386254,
+      "gpr": 0.34773933147911307,
+      "QALDgpr": 0.6674672226355757,
+      "gfm": 0.33746509179511475,
+      "QALDgfm": 0.47270412818938523
+    }
+  },
+  "1561740747682": {
+    "id": 1561740747682,
+    "name": "gAnswer2",
+    "startTimestamp": 1561740747682,
+    "endTimestamp": 1561741478452,
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561740747682",
+    "evaluatorVersion": "3.0.0",
+    "errors": [{ "questionId": "42", "error": "Gateway Time-out" }],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.36101655356938117,
+      "gpr": 0.3430716894458364,
+      "QALDgpr": 0.6652193404525478,
+      "gfm": 0.33293535901934135,
+      "QALDgfm": 0.4680311711115104
+    }
+  },
+  "1561820835200": {
+    "id": 1561820835200,
+    "name": "gAnswer2",
+    "startTimestamp": 1561820835200,
+    "endTimestamp": 1561821370032,
+    "dataset": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "runningUrl": "http://localhost:3000/runningEvals/1561820835200",
+    "evaluatorVersion": "3.0.0",
+    "errors": [{ "questionId": "42", "error": "Gateway Time-out" }],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "grc": 0.36101655356938117,
+      "gpr": 0.3430716894458364,
+      "QALDgpr": 0.6652193404525478,
+      "gfm": 0.33293535901934135,
+      "QALDgfm": 0.4680311711115104
+    }
   }
 }

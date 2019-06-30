@@ -1,4 +1,6 @@
 const fetch = require("node-fetch");
+const fetch_retry = require("node-fetch-retry");
+
 const fs = require("fs");
 
 const Metrics = require("../helpers/metrics");
@@ -30,14 +32,15 @@ class Evaluation {
     })();
 
     let questionUrl = this.systemUrl + "?query=" + encodeURI(question);
-    return { qId:q.id, questionUrl };
+    return { qId: q.id, questionUrl };
   }
 
   async askQuestion(questionUrl) {
     console.log("============ Question asked ============");
     console.log("RequestUrl: ", questionUrl);
-    return fetch(questionUrl, {
-      method: "POST"
+    return fetch_retry(questionUrl, {
+      method: "POST",
+      retry: 3
     }).then(res => {
       if (res.status >= 200 && res.status < 300) {
         return res.json();
@@ -93,16 +96,16 @@ class Evaluation {
                 expectedAnswers.push(q.answers[0].boolean);
               } else {
                 answerType = q.answers[0].head.vars[0];
-                if (answerType === "c") {
-                  expectedAnswers.push(
-                    Number(q.answers[0].results.bindings[0][answerType].value)
-                  );
-                } else {
-                  if (q.answers[0].results.bindings) {
-                    for (let a of q.answers[0].results.bindings) {
-                      expectedAnswers.push(a[answerType].value);
-                    }
+                // if (answerType === "c") {
+                //   expectedAnswers.push(
+                //     Number(q.answers[0].results.bindings[0][answerType].value)
+                //   );
+                // } else {
+                if (q.answers[0].results.bindings) {
+                  for (let a of q.answers[0].results.bindings) {
+                    expectedAnswers.push(a[answerType].value);
                   }
+                  //}
                 }
               }
 

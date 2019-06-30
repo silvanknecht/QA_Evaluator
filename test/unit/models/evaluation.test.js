@@ -57,7 +57,7 @@ describe("findNextQuestion", () => {
 });
 
 describe("evaluateQuestions", () => {
-  it("should evaluate all questinos of the resultset and add NrSystem && NrExpected && NrCorrect", async () => {
+  it("should evaluate all questinos of the resultset (all answers correct) and add NrSystem && NrExpected && NrCorrect", async () => {
     try {
       await mockEvaluation.evaluateQuestions();
 
@@ -104,7 +104,131 @@ describe("evaluateQuestions", () => {
       expect(mockEvaluation.results[10].NrSystem).toBe(8);
       expect(mockEvaluation.results[10].NrExpected).toBe(8);
       expect(mockEvaluation.results[10].NrCorrect).toBe(8);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  it("should add NrSystem = 0 && NrExpected =1 && NrCorrect = 0 when the system doesn't give an answer to the first question", async () => {
+    mockEvaluation.results[0].data.questions[0].answers = [];
+    await mockEvaluation.evaluateQuestions();
+
+    expect(mockEvaluation.results[0].NrSystem).toBe(0);
+    expect(mockEvaluation.results[0].NrExpected).toBe(1);
+    expect(mockEvaluation.results[0].NrCorrect).toBe(0);
+  });
+  it("should add NrSystem = 0 && NrExpected =1 && NrCorrect = 0 when the system doesn't give an answer to the first question, when the answer Array contains an object but still no answer", async () => {
+    mockEvaluation.results[0].data.questions[0].answers = [
+      {
+        head: {
+          vars: ["c"]
+        },
+        results: {
+          bindings: []
+        }
+      }
+    ];
+    await mockEvaluation.evaluateQuestions();
+
+    expect(mockEvaluation.results[0].NrSystem).toBe(0);
+    expect(mockEvaluation.results[0].NrExpected).toBe(1);
+    expect(mockEvaluation.results[0].NrCorrect).toBe(0);
+  });
+
+  it("should add NrSystem = 2 && NrExpected =1 && NrCorrect = 0 when the system gives 2 wrong answers", async () => {
+    mockEvaluation.results[0].data.questions[0].answers = [
+      {
+        head: {
+          vars: ["c"]
+        },
+        results: {
+          bindings: [
+            {
+              c: {
+                type: "literal",
+                value: "200"
+              }
+            },
+            {
+              c: {
+                type: "literal",
+                value: "300"
+              }
+            }
+          ]
+        }
+      }
+    ];
+    await mockEvaluation.evaluateQuestions();
+
+    expect(mockEvaluation.results[0].NrSystem).toBe(2);
+    expect(mockEvaluation.results[0].NrExpected).toBe(1);
+    expect(mockEvaluation.results[0].NrCorrect).toBe(0);
+  });
+
+  it("should add NrSystem = 4 && NrExpected =1 && NrCorrect = 0 when the system gives 2 wrong answers with 2 diffrent vars", async () => {
+    mockEvaluation.results[0].data.questions[0].answers = [
+      {
+        head: {
+          vars: ["c", "d"]
+        },
+        results: {
+          bindings: [
+            {
+              c: {
+                type: "literal",
+                value: "200"
+              },
+              d: { type: "literal", value: "400" }
+            },
+            {
+              c: {
+                type: "literal",
+                value: "300"
+              },
+              d: { type: "literal", value: "500" }
+            }
+          ]
+        }
+      }
+    ];
+    await mockEvaluation.evaluateQuestions();
+
+    expect(mockEvaluation.results[0].NrSystem).toBe(4);
+    expect(mockEvaluation.results[0].NrExpected).toBe(1);
+    expect(mockEvaluation.results[0].NrCorrect).toBe(0);
+  });
+
+  it("should add NrSystem = 3 && NrExpected = 1 && NrCorrect = 0 when the system gives 2 wrong answers with 2 diffrent vars, but  2 answers are the same", async () => {
+    mockEvaluation.results[0].data.questions[0].answers = [
+      {
+        head: {
+          vars: ["c", "d"]
+        },
+        results: {
+          bindings: [
+            {
+              c: {
+                type: "literal",
+                value: "200"
+              },
+              d: { type: "literal", value: "500" }
+            },
+            {
+              c: {
+                type: "literal",
+                value: "300"
+              },
+              d: { type: "literal", value: "500" }
+            }
+          ]
+        }
+      }
+    ];
+    await mockEvaluation.evaluateQuestions();
+
+    expect(mockEvaluation.results[0].NrSystem).toBe(3);
+    expect(mockEvaluation.results[0].NrExpected).toBe(1);
+    expect(mockEvaluation.results[0].NrCorrect).toBe(0);
   });
 });
 
