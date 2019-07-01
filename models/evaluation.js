@@ -11,7 +11,7 @@ class Evaluation {
     this.name = name;
     this.startTimestamp = timestamp;
     this.endTimestamp = null;
-    this.dataset = dataset;
+    this.datasetKey = dataset;
     this.systemUrl = systemUrl;
     this.runningUrl = evaluationUrl + "runningEvals/" + timestamp;
     this.evaluatorVersion = evaluatorVersion;
@@ -81,7 +81,7 @@ class Evaluation {
         console.log("=== Evaluation started ===");
         let evalCount = 0;
         for (let r of this.results) {
-          for (let q of datasets[this.dataset].questions) {
+          for (let q of datasets[this.datasetKey].questions) {
             if (r.id === q.id) {
               evalCount++;
               console.log(
