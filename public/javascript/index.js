@@ -1,9 +1,13 @@
 const url = "http://localhost:3000/";
+const qanaryUrl = "http://146.136.58.83:8080/"
 
 const exForm = document.getElementById("exForm");
 const exName = document.getElementById("exName");
 const exDataset = document.getElementById("exDataset");
 const exSystemUrl = document.getElementById("exSystemUrl");
+const exQASystems = document.getElementById("exQASystems");
+
+const datasetFin = document.getElementById("datasetFin");
 
 const runEvalsTableBody = document
   .getElementById("runEvalsTable")
@@ -12,9 +16,51 @@ const finEvalsTableBody = document
   .getElementById("finEvalsTable")
   .getElementsByTagName("tbody")[0];
 
-(function() {
-  fillFinishedTable();
+(function () {
+  fillFinishedTable("qald-9");
   fillRunningTable();
+
+  // 
+  exQASystems.addEventListener("change", (e) => {
+    let value = e.target.value;
+    exSystemUrl.readOnly = false;
+
+    if (value === "false") return exSystemUrl.value = "";
+    if (!value.match(/^http:\/\//)) value = qanaryUrl + value;
+    exSystemUrl.value = value;
+    exSystemUrl.readOnly = true;
+  });
+
+  datasetFin.addEventListener("change", (e) => {
+    fillFinishedTable(e.target.value);
+  })
+
+  // Start an evaluation
+  exForm.addEventListener("submit", () => {
+    let data = {
+      name: exName.value.replace(" ", ""),
+      dataset: exDataset.value,
+      systemUrl: exSystemUrl.value
+    };
+
+    fetch(url + "evaluations/evaluate", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(response => {
+        if (response) console.log("Evaluation started: ", response);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  });
+
+  // POPOVERS
+  $(".pop-me-over").popover({ trigger: "hover" });
 })();
 
 // Live data
@@ -40,38 +86,18 @@ socket.on("evalEnded", data => {
   let json = JSON.parse(data);
   const trRun = document.getElementById(`trRun${json.id}`);
   trRun.parentNode.removeChild(trRun);
-  addToFinEval(json);
+  if (json.datasetKey === datasetFin.value) {
+    addToFinEval(json);
+  }
 });
 
 socket.on("evalFailed", data => {
   console.log("evalFailed");
   let json = JSON.parse(data);
-  addToFinEval(json);
+  if (json.datasetKey === datasetFin.value) addToFinEval(json);
 });
 
-// Start an evaluation
-exForm.addEventListener("submit", () => {
-  let data = {
-    name: exName.value.replace(" ", ""),
-    dataset: exDataset.value,
-    systemUrl: exSystemUrl.value
-  };
 
-  fetch(url + "evaluations/evaluate", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => res.json())
-    .then(response => {
-      if (response) console.log("Evaluation started: ", response);
-    })
-    .catch(error => {
-      console.error("Error:", error);
-    });
-});
 
 function fillRunningTable() {
   fetch(url + "runningEvals", {
@@ -90,8 +116,10 @@ function fillRunningTable() {
     .catch(error => console.error("Error:", error));
 }
 
-function fillFinishedTable() {
-  fetch(url + "finishedEvals", {
+function fillFinishedTable(datasetKey) {
+  //$("#finEvalsTable tbody tr").remove(); 
+  finEvalsTableBody.innerHTML = "";
+  fetch(url + "finishedEvals?" + "datasetKey=" + datasetKey, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -110,20 +138,19 @@ function fillFinishedTable() {
 // Table column functions
 
 function addToRunEval(response) {
-  let { id, startTimestamp, name, dataset, progress, status } = response;
+  let { id, startTimestamp, name, datasetKey, progress, status } = response;
   let tr = document.createElement("tr");
   tr.setAttribute("id", `trRun${id}`);
 
   // Table header
-  let th = document.createElement("th");
-  th.setAttribute("scope", "row");
-  th.appendChild(createDateField(startTimestamp, id));
+  let td = document.createElement("td");
+  td.setAttribute("scope", "row");
+  td.appendChild(createDateField(startTimestamp, id));
 
   // Create table
-  tr.appendChild(th);
-  tr.appendChild(createSimpleField(id));
+  tr.appendChild(td);
   tr.appendChild(createSimpleField(name));
-  tr.appendChild(createSimpleField(dataset));
+  tr.appendChild(createSimpleField(datasetKey));
   tr.appendChild(createProgressField(id, progress));
   tr.appendChild(createSimpleField(status, "statRun", id));
 
@@ -133,8 +160,10 @@ function addToRunEval(response) {
 function addToFinEval(response) {
   let {
     id,
+    evaluatorVersion,
     startTimestamp,
     name,
+    datasetKey,
     dataset,
     status,
     errors,
@@ -143,15 +172,14 @@ function addToFinEval(response) {
   let tr = document.createElement("tr");
 
   // Table header
-  let th = document.createElement("th");
-  th.setAttribute("scope", "row");
-  th.appendChild(createDateField(startTimestamp, id));
+  let td = document.createElement("td");
+  td.setAttribute("scope", "row");
+  td.appendChild(createDateField(startTimestamp, id));
 
   // Create table
-  tr.appendChild(th);
-  tr.appendChild(createSimpleField(id));
+  tr.appendChild(td);
   tr.appendChild(createSimpleField(name));
-  tr.appendChild(createSimpleField(dataset));
+  tr.appendChild(createSimpleField(datasetKey));
 
   // TODO: needs better solution
   if (evalResults !== undefined) {
@@ -185,7 +213,7 @@ function createSimpleField(value, name = 0, id = 0) {
 }
 
 function createDateField(startTimestamp, id) {
-  // TODO: fix because old data doesn't hav the startTimestamp value
+  // TODO: fix because old data doesn't have the startTimestamp value
   let gmt2;
   if (startTimestamp === undefined) {
     gmt2 = id + 7200000;

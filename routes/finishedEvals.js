@@ -3,6 +3,6 @@ let router = express.Router();
 
 const finishedEvalsController = require("../controllers/finishedEvals");
 
-router.get("/:id?", finishedEvalsController.getAll);
+router.get("/:datasetKey?", finishedEvalsController.getAll);
 
 module.exports = router;

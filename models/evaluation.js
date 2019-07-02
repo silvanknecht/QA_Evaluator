@@ -13,7 +13,6 @@ class Evaluation {
     this.endTimestamp = null;
     this.datasetKey = dataset;
     this.systemUrl = systemUrl;
-    this.runningUrl = evaluationUrl + "runningEvals/" + timestamp;
     this.evaluatorVersion = evaluatorVersion;
     this.results = [];
     this.errors = [];
@@ -24,7 +23,7 @@ class Evaluation {
   }
 
   findNextQuestion() {
-    let q = datasets[this.dataset].questions[this.processedQuestions];
+    let q = datasets[this.datasetKey].questions[this.processedQuestions];
     let question = (() => {
       for (let lang of q.question) {
         if (lang.language === "en") return lang.string;

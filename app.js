@@ -18,7 +18,7 @@ global.runningEvals = {};
 global.evaluationUrl = `http://localhost:${port}/`;
 global.availableDatasets = ["qald-8", "qald-9", "testData20", "smallTest"];
 global.datasets = {}; //datasets are loaded only when they were used at least once
-global.evaluatorVersion = "3.0.0";
+global.evaluatorVersion = "3.0.1";
 // 1.0.0: evaluation dublicated answers are also answers,
 // 2.0.0: evaluation only testing answers against vars[0], dublicated answers are only one answer
 // 3.0.0: all vars are considered one answere

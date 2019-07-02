@@ -6,7 +6,8 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
-
+    name = name.replace(/[/\\?%*:|"<>]/g, '-');
+    
     let timestamp = Date.now();
     let currentEval = new Evaluation(
       timestamp,

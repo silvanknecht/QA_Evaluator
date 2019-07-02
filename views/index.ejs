@@ -1,153 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Qald Evaluator</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" type="text/css" href="../css/index.css" />
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#nav"
-        aria-controls="nav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <a class="navbar-brand" href="#">Qald Evaluator</a>
 
-      <div class="collapse navbar-collapse" id="nav">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"
-              >Experiment<span class="sr-only">(current)</span></a
-            >
-          </li>
-        </ul>
-      </div>
-    </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Qald Evaluator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../css/index.css" />
+</head>
 
-    <div class="container-fluid">
-      <div class="row">
-        <form id="exForm" class="col-md-12" onsubmit="return false;">
+<body>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav" aria-controls="nav" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Qald Evaluator</a>
+
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Experiment
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <form id="exForm" class="col-md-12" onsubmit="return false;">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="exName">Experiment Name</label>
+            <input type="text" class="form-control" id="exName" placeholder="insert an experiment name" minlength="3" maxlength="25"
+              value="TestEx" required />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="exDataset">Dataset</label>
+            <select class="form-control" id="exDataset">
+              <option value="smallTest">smallTest</option>
+              <option value="testData20">testData20</option>
+              <option value="qald-9">qald-9</option>
+              <option value="qald-8">qald-8</option>
+              <option value="validation-error">validation-error</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="exQASystems">QA Systems
+              <i class="material-icons pressable" data-toggle="modal" data-target="#qanaryPipelines">
+                info
+              </i>
+            </label>
+            <select class="form-control" id="exQASystems">
+              <option value="false">-my own-</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20EarlRelationLinking,%20ClsNliodCls,%20SINA/">Qanary 1</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20EarlRelationLinking,%20ClsNliodCls,%20QueryBuilder/">Qanary 2</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/">Qanary 3</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/">Qanary 4</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20RelNliodRel,%20ClsNliodCls,%20SINA/">Qanary 5</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20RelNliodRel,%20ClsNliodCls,%20QueryBuilder/">Qanary 6</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20RelNliodRel,%20DiambiguationClass,%20SINA/">Qanary 7</option>
+              <option value="gerbil-execute/NED-DBpediaSpotlight,%20RelNliodRel,%20DiambiguationClass,%20QueryBuilder/">Qanary 8</option>
+              <option value="gerbil-execute/TagmeNED,%20EarlRelationLinking,%20ClsNliodCls,%20SINA/">Qanary 9</option>
+              <option value="gerbil-execute/TagmeNED,%20EarlRelationLinking,%20ClsNliodCls,%20QueryBuilder/">Qanary 10</option>
+              <option value="gerbil-execute/TagmeNED,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/">Qanary 11</option>
+              <option value="gerbil-execute/TagmeNED,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/">Qanary 12</option>
+              <option value="gerbil-execute/TagmeNED,%20RelNliodRel,%20ClsNliodCls,%20SINA/">Qanary 13</option>
+              <option value="gerbil-execute/TagmeNED,%20RelNliodRel,%20ClsNliodCls,%20QueryBuilder/">Qanary 14</option>
+              <option value="gerbil-execute/TagmeNED,%20RelNliodRel,%20DiambiguationClass,%20SINA/">Qanary 15</option>
+              <option value="gerbil-execute/TagmeNED,%20RelNliodRel,%20DiambiguationClass,%20QueryBuilder/">Qanary 16</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20ClsNliodCls,%20SINA/">Qanary 17</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20ClsNliodCls,%20QueryBuilder/">Qanary 18</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/">Qanary 19</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/">Qanary 20</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20ClsNliodCls,%20SINA/">Qanary 21</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20ClsNliodCls,%20QueryBuilder/">Qanary 22</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20DiambiguationClass,%20SINA/">Qanary 23</option>
+              <option value="gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20RelNliodRel,%20DiambiguationClass,%20QueryBuilder/">Qanary 24</option>
+              <option value="http://ganswer.gstore-pku.com/api/qald.jsp">gAnswer2</option>
+
+
+
+            </select>
+          </div>
+          <div class="form-group col-md-9">
+            <label for="exSystemUrl">System URL
+              <i class="material-icons pop-me-over" data-container="body" data-toggle="popover" data-placement="right" data-content="we will add '?query=' to your URL ">
+                info
+              </i>
+            </label>
+            <input type="text" class="form-control" id="exSystemUrl" placeholder="http://URLTOYOURQASYSTEM/" maxlength="400" autocomplete="true"
+              required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Start experiment
+        </button>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Running</h2>
+        <table id="runEvalsTable" class="table">
+          <caption>
+            Running evalutations
+          </caption>
+          <thead class="thead-dark">
+            <tr>
+              <th class="pressable" scope="col" onclick="sortTable(0, 'runEvalsTable')">Date</th>
+              <th class="pressable" scope="col" onclick="sortTable(1, 'runEvalsTable')">Name</th>
+              <th class="pressable" scope="col" onclick="sortTable(2, 'runEvalsTable')">Dataset</th>
+              <th class="pressable" scope="col" onclick="sortTable(3, 'runEvalsTable')">Progress</th>
+              <th class="pressable" scope="col" onclick="sortTable(4, 'runEvalsTable')">State</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+
+
+        <h2>Finished</h2>
+        <form id="finForm" class="col-md-12" onsubmit="return false;">
           <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="exName">Experiment Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="exName"
-                placeholder="insert an experiment name"
-                minlength="3"
-                maxlength="25"
-                value="TestEx"
-                required
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label for="exDataset">Dataset</label>
-              <select class="form-control" id="exDataset">
-                <option>smallTest</option>
-                <option>testData20</option>
-                <option>qald-9</option
-                ><option>qald-8</option
-                  ><option>validation-error</option>
-              </select>
-            </div>
-            <div class="form-group col-md-12">
-              <label for="exSystemUrl">System URL</label>
-              <input
-                type="text"
-                class="form-control"
-                id="exSystemUrl"
-                placeholder="http://URLTOTHEQASYSTEM/"
-                maxlength="400"
-                value="http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/"
-                autocomplete="true"
-                required
-              />
+            <div class="form-group row">
+              <label for="datasetFin" class="col-sm-3 col-form-label">Dataset</label>
+              <div class="col-sm-9">
+                <select id="datasetFin" class="form-control">
+                  <option value="smallTest">smallTest</option>
+                  <option value="testData20">testData20</option>
+                  <option value="qald-9" selected>qald-9</option>
+                  <option value="qald-8">qald-8</option>
+                </select>
+              </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">
-            Start experiment
-          </button>
         </form>
+
+
+        <table id="finEvalsTable" class="table">
+          <caption>
+            Finished evalutations
+          </caption>
+          <thead class="thead-dark">
+            <tr>
+              <th class="pressable" scope="col" onclick="sortTable(0, 'finEvalsTable')">Date</th>
+              <th class="pressable" scope="col" onclick="sortTable(1, 'finEvalsTable')">Name</th>
+              <th class="pressable" scope="col" onclick="sortTable(2, 'finEvalsTable')">Dataset</th>
+              <th class="pressable" scope="col" onclick="sortTable(3, 'finEvalsTable')">Macro recall </th>
+              <th class="pressable" scope="col" onclick="sortTable(4, 'finEvalsTable')">Macro precision</th>
+              <th class="pressable" scope="col" onclick="sortTable(5, 'finEvalsTable')">F-measure </th>
+              <th class="pressable" scope="col" onclick="sortTable(6, 'finEvalsTable')">QALD precision </th>
+              <th class="pressable" scope="col" onclick="sortTable(7, 'finEvalsTable')">QALD f-measure </th>
+              <th class="pressable" scope="col" onclick="sortTable(8, 'finEvalsTable')">Errors</th>
+              <th class="pressable" scope="col" onclick="sortTable(9, 'finEvalsTable')">State</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h2>Running</h2>
-          <table id="runEvalsTable" class="table">
-            <caption>
-              Running evalutations
-            </caption>
+    </div>
+  </div>
+
+
+  <!-- Qanary Pipelines Tabel Modal -->
+  <div class="modal fade" id="qanaryPipelines" tabindex="-1" role="dialog" aria-labelledby="qanaryPipelinesLable" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="qanaryPipelinesLable">Qanary Pipelines</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th class="pressable" scope="col"onclick="sortTable(0, 'runEvalsTable')">Date</th>
-                <th class="pressable" scope="col"onclick="sortTable(0, 'runEvalsTable')">Id</th>
-                <th class="pressable" scope="col"onclick="sortTable(1, 'runEvalsTable')">Name</th>
-                <th class="pressable" scope="col"onclick="sortTable(2, 'runEvalsTable')">Dataset</th>
-                <th class="pressable" scope="col"onclick="sortTable(3, 'runEvalsTable')">Progress</th>
-                <th class="pressable" scope="col"onclick="sortTable(4, 'runEvalsTable')">State</th>
+                <th scope="col">#</th>
+                <th scope="col">NED (NER)</th>
+                <th scope="col">RL</th>
+                <th scope="col">CL</th>
+                <th scope="col">QB</th>
               </tr>
             </thead>
-            <tbody></tbody>
-          </table>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">6</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">7</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">8</th>
+                <td>DBpedia Spotlight NERD</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">9</th>
+                <td>Tagme</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">10</th>
+                <td>Tagme</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">11</th>
+                <td>Tagme</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">12</th>
+                <td>Tagme</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">13</th>
+                <td>Tagme</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">14</th>
+                <td>Tagme</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">15</th>
+                <td>Tagme</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">16</th>
+                <td>Tagme</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">17</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">18</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>Earl</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">19</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">20</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>Earl</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">21</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">22</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>RNLIWOD</td>
+                <td>CLSNLIOD</td>
+                <td>NLIWOD QB</td>
+              </tr>
+              <tr>
+                <th scope="row">23</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>SINA</td>
+              </tr>
+              <tr>
+                <th scope="row">24</th>
+                <td>Stanford NER + AGDISTIS</td>
+                <td>RNLIWOD</td>
+                <td>OKBAQA DM CLS</td>
+                <td>NLIWOD QB</td>
+              </tr>
 
-      <h2>Finished</h2>
-      <table id="finEvalsTable" class="table">
-        <caption>
-          Finished evalutations
-        </caption>
-        <thead class="thead-dark">
-          <tr>
-            <th class="pressable" scope="col" onclick="sortTable(0, 'finEvalsTable')">Date</th>
-            <th class="pressable" scope="col" onclick="sortTable(0, 'finEvalsTable')">Id</th>
-            <th class="pressable" scope="col" onclick="sortTable(1, 'finEvalsTable')">Name</th>
-            <th class="pressable" scope="col" onclick="sortTable(2, 'finEvalsTable')">Dataset</th>
-            <th class="pressable" scope="col" onclick="sortTable(3, 'finEvalsTable')">Macro recall </th>
-            <th class="pressable" scope="col" onclick="sortTable(4, 'finEvalsTable')">Macro precision</th>
-            <th class="pressable" scope="col" onclick="sortTable(5, 'finEvalsTable')">F-measure </th>
-            <th class="pressable" scope="col" onclick="sortTable(6, 'finEvalsTable')">QALD presision </th>
-            <th class="pressable" scope="col" onclick="sortTable(7, 'finEvalsTable')">QALD f-measure </th>
-            <th class="pressable" scope="col" onclick="sortTable(8, 'finEvalsTable')">Errors</th>
-            <th class="pressable" scope="col" onclick="sortTable(9, 'finEvalsTable')">State</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+  </div>
 
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-      crossorigin="anonymous"
-    ></script>
-    <script src="../javascript/index.js"></script>
-  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="../javascript/index.js"></script>
+</body>
+
 </html>

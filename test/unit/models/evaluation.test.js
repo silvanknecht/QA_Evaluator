@@ -33,10 +33,6 @@ afterEach(() => {
 describe("Evaluation Model", () => {
   it("should return a evaluation object with certain properties", () => {
     expect(mockEvaluation).toHaveProperty("id", mockTimestamp);
-    expect(mockEvaluation).toHaveProperty(
-      "runningUrl",
-      evaluationUrl + "runningEvals/" + mockTimestamp
-    );
     expect(mockEvaluation).toHaveProperty("status", "starting...");
     expect(mockEvaluation).toHaveProperty("totalQuestions", 11);
   });

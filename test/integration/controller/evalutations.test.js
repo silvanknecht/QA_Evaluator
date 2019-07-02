@@ -72,8 +72,7 @@ describe("start evaluation", () => {
   //     endTimestamp: null,
   //     dataset: "testData20",
   //     systemUrl:
-  //       "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
-  //     runningUrl: evaluationUrl + "runningEvals/" + res.body.startTimestamp,
+  //     "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
   //     evaluatorVersion: "3.0.0",
   //     results: [],
   //     errors: [],

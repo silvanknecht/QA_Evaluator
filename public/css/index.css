@@ -5,6 +5,10 @@ body {
   width: 100%;
 }
 
+.material-icons{
+  line-height: 0;
+}
+
 .pressable {
   cursor: pointer;
 }
