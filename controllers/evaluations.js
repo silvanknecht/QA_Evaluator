@@ -6,8 +6,8 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
-    name = name.replace(/[/\\?%*:|"<>]/g, '-');
-    
+    name = name.replace(/[/\\?%*:|"<>]/g, "-");
+
     let timestamp = Date.now();
     let currentEval = new Evaluation(
       timestamp,
@@ -90,6 +90,56 @@ module.exports = {
       console.log("System Evaluation Failed: ", error);
     }
     return;
+  },
+  deleteEvaluation: function(req, res, next) {
+    let { id, name } = req.query;
+
+    if (id !== undefined && name !== undefined) {
+      let path = name + "-" + id + ".json";
+
+      //delete system answers
+      try {
+        fs.unlinkSync("./data/systemAnswers/" + path);
+      } catch (error) {
+        console.log(error);
+      }
+
+      //delete evaluated answers
+      try {
+        fs.unlinkSync("./data/evaluatedAnswers/" + path);
+      } catch (error) {
+        console.log(error);
+      }
+
+      //delete from evaluations
+      try {
+        fs.readFile("./data/evaluations.json", "utf8", (error, data) => {
+          if (error) {
+            console.log(error);
+          } else {
+            let evaluations = JSON.parse(data);
+            delete evaluations[id];
+            fs.writeFile(
+              "./data/evaluations.json",
+              JSON.stringify(evaluations),
+              "utf8",
+              () => {}
+            );
+          }
+        });
+
+        return res.status(200).json({
+          message: `Evaluation with name: ${name} and id: ${id} has been successfully deleted!`
+        });
+      } catch (err) {
+        console.error(err);
+        return res.status(404).json({ message: "File not found!" });
+      }
+    } else {
+      return res
+        .status(400)
+        .json({ message: "You must send a number as a query id!" });
+    }
   }
 };
 

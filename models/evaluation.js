@@ -1,6 +1,4 @@
-const fetch = require("node-fetch");
 const fetch_retry = require("node-fetch-retry");
-
 const fs = require("fs");
 
 const Metrics = require("../helpers/metrics");
@@ -20,6 +18,7 @@ class Evaluation {
     this.processedQuestions = 0;
     this.progress = 0 + "%";
     this.status = "starting...";
+    this.evalResults = { answerTypes: {} };
   }
 
   findNextQuestion() {
@@ -87,22 +86,17 @@ class Evaluation {
                 "Eval Progress: ",
                 evalCount + " / " + this.results.length
               );
-              let answerType;
+              let variable;
               let expectedAnswers = [];
 
               if (q.answers[0].head.vars === undefined) {
-                answerType = "boolean";
+                variable = "boolean";
                 expectedAnswers.push(q.answers[0].boolean);
               } else {
-                answerType = q.answers[0].head.vars[0];
-                // if (answerType === "c") {
-                //   expectedAnswers.push(
-                //     Number(q.answers[0].results.bindings[0][answerType].value)
-                //   );
-                // } else {
+                variable = q.answers[0].head.vars[0];
                 if (q.answers[0].results.bindings) {
                   for (let a of q.answers[0].results.bindings) {
-                    expectedAnswers.push(a[answerType].value);
+                    expectedAnswers.push(a[variable].value);
                   }
                   //}
                 }
@@ -154,6 +148,16 @@ class Evaluation {
                   }
                 }
               }
+              if (r.NrCorrect > 0) {
+                let answerTypeToUpdate = this.evalResults.answerTypes[
+                  q.answertype
+                ];
+                if (answerTypeToUpdate) {
+                  this.evalResults.answerTypes[q.answertype]++;
+                } else {
+                  this.evalResults.answerTypes[q.answertype] = 1;
+                }
+              }
               console.log("========================================");
               console.log("Evaluated Question: ", r);
 
@@ -203,28 +207,25 @@ class Evaluation {
       /** Add global Recall, Precicion and FMeasure to the Pipeline */
       let totalResults = this.results.length; // don't consider errors
 
-      let evalResults = {};
-      evalResults.grc = recallTot / totalResults;
-      evalResults.gpr = precisionTot / totalResults;
-      evalResults.QALDgpr = qaldPrecisionTot / totalResults;
-      evalResults.gfm = fMeasureTot / totalResults;
+      this.evalResults.grc = recallTot / totalResults;
+      this.evalResults.gpr = precisionTot / totalResults;
+      this.evalResults.QALDgpr = qaldPrecisionTot / totalResults;
+      this.evalResults.gfm = fMeasureTot / totalResults;
 
-      if (evalResults.grc === 0 && evalResults.QALDgpr === 0) {
-        evalResults.QALDgfm = 0;
+      if (this.evalResults.grc === 0 && this.evalResults.QALDgpr === 0) {
+        this.evalResults.QALDgfm = 0;
       } else {
-        evalResults.QALDgfm =
-          (2 * evalResults.grc * evalResults.QALDgpr) /
-          (evalResults.grc + evalResults.QALDgpr);
+        this.evalResults.QALDgfm =
+          (2 * this.evalResults.grc * this.evalResults.QALDgpr) /
+          (this.evalResults.grc + this.evalResults.QALDgpr);
       }
 
-      this.evalResults = evalResults;
-
       if (
-        (evalResults.grc || evalResults.grc === 0) &&
-        (evalResults.gpr || evalResults.gpr === 0) &&
-        (evalResults.QALDgpr || evalResults.QALDgpr === 0) &&
-        (evalResults.gfm || evalResults.gfm === 0) &&
-        (evalResults.QALDgfm || evalResults.QALDgfm === 0)
+        (this.evalResults.grc || this.evalResults.grc === 0) &&
+        (this.evalResults.gpr || this.evalResults.gpr === 0) &&
+        (this.evalResults.QALDgpr || this.evalResults.QALDgpr === 0) &&
+        (this.evalResults.gfm || this.evalResults.gfm === 0) &&
+        (this.evalResults.QALDgfm || this.evalResults.QALDgfm === 0)
       ) {
         resolve();
       } else {

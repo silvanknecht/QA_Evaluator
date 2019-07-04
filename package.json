@@ -1,6 +1,6 @@
 {
   "name": "qald-evaluator",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "jest": {
     "globals": {
-      "evaluationUrl": "asdfsdfsdf",
+      "evaluationUrl": "http://testurl.ch",
       "evaluatorVersion": "testVersion",
       "datasets": {}
     }

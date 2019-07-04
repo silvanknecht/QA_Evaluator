@@ -1,5 +1,5 @@
 const url = "http://localhost:3000/";
-const qanaryUrl = "http://146.136.58.83:8080/"
+const qanaryUrl = "http://localhost:8080/";
 
 const exForm = document.getElementById("exForm");
 const exName = document.getElementById("exName");
@@ -16,24 +16,26 @@ const finEvalsTableBody = document
   .getElementById("finEvalsTable")
   .getElementsByTagName("tbody")[0];
 
-(function () {
+let compareResults = [];
+
+(function() {
   fillFinishedTable("qald-9");
   fillRunningTable();
 
-  // 
-  exQASystems.addEventListener("change", (e) => {
+  //
+  exQASystems.addEventListener("change", e => {
     let value = e.target.value;
     exSystemUrl.readOnly = false;
 
-    if (value === "false") return exSystemUrl.value = "";
+    if (value === "false") return (exSystemUrl.value = "");
     if (!value.match(/^http:\/\//)) value = qanaryUrl + value;
     exSystemUrl.value = value;
     exSystemUrl.readOnly = true;
   });
 
-  datasetFin.addEventListener("change", (e) => {
+  datasetFin.addEventListener("change", e => {
     fillFinishedTable(e.target.value);
-  })
+  });
 
   // Start an evaluation
   exForm.addEventListener("submit", () => {
@@ -97,8 +99,6 @@ socket.on("evalFailed", data => {
   if (json.datasetKey === datasetFin.value) addToFinEval(json);
 });
 
-
-
 function fillRunningTable() {
   fetch(url + "runningEvals", {
     method: "GET",
@@ -117,9 +117,9 @@ function fillRunningTable() {
 }
 
 function fillFinishedTable(datasetKey) {
-  //$("#finEvalsTable tbody tr").remove(); 
+  //$("#finEvalsTable tbody tr").remove();
   finEvalsTableBody.innerHTML = "";
-  fetch(url + "finishedEvals?" + "datasetKey=" + datasetKey, {
+  fetch(url + "finishedEvals?datasetKey=" + datasetKey, {
     method: "GET",
     headers: {
       "Content-Type": "application/json"
@@ -170,6 +170,7 @@ function addToFinEval(response) {
     evalResults
   } = response;
   let tr = document.createElement("tr");
+  tr.setAttribute("id", `trFin${id}`);
 
   // Table header
   let td = document.createElement("td");
@@ -179,7 +180,6 @@ function addToFinEval(response) {
   // Create table
   tr.appendChild(td);
   tr.appendChild(createSimpleField(name));
-  tr.appendChild(createSimpleField(datasetKey));
 
   // TODO: needs better solution
   if (evalResults !== undefined) {
@@ -198,8 +198,66 @@ function addToFinEval(response) {
 
   tr.appendChild(createSimpleField(errors.length));
   tr.appendChild(createSimpleField(status));
+  tr.appendChild(createSimpleField("Delete", "delFin", id));
 
   finEvalsTableBody.appendChild(tr);
+
+  //action listeners
+  const delFin = document.getElementById("delFin" + id);
+  delFin.classList += "pressable";
+  delFin.addEventListener("click", () => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this Evaluation!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true
+    }).then(willDelete => {
+      if (willDelete) {
+        fetch(url + `evaluations/remove?id=${id}&name=${name}`, {
+          method: "DELETE"
+        })
+          .then(res => res.json())
+          .then(response => {
+            console.log(response);
+            const trFin = document.getElementById(`trFin${id}`);
+            trFin.parentNode.removeChild(trFin);
+            swal(response.message, {
+              icon: "success"
+            });
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            sweetAlert("Oops...", "Something went wrong!", "error");
+          });
+      } else {
+        swal("Nothing deleted!");
+      }
+    });
+  });
+
+  // choose to compare
+  tr.addEventListener("click", e => {
+    let trId = e.path[1].id;
+    const finTr = document.getElementById(trId);
+    id = trId.replace(/\D/g, "");
+    if (compareResults.indexOf(id) === -1) {
+      if (compareResults.length === 2) {
+        const replactrFin = document.getElementById(
+          "trFin" + compareResults[0]
+        );
+        replactrFin.classList.remove("toCompare");
+        compareResults.splice(0, 1);
+      }
+      compareResults.push(id);
+      finTr.classList += "toCompare";
+    } else {
+      compareResults.splice(compareResults.indexOf(id), 1);
+      finTr.classList.remove("toCompare");
+    }
+
+    console.log(compareResults);
+  });
 }
 
 // Table funtions

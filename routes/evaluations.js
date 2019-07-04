@@ -19,18 +19,20 @@ router.post(
       try {
         let dataset = require("../datasets/" + choosenDataset);
         datasets[choosenDataset] = dataset;
-        console.log("dataset has been loaded!")
+        console.log("dataset has been loaded!");
       } catch (error) {
         console.log("Dataset couldn't be loaded", error);
         return res.status(500);
       }
-    }else{
-      console.log("dataset already loaded!")
+    } else {
+      console.log("dataset already loaded!");
     }
     next();
   },
   evaluationsController.evaluateSystem
 );
+
+router.delete("/remove", evaluationsController.deleteEvaluation);
 
 // schema for body validatino
 const schema = Joi.object().keys({

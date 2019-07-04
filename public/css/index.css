@@ -5,7 +5,7 @@ body {
   width: 100%;
 }
 
-.material-icons{
+.material-icons {
   line-height: 0;
 }
 
@@ -25,4 +25,17 @@ body {
   .container-fluid {
     padding: 0 50px 0 50px;
   }
+}
+
+td[id^="del"] {
+  color: red;
+}
+
+tr[id^="trFin"]:hover {
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+tr.toCompare {
+  background-color: lightgray;
 }
