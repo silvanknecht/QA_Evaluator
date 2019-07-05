@@ -51,12 +51,27 @@ async function buildPage() {
   datasetComp.addEventListener("change", async e => {
     await buildDatasetVisual(e.target.value);
     await buildSystemSelection(datasetComp.value);
+
     refreshComparison();
   });
   await buildSystemSelection(datasetComp.value);
+  if (localStorage.itemsToCompare) {
+    datasetComp.value = localStorage.dataset;
+    let itemsToCompare = localStorage.itemsToCompare.split(",");
+    if (itemsToCompare.length > 1) {
+      selectSystem1.value = itemsToCompare[0];
+      selectSystem2.value = itemsToCompare[1];
+    } else {
+      selectSystem1.value = itemsToCompare[0];
+    }
+  }
 }
 
 (async function() {
+  if (localStorage.dataset) {
+    datasetComp.value = localStorage.dataset;
+    let itemsToCompare = localStorage.itemsToCompare.split(",");
+  }
   await buildPage();
 
   selectSystem1.addEventListener("change", e => {
@@ -167,6 +182,8 @@ async function buildChars(systemNr, id, name) {
     { method: "GET" }
   );
   evaluatedAnswers = await evaluatedAnswers.json();
+  evaluatedAnswers = evaluatedAnswers.concat(evaluations[id].errors);
+
   evaluatedAnswers.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1));
   drawChart(
     dataset.questions.length,

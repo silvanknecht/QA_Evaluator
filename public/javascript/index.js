@@ -18,6 +18,7 @@ const finEvalsTableBody = document
 
 let compareResults = [];
 const selectedResults = document.getElementById("selectedResults");
+const compareBtn = document.getElementById("compareBtn");
 
 (function() {
   fillFinishedTable("qald-9");
@@ -65,6 +66,13 @@ const selectedResults = document.getElementById("selectedResults");
 
   // POPOVERS
   $(".pop-me-over").popover({ trigger: "hover" });
+
+  // compare button
+  compareBtn.addEventListener("click", () => {
+    localStorage.setItem("itemsToCompare", compareResults);
+    localStorage.setItem("dataset", datasetFin.value);
+    window.location.href = "/compare";
+  });
 })();
 
 // Live data
@@ -223,7 +231,6 @@ function addToFinEval(response) {
         })
           .then(res => res.json())
           .then(response => {
-            console.log(response);
             const trFin = document.getElementById(`trFin${id}`);
             trFin.parentNode.removeChild(trFin);
             swal(response.message, {

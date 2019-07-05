@@ -39,7 +39,7 @@ module.exports = {
         console.log("Looks like there was a problem: xS " + error);
 
         currentEval.errors.push({
-          questionId: qId,
+          id: qId,
           error: error.message
         });
 

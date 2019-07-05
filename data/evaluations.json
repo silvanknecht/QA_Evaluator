@@ -95,7 +95,7 @@
     "datasetKey": "qald-9",
     "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
     "evaluatorVersion": "3.0.0",
-    "errors": [{ "questionId": "42", "error": "Gateway Time-out" }],
+    "errors": [{ "id": "42", "error": "Gateway Time-out" }],
     "totalQuestions": 150,
     "processedQuestions": 150,
     "progress": "100%",
