@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
+const compression = require("compression");
 global.io = require("socket.io")(server);
 
 const port = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ app.set("view engine", "ejs");
 // middleware
 app.use(express.json());
 app.use(express.static(__dirname + "/public"));
+app.use(compression());
 
 // global variables
 global.runningEvals = {};
@@ -29,12 +31,16 @@ const evaluations = require("./routes/evaluations");
 const runningEvals = require("./routes/runningEvals");
 const finishedEvals = require("./routes/finishedEvals");
 const systemAnswers = require("./routes/systemAnswers");
+const evaluatedAnswers = require("./routes/evaluatedAnswers");
+const datasets = require("./routes/datasets");
 
 app.use("/", pages);
 app.use("/evaluations", evaluations);
 app.use("/runningEvals", runningEvals);
 app.use("/finishedEvals", finishedEvals);
 app.use("/systemAnswers", systemAnswers);
+app.use("/evaluatedAnswers", evaluatedAnswers);
+app.use("/datasets", datasets);
 
 process.on("unhandledRejection", (reason, p) => {
   console.log("Unhandled Rejection at: Promise", p, "reason:", reason);

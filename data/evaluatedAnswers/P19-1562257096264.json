@@ -1,0 +1,507 @@
+[
+  {
+    "id": "1",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/IBM>   <http://dbpedia.org/ontology/revenue>   ?l0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["l0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "l0": {
+                      "datatype": "http://dbpedia.org/datatype/usDollar",
+                      "type": "typed-literal",
+                      "value": "8.1741E10"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/IBM, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/revenue, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 1,
+    "NrCorrect": 1,
+    "calc": [{ "recall": 1, "precision": 1, "qaldPrecision": 1, "fMeasure": 1 }]
+  },
+  {
+    "id": "24",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/China>   <http://dbpedia.org/ontology/leader>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Li_Keqiang"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Liu_Yunshan"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Yu_Zhengsheng"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Zhang_Dejiang"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Xi_Jinping"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/China, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/leader, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 5,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 0, "precision": 0, "qaldPrecision": 0, "fMeasure": 0 }]
+  },
+  {
+    "id": "99",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Salt_Lake_City>   <http://dbpedia.org/ontology/timeZone>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Mountain_Time_Zone"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Salt_Lake_City, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/timeZone, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 1,
+    "NrCorrect": 1,
+    "calc": [{ "recall": 1, "precision": 1, "qaldPrecision": 1, "fMeasure": 1 }]
+  },
+  {
+    "id": "107",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Elizabeth_II>   <http://dbpedia.org/ontology/parent>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/George_VI"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Queen_Elizabeth_The_Queen_Mother"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Elizabeth_II, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/parent, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 2,
+    "NrCorrect": 1,
+    "calc": [
+      {
+        "recall": 1,
+        "precision": 0.5,
+        "qaldPrecision": 0.5,
+        "fMeasure": 0.6666666666666666
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "",
+          "answers": [],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Japanese_language, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/genre, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 0,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 0, "precision": 0, "qaldPrecision": 1, "fMeasure": 0 }]
+  },
+  {
+    "id": "173",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "",
+          "answers": [],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Finland, http://dbpedia.org/resource/European_Union, ",
+            "classes": "",
+            "properties": ""
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 0,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 0, "precision": 0, "qaldPrecision": 1, "fMeasure": 0 }]
+  },
+  {
+    "id": "156",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Fort_Knox>   <http://dbpedia.org/ontology/location>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Kentucky"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Fort_Knox__location__1"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Fort_Knox, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/location, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 2,
+    "NrCorrect": 1,
+    "calc": [
+      {
+        "recall": 1,
+        "precision": 0.5,
+        "qaldPrecision": 0.5,
+        "fMeasure": 0.6666666666666666
+      }
+    ]
+  },
+  {
+    "id": "203",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Michael_Jackson>   <http://dbpedia.org/ontology/motto>   ?l0.  }, ",
+          "answers": [
+            { "head": { "vars": ["l0"] }, "results": { "bindings": [] } }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Michael_Jackson, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/motto, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 0,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 0, "precision": 0, "qaldPrecision": 1, "fMeasure": 0 }]
+  },
+  {
+    "id": "32",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Angela_Merkel>   <http://dbpedia.org/ontology/birthPlace>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Hamburg"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Barmbek-Nord"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Angela_Merkel, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/birthPlace, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 1,
+    "NrSystem": 2,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 0, "precision": 0, "qaldPrecision": 0, "fMeasure": 0 }]
+  },
+  {
+    "id": "198",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Socrates>   <http://dbpedia.org/ontology/influenced>   ?v0.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Antisthenes"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Aristotle"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Plato"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Aristippus"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Western_philosophy"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Socrates, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/influenced, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 22,
+    "NrSystem": 5,
+    "NrCorrect": 4,
+    "calc": [
+      {
+        "recall": 0.18181818181818182,
+        "precision": 0.8,
+        "qaldPrecision": 0.8,
+        "fMeasure": 0.2962962962962963
+      }
+    ]
+  },
+  {
+    "id": "124",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Death_of_Carlo_Giuliani>   <http://dbpedia.org/ontology/position>   ?l0.  }, ",
+          "answers": [
+            { "head": { "vars": ["l0"] }, "results": { "bindings": [] } }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Death_of_Carlo_Giuliani, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/position, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 0,
+    "NrSystem": 0,
+    "NrCorrect": 0,
+    "calc": [{ "recall": 1, "precision": 1, "qaldPrecision": 1, "fMeasure": 1 }]
+  },
+  {
+    "id": "141",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     ?v0   a   <http://dbpedia.org/ontology/Language>.    ?v0   <http://dbpedia.org/ontology/spokenIn>   <http://dbpedia.org/resource/Estonia>.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Baltic_Romani"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Modern_Swedish"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Seto_dialect"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Laiuse_Romani_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Russian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/VÃµro_language"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Estonia, ",
+            "classes": "http://dbpedia.org/ontology/Language, ",
+            "properties": "http://dbpedia.org/ontology/Language, http://dbpedia.org/ontology/spokenIn, "
+          }
+        }
+      ]
+    },
+    "NrExpected": 8,
+    "NrSystem": 8,
+    "NrCorrect": 7,
+    "calc": [
+      {
+        "recall": 0.875,
+        "precision": 0.875,
+        "qaldPrecision": 0.875,
+        "fMeasure": 0.875
+      }
+    ]
+  }
+]

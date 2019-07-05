@@ -1,1 +1,156 @@
-{"1562161019083":{"id":1562161019083,"name":"gAnswer2","startTimestamp":1562161019083,"endTimestamp":1562161610323,"datasetKey":"qald-9","systemUrl":"http://ganswer.gstore-pku.com/api/qald.jsp","evaluatorVersion":"3.0.0","errors":[{"questionId":"42","error":"Gateway Time-out"}],"totalQuestions":150,"processedQuestions":150,"progress":"100%","status":"successful","evalResults":{"answerTypes":{"resource":43,"string":5,"number":4,"date":5},"grc":0.36101655356938117,"gpr":0.3430716894458364,"QALDgpr":0.6652193404525478,"gfm":0.33293535901934135,"QALDgfm":0.4680311711115104}}}
+{
+  "1562250015624": {
+    "id": 1562250015624,
+    "name": "gAnswer2",
+    "startTimestamp": 1562250015624,
+    "endTimestamp": 1562250054012,
+    "datasetKey": "testData20",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "number": 1, "resource": 4, "string": 1 },
+      "grc": 0.5833333333333334,
+      "gpr": 0.5416666666666666,
+      "QALDgpr": 0.625,
+      "gfm": 0.5555555555555555,
+      "QALDgfm": 0.603448275862069
+    }
+  },
+  "1562250126956": {
+    "id": 1562250126956,
+    "name": "gAnswer2-1",
+    "startTimestamp": 1562250126956,
+    "endTimestamp": 1562250161368,
+    "datasetKey": "testData20",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "number": 1, "resource": 2 },
+      "grc": 0.5033333333333334,
+      "gpr": 0.2416666666666666,
+      "QALDgpr": 0.425,
+      "gfm": 0.2555555555555555,
+      "QALDgfm": 0.503448275862069
+    }
+  },
+  "1562256753787": {
+    "id": 1562256753787,
+    "name": "P20",
+    "startTimestamp": 1562256753787,
+    "endTimestamp": 1562256915771,
+    "datasetKey": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "number": 1, "resource": 4 },
+      "grc": 0.4318181818181818,
+      "gpr": 0.39999999999999997,
+      "QALDgpr": 0.65,
+      "gfm": 0.38580246913580246,
+      "QALDgfm": 0.5189075630252101
+    }
+  },
+  "1562257096264": {
+    "id": 1562257096264,
+    "name": "P19",
+    "startTimestamp": 1562257096264,
+    "endTimestamp": 1562257579832,
+    "datasetKey": "testData20",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 12,
+    "processedQuestions": 12,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "number": 1, "resource": 5 },
+      "grc": 0.5047348484848485,
+      "gpr": 0.47291666666666665,
+      "QALDgpr": 0.7229166666666668,
+      "gfm": 0.45871913580246915,
+      "QALDgfm": 0.5944378021186877
+    }
+  },
+  "1562268479331": {
+    "id": 1562268479331,
+    "name": "gAnswer2",
+    "startTimestamp": 1562268479331,
+    "endTimestamp": 1562268945797,
+    "datasetKey": "qald-9",
+    "systemUrl": "http://ganswer.gstore-pku.com/api/qald.jsp",
+    "evaluatorVersion": "3.0.0",
+    "errors": [{ "questionId": "42", "error": "Gateway Time-out" }],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "resource": 43, "string": 5, "number": 4, "date": 5 },
+      "grc": 0.36101655356938117,
+      "gpr": 0.3430716894458364,
+      "QALDgpr": 0.6652193404525478,
+      "gfm": 0.33293535901934135,
+      "QALDgfm": 0.4680311711115104
+    }
+  },
+  "1562268460755": {
+    "id": 1562268460755,
+    "name": "P20",
+    "startTimestamp": 1562268460755,
+    "endTimestamp": 1562270292504,
+    "datasetKey": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20QueryBuilder/",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "resource": 6, "string": 1, "number": 1 },
+      "grc": 0.05454545454545454,
+      "gpr": 0.052,
+      "QALDgpr": 0.8786666666666667,
+      "gfm": 0.0508641975308642,
+      "QALDgfm": 0.1027146382647097
+    }
+  },
+  "1562269722596": {
+    "id": 1562269722596,
+    "name": "P19",
+    "startTimestamp": 1562269722596,
+    "endTimestamp": 1562274189310,
+    "datasetKey": "qald-9",
+    "systemUrl": "http://localhost:8080/gerbil-execute/NER-Stanford,%20NED-AGDISTIS,%20EarlRelationLinking,%20DiambiguationClass,%20SINA/",
+    "evaluatorVersion": "3.0.0",
+    "errors": [],
+    "totalQuestions": 150,
+    "processedQuestions": 150,
+    "progress": "100%",
+    "status": "successful",
+    "evalResults": {
+      "answerTypes": { "resource": 13, "string": 1, "number": 1 },
+      "grc": 0.09282159833630423,
+      "gpr": 0.07863387687581237,
+      "QALDgpr": 0.765300543542479,
+      "gfm": 0.08041218669650042,
+      "QALDgfm": 0.1655624909147019
+    }
+  }
+}

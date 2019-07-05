@@ -148,7 +148,7 @@ class Evaluation {
                   }
                 }
               }
-              if (r.NrCorrect > 0) {
+              if (r.NrCorrect === r.Expected) {
                 let answerTypeToUpdate = this.evalResults.answerTypes[
                   q.answertype
                 ];

@@ -17,6 +17,7 @@ const finEvalsTableBody = document
   .getElementsByTagName("tbody")[0];
 
 let compareResults = [];
+const selectedResults = document.getElementById("selectedResults");
 
 (function() {
   fillFinishedTable("qald-9");
@@ -34,31 +35,32 @@ let compareResults = [];
   });
 
   datasetFin.addEventListener("change", e => {
+    compareResults = [];
+    selectedResults.innerText = compareResults.length;
     fillFinishedTable(e.target.value);
   });
 
   // Start an evaluation
-  exForm.addEventListener("submit", () => {
+  exForm.addEventListener("submit", async () => {
     let data = {
       name: exName.value.replace(" ", ""),
       dataset: exDataset.value,
       systemUrl: exSystemUrl.value
     };
 
-    fetch(url + "evaluations/evaluate", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(response => {
-        if (response) console.log("Evaluation started: ", response);
-      })
-      .catch(error => {
-        console.error("Error:", error);
+    try {
+      let startedEval = await fetch(url + "evaluations/evaluate", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
       });
+      startedEval = await startedEval.json();
+      if (startedEval) console.log("Evaluation started: ", startedEval);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   });
 
   // POPOVERS
@@ -99,40 +101,42 @@ socket.on("evalFailed", data => {
   if (json.datasetKey === datasetFin.value) addToFinEval(json);
 });
 
-function fillRunningTable() {
-  fetch(url + "runningEvals", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => res.json())
-    .then(response => {
-      console.log(response);
-      for (let id in response) {
-        addToRunEval(response[id]);
+async function fillRunningTable() {
+  try {
+    let runningEvals = await fetch(url + "runningEvals", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
       }
-    })
-    .catch(error => console.error("Error:", error));
+    });
+    runningEvals = await runningEvals.json();
+    console.log(runningEvals);
+    for (let id in runningEvals) {
+      addToRunEval(runningEvals[id]);
+    }
+  } catch (error) {
+    onsole.error("Error:", error);
+  }
 }
 
-function fillFinishedTable(datasetKey) {
+async function fillFinishedTable(datasetKey) {
   //$("#finEvalsTable tbody tr").remove();
   finEvalsTableBody.innerHTML = "";
-  fetch(url + "finishedEvals?datasetKey=" + datasetKey, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res => res.json())
-    .then(response => {
-      console.log(response);
-      for (let id in response) {
-        addToFinEval(response[id]);
+  try {
+    let evals = await fetch(url + "finishedEvals?datasetKey=" + datasetKey, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
       }
-    })
-    .catch(error => console.error("Error:", error));
+    });
+    evals = await evals.json();
+    console.log(evals);
+    for (let id in evals) {
+      addToFinEval(evals[id]);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 // Table column functions
@@ -225,6 +229,11 @@ function addToFinEval(response) {
             swal(response.message, {
               icon: "success"
             });
+
+            // when you press on delete, the row gets selected... and needs to be deleted out of the comparison Array when the delete was successsful
+            let index = compareResults.indexOf(id);
+            compareResults.splice(index, 1);
+            selectedResults.innerText = compareResults.length;
           })
           .catch(error => {
             console.error("Error:", error);
@@ -246,7 +255,9 @@ function addToFinEval(response) {
         const replactrFin = document.getElementById(
           "trFin" + compareResults[0]
         );
-        replactrFin.classList.remove("toCompare");
+        if (replactrFin) {
+          replactrFin.classList.remove("toCompare");
+        }
         compareResults.splice(0, 1);
       }
       compareResults.push(id);
@@ -255,8 +266,7 @@ function addToFinEval(response) {
       compareResults.splice(compareResults.indexOf(id), 1);
       finTr.classList.remove("toCompare");
     }
-
-    console.log(compareResults);
+    selectedResults.innerText = compareResults.length;
   });
 }
 
