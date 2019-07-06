@@ -1,5 +1,6 @@
 const fetch_retry = require("node-fetch-retry");
 const fs = require("fs");
+let Joi = require("joi");
 
 const Metrics = require("../helpers/metrics");
 
@@ -253,4 +254,20 @@ class Evaluation {
   }
 }
 
+function validateSystemToEvaluate(req, res, next) {
+  // schema for body validatino
+  const schema = Joi.object().keys({
+    systemUrl: Joi.string()
+      .max(400)
+      .required(),
+    name: Joi.string()
+      .min(3)
+      .max(25)
+      .required(),
+    dataset: Joi.valid(availableDatasets)
+  });
+  return Joi.validate(req, schema);
+}
+
 module.exports = Evaluation;
+module.exports.validateSystemToEvaluate = validateSystemToEvaluate;

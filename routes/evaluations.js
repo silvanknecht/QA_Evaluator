@@ -1,18 +1,14 @@
 let express = require("express");
-let Joi = require("joi");
 
 let router = express.Router();
 
 const evaluationsController = require("../controllers/evaluations");
+const validate = require("../middleware/validate");
+const { validateSystemToEvaluate } = require("../models/evaluation");
 
 router.post(
   "/evaluate",
-  function(req, res, next) {
-    const result = Joi.validate(req.body, schema);
-    if (result.error !== null)
-      return res.status(400).json({ message: result.error.details[0].message });
-    next();
-  },
+  validate(validateSystemToEvaluate),
   function(req, res, next) {
     let choosenDataset = req.body.dataset;
     if (!datasets.hasOwnProperty(choosenDataset)) {
@@ -32,18 +28,10 @@ router.post(
   evaluationsController.evaluateSystem
 );
 
-router.delete("/remove", evaluationsController.deleteEvaluation);
-
-// schema for body validatino
-const schema = Joi.object().keys({
-  systemUrl: Joi.string()
-    .max(400)
-    .required(),
-  name: Joi.string()
-    .min(3)
-    .max(25)
-    .required(),
-  dataset: Joi.valid(availableDatasets)
-});
+router.delete("/", evaluationsController.deleteEvaluation);
+router.get("/evaluatedAnswers", evaluationsController.getEvaluatedAnswers);
+router.get("/systemAnswers", evaluationsController.getSystemAnswers);
+router.get("/finished", evaluationsController.getFinishedEvals);
+router.get("/running", evaluationsController.getRunningEvals);
 
 module.exports = router;

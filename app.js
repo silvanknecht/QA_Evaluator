@@ -28,18 +28,10 @@ global.evaluatorVersion = "3.0.0";
 // routes and routers
 const pages = require("./routes/pages");
 const evaluations = require("./routes/evaluations");
-const runningEvals = require("./routes/runningEvals");
-const finishedEvals = require("./routes/finishedEvals");
-const systemAnswers = require("./routes/systemAnswers");
-const evaluatedAnswers = require("./routes/evaluatedAnswers");
 const datasets = require("./routes/datasets");
 
 app.use("/", pages);
 app.use("/evaluations", evaluations);
-app.use("/runningEvals", runningEvals);
-app.use("/finishedEvals", finishedEvals);
-app.use("/systemAnswers", systemAnswers);
-app.use("/evaluatedAnswers", evaluatedAnswers);
 app.use("/datasets", datasets);
 
 process.on("unhandledRejection", (reason, p) => {

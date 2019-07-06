@@ -6,6 +6,7 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
+    // replace all 
     name = name.replace(/[/\\?%*:|"<>]/g, "-");
 
     let timestamp = Date.now();
@@ -139,6 +140,85 @@ module.exports = {
       return res
         .status(400)
         .json({ message: "You must send a number as a query id!" });
+    }
+  },
+  getEvaluatedAnswers: function(req, res, next) {
+    let { name, id } = req.query;
+    if ((name !== undefined) & (id !== undefined)) {
+      try {
+        let evaluatedAnswers = require(`../data/evaluatedAnswers/${name}-${id}.json`);
+        res.json(evaluatedAnswers);
+      } catch (error) {
+        res.status(404).json({
+          message: "File not found!"
+        });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "You need to add the query parameters id and name" });
+    }
+  },
+  getSystemAnswers: function(req, res, next) {
+    let { name, id } = req.query;
+    if ((name !== undefined) & (id !== undefined)) {
+      try {
+        let systemAnswers = require(`../data/systemAnswers/${name}-${id}.json`);
+        res.json(systemAnswers);
+      } catch (error) {
+        res.status(404).json({
+          message: "File not found!"
+        });
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "You need to add the query parameters id and name" });
+    }
+  },
+  getFinishedEvals: function(req, res, next) {
+    let evaluations;
+    let { datasetKey } = req.query;
+    fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        evaluations = JSON.parse(data);
+        if (datasetKey === undefined && req.params.id === undefined) {
+          res.json(evaluations);
+        } else if (req.params.id !== undefined) {
+          let jsonToReturn = evaluations[String(req.params.id)];
+          if (jsonToReturn === undefined)
+            res.status(404).json({
+              message: "Evaluation with Id: " + req.params.id + " not found!"
+            });
+          res.json(evaluations[String(req.params.id)]);
+        } else if (datasetKey !== undefined) {
+          let filteredEvals = {};
+          for (let i in evaluations) {
+            if (evaluations[String(i)].datasetKey === datasetKey) {
+              filteredEvals[String(i)] = evaluations[String(i)];
+            }
+          }
+          res.json(filteredEvals);
+        }
+      }
+    });
+  },
+  getRunningEvals: function(req, res, next) {
+    let { id } = req.query;
+    if (id === undefined) {
+      res.json(runningEvals);
+    } else {
+      let jsonToReturn = runningEvals[String(id)];
+      if (jsonToReturn === undefined) {
+        res
+          .status(404)
+          .json({
+            message: "not found, or the evaluations is already finished"
+          });
+      }
+      res.json(runningEvals[String(id)]);
     }
   }
 };

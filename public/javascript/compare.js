@@ -1,6 +1,3 @@
-const url = "http://localhost:3000/";
-const qanaryUrl = "http://localhost:8080/";
-
 let dataset;
 let evaluations;
 let answers = [];
@@ -178,7 +175,7 @@ function compareAnswertypes() {
 
 async function buildChars(systemNr, id, name) {
   let evaluatedAnswers = await fetch(
-    url + "evaluatedAnswers?name=" + name + "&id=" + id,
+    url + "evaluations/evaluatedAnswers?name=" + name + "&id=" + id,
     { method: "GET" }
   );
   evaluatedAnswers = await evaluatedAnswers.json();
@@ -234,7 +231,7 @@ function buildAnswerTypes(systemNr, answerTypes) {
 
 async function buildSystemSelection(datasetKey) {
   try {
-    evaluations = await fetch(url + "finishedEvals?datasetKey=" + datasetKey, {
+    evaluations = await fetch(url + "evaluations/finished?datasetKey=" + datasetKey, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"

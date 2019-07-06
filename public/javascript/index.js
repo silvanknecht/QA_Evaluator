@@ -1,6 +1,3 @@
-const url = "http://localhost:3000/";
-const qanaryUrl = "http://localhost:8080/";
-
 const exForm = document.getElementById("exForm");
 const exName = document.getElementById("exName");
 const exDataset = document.getElementById("exDataset");
@@ -111,7 +108,7 @@ socket.on("evalFailed", data => {
 
 async function fillRunningTable() {
   try {
-    let runningEvals = await fetch(url + "runningEvals", {
+    let runningEvals = await fetch(url + "evaluations/running", {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -128,15 +125,17 @@ async function fillRunningTable() {
 }
 
 async function fillFinishedTable(datasetKey) {
-  //$("#finEvalsTable tbody tr").remove();
   finEvalsTableBody.innerHTML = "";
   try {
-    let evals = await fetch(url + "finishedEvals?datasetKey=" + datasetKey, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
+    let evals = await fetch(
+      url + "evaluations/finished?datasetKey=" + datasetKey,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
       }
-    });
+    );
     evals = await evals.json();
     console.log(evals);
     for (let id in evals) {
@@ -226,7 +225,7 @@ function addToFinEval(response) {
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
-        fetch(url + `evaluations/remove?id=${id}&name=${name}`, {
+        fetch(url + `evaluations?id=${id}&name=${name}`, {
           method: "DELETE"
         })
           .then(res => res.json())
