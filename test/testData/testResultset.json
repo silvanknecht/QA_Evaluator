@@ -5,7 +5,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "{select * where {     <http://dbpedia.org/resource/IBM>   <http://dbpedia.org/ontology/revenue>   ?l0.  },",
           "answers": [
             {
               "head": {
@@ -22,7 +22,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/IBM, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/revenue, "
+          }
         }
       ]
     }
@@ -33,7 +38,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "SELECT COUNT(DISTINCT ?uri) WHERE { ?uri <http://dbpedia.org/property/title> <http://dbpedia.org/resource/Emperor_of_China> . }, ",
           "answers": [
             {
               "head": {
@@ -50,7 +55,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/China, ",
+            "classes": "",
+            "properties": "<http://dbpedia.org/property/title>, "
+          }
         }
       ]
     }
@@ -61,7 +71,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "select * where {     <http://dbpedia.org/resource/Salt_Lake_City>   <http://dbpedia.org/ontology/timeZone>   ?v0.  }, ",
           "answers": [
             {
               "head": {
@@ -78,7 +88,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Salt_Lake_City, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/timeZone, "
+          }
         }
       ]
     }
@@ -89,7 +104,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "PREFIX dbo: <http://dbpedia.org/ontology/> PREFIX res: <http://dbpedia.org/resource/> SELECT DISTINCT * WHERE { res:Elizabeth_II dbo:parent ?uri . ?uri <http://xmlns.com/foaf/0.1/gender> \"male\"@en }, ",
           "answers": [
             {
               "head": {
@@ -106,7 +121,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Elizabeth_II, ",
+            "classes": "",
+            "properties": ""
+          }
         }
       ]
     }
@@ -117,14 +137,19 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "ASK WHERE { <http://dbpedia.org/resource/Taiko> a <http://dbpedia.org/class/yago/WikicatJapaneseMusicalInstruments> }, ",
           "answers": [
             {
               "head": {},
               "results": {},
               "boolean": true
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Taiko, ",
+            "classes": "http://dbpedia.org/class/yago/WikicatJapaneseMusicalInstruments, ",
+            "properties": ""
+          }
         }
       ]
     }
@@ -135,7 +160,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbp: <http://dbpedia.org/property/> SELECT DISTINCT ?date WHERE { res:Finland dbp:accessioneudate ?date }, ",
           "answers": [
             {
               "head": {
@@ -152,7 +177,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Finland, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/property/accessioneudate, "
+          }
         }
       ]
     }
@@ -163,7 +193,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "SELECT DISTINCT ?uri WHERE { <http://dbpedia.org/resource/Fort_Knox> <http://dbpedia.org/ontology/location> ?uri. ?uri a <http://dbpedia.org/ontology/Place>. }, ",
           "answers": [
             {
               "head": {
@@ -180,7 +210,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Fort_Knox, ",
+            "classes": "http://dbpedia.org/ontology/Place, ",
+            "properties": "http://dbpedia.org/ontology/location, "
+          }
         }
       ]
     }
@@ -191,7 +226,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "SELECT DISTINCT ?s WHERE { <http://dbpedia.org/resource/Michael_Jackson> <http://dbpedia.org/property/deathCause> ?s }, ",
           "answers": [
             {
               "head": {
@@ -208,7 +243,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Michael_Jackson, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/property/deathCause, "
+          }
         }
       ]
     }
@@ -219,7 +259,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbp: <http://dbpedia.org/property/> SELECT DISTINCT ?string WHERE { res:Angela_Merkel dbp:birthName ?string }, ",
           "answers": [
             {
               "head": {
@@ -236,7 +276,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Angela_Merkel, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/property/birthName, "
+          }
         }
       ]
     }
@@ -247,7 +292,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "SELECT DISTINCT ?uri WHERE { ?uri <http://dbpedia.org/ontology/influencedBy> <http://dbpedia.org/resource/Socrates> }, ",
           "answers": [
             {
               "head": {
@@ -390,7 +435,12 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Socrates, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/influencedBy, "
+          }
         }
       ]
     }
@@ -401,7 +451,7 @@
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": {},
+          "query": "SELECT DISTINCT ?uri WHERE { ?uri <http://dbpedia.org/ontology/spokenIn> <http://dbpedia.org/resource/Estonia> }, ",
           "answers": [
             {
               "head": {
@@ -460,7 +510,85 @@
                 ]
               }
             }
-          ]
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Estonia, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/spokenIn, "
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "141",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     ?v0   a   <http://dbpedia.org/ontology/Language>.    ?v0   <http://dbpedia.org/ontology/spokenIn>   <http://dbpedia.org/resource/Estonia>.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["v0"] },
+              "results": {
+                "bindings": [
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Baltic_Romani"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Estonian_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Modern_Swedish"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Seto_dialect"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Laiuse_Romani_language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/Russian_Sign_Language"
+                    }
+                  },
+                  {
+                    "v0": {
+                      "type": "uri",
+                      "value": "http://dbpedia.org/resource/VÃµro_language"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Estonia, ",
+            "classes": "http://dbpedia.org/ontology/Language, ",
+            "properties": "http://dbpedia.org/ontology/Language, http://dbpedia.org/ontology/spokenIn, "
+          }
         }
       ]
     }

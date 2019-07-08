@@ -12,16 +12,22 @@ class Evaluation {
     this.endTimestamp = null;
     this.datasetKey = dataset;
     this.systemUrl = systemUrl;
+    this.isQanaryPipeline = false;
     this.evaluatorVersion = evaluatorVersion;
     this.results = [];
     this.errors = [];
     this.totalQuestions = totalQuestions;
     this.processedQuestions = 0;
-    this.progress = 0 + "%";
+    this.progress = "0%";
     this.status = "starting...";
-    this.evalResults = { answerTypes: {} };
+    this.evalResults = {
+      answerTypes: {},
+      metrics: {},
+      totalFound: { entities: 0, properties: 0, classes: 0, queries: 0 }
+    };
   }
 
+  // finds the next available question in the dataset and returns its id and question url
   findNextQuestion() {
     let q = datasets[this.datasetKey].questions[this.processedQuestions];
     let question = (() => {
@@ -34,9 +40,13 @@ class Evaluation {
     return { qId: q.id, questionUrl };
   }
 
+  // sends a question to QA system, requires the entire questionUrl for the system
   async askQuestion(questionUrl) {
-    console.log("============ Question asked ============");
-    console.log("RequestUrl: ", questionUrl);
+    if (typeof jest == "undefined") {
+      console.log("============ Question asked ============");
+      console.log("RequestUrl: ", questionUrl);
+    }
+
     return fetch_retry(questionUrl, {
       method: "POST",
       retry: 3
@@ -51,6 +61,7 @@ class Evaluation {
     });
   }
 
+  // updates the progress of the evaluation
   updateProgress() {
     this.processedQuestions++;
     this.progress =
@@ -58,6 +69,7 @@ class Evaluation {
     io.sockets.emit("update", JSON.stringify(this));
   }
 
+  // updates the status of the evaluation progress
   updateStatus(status) {
     this.status = status;
     switch (status) {
@@ -77,67 +89,46 @@ class Evaluation {
   evaluateQuestions() {
     return new Promise((resolve, reject) => {
       if (this.results.length > 0) {
-        console.log("=== Evaluation started ===");
+        if (typeof jest == "undefined") {
+          console.log("=== Evaluation started ===");
+        }
         let evalCount = 0;
         for (let r of this.results) {
           for (let q of datasets[this.datasetKey].questions) {
             if (r.id === q.id) {
               evalCount++;
-              console.log(
-                "Eval Progress: ",
-                evalCount + " / " + this.results.length
-              );
-              let variable;
-              let expectedAnswers = [];
-
-              if (q.answers[0].head.vars === undefined) {
-                variable = "boolean";
-                expectedAnswers.push(q.answers[0].boolean);
-              } else {
-                variable = q.answers[0].head.vars[0];
-                if (q.answers[0].results.bindings) {
-                  for (let a of q.answers[0].results.bindings) {
-                    expectedAnswers.push(a[variable].value);
-                  }
-                  //}
-                }
+              if (typeof jest == "undefined") {
+                console.log(
+                  "Eval Progress: ",
+                  evalCount + " / " + this.results.length
+                );
               }
 
-              let givenAnswers = [];
+              // gather all the expected answers
+              let expectedAnswers = countExpectedAnswers(q);
 
+              // count all classes, properties, entities and queries that are found by the system
               let question = r.data.questions[0];
-              if (question.answers.length !== 0) {
-                let cond1 = Object.entries(question.answers[0]).length === 0; // answers array can contain an empty object, filter these
-
-                if (!cond1) {
-                  // empty answers
-                  let answer = question.answers[0];
-                  if (answer.head.vars === undefined) {
-                    givenAnswers.push(answer.boolean);
-                  } else {
-                    for (let vars of answer.head.vars) {
-                      for (let s of answer.results.bindings) {
-                        let i = 0;
-                        if (givenAnswers.length === 0) {
-                          givenAnswers.push(s[vars].value);
-                        } else {
-                          // Filter for answers that are already in the givenAnswers array
-                          for (; i < givenAnswers.length; i++) {
-                            if (givenAnswers[i] == s[vars].value) {
-                              break;
-                            } else if (i === givenAnswers.length - 1) {
-                              givenAnswers.push(s[vars].value);
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                } else {
-                  //givenAnswers.push({});
-                }
+              if (question.qanaryAnno !== undefined) {
+                this.isQanaryPipeline = true;
+                this.evalResults.totalFound.properties += countUris(
+                  question.qanaryAnno.properties
+                );
+                this.evalResults.totalFound.classes += countUris(
+                  question.qanaryAnno.classes
+                );
+                this.evalResults.totalFound.entities += countUris(
+                  question.qanaryAnno.entities
+                );
+                this.evalResults.totalFound.queries += countUris(
+                  question.query
+                );
               }
 
+              // gather all the given answers
+              let givenAnswers = gatherGivenAnswers(question);
+
+              // summery and figure out how many answers were correct
               r.NrExpected = expectedAnswers.length;
               r.NrSystem = givenAnswers.length;
               r.NrCorrect = 0;
@@ -149,7 +140,7 @@ class Evaluation {
                   }
                 }
               }
-              if (r.NrCorrect === r.Expected) {
+              if (r.NrCorrect === r.NrExpected) {
                 let answerTypeToUpdate = this.evalResults.answerTypes[
                   q.answertype
                 ];
@@ -159,8 +150,10 @@ class Evaluation {
                   this.evalResults.answerTypes[q.answertype] = 1;
                 }
               }
-              console.log("========================================");
-              console.log("Evaluated Question: ", r);
+              if (typeof jest == "undefined") {
+                console.log("========================================");
+                console.log("Evaluated Question: ", r);
+              }
 
               break;
             }
@@ -208,25 +201,32 @@ class Evaluation {
       /** Add global Recall, Precicion and FMeasure to the Pipeline */
       let totalResults = this.results.length; // don't consider errors
 
-      this.evalResults.grc = recallTot / totalResults;
-      this.evalResults.gpr = precisionTot / totalResults;
-      this.evalResults.QALDgpr = qaldPrecisionTot / totalResults;
-      this.evalResults.gfm = fMeasureTot / totalResults;
+      this.evalResults.metrics.grc = recallTot / totalResults;
+      this.evalResults.metrics.gpr = precisionTot / totalResults;
+      this.evalResults.metrics.QALDgpr = qaldPrecisionTot / totalResults;
+      this.evalResults.metrics.gfm = fMeasureTot / totalResults;
 
-      if (this.evalResults.grc === 0 && this.evalResults.QALDgpr === 0) {
-        this.evalResults.QALDgfm = 0;
+      if (
+        this.evalResults.metrics.grc === 0 &&
+        this.evalResults.metrics.QALDgpr === 0
+      ) {
+        this.evalResults.metrics.QALDgfm = 0;
       } else {
-        this.evalResults.QALDgfm =
-          (2 * this.evalResults.grc * this.evalResults.QALDgpr) /
-          (this.evalResults.grc + this.evalResults.QALDgpr);
+        this.evalResults.metrics.QALDgfm =
+          (2 *
+            this.evalResults.metrics.grc *
+            this.evalResults.metrics.QALDgpr) /
+          (this.evalResults.metrics.grc + this.evalResults.metrics.QALDgpr);
       }
 
       if (
-        (this.evalResults.grc || this.evalResults.grc === 0) &&
-        (this.evalResults.gpr || this.evalResults.gpr === 0) &&
-        (this.evalResults.QALDgpr || this.evalResults.QALDgpr === 0) &&
-        (this.evalResults.gfm || this.evalResults.gfm === 0) &&
-        (this.evalResults.QALDgfm || this.evalResults.QALDgfm === 0)
+        (this.evalResults.metrics.grc || this.evalResults.metrics.grc === 0) &&
+        (this.evalResults.metrics.gpr || this.evalResults.metrics.gpr === 0) &&
+        (this.evalResults.metrics.QALDgpr ||
+          this.evalResults.metrics.QALDgpr === 0) &&
+        (this.evalResults.metrics.gfm || this.evalResults.metrics.gfm === 0) &&
+        (this.evalResults.metrics.QALDgfm ||
+          this.evalResults.metrics.QALDgfm === 0)
       ) {
         resolve();
       } else {
@@ -254,8 +254,68 @@ class Evaluation {
   }
 }
 
+function countUris(arr) {
+  let nArr = arr.split(",").length;
+  if (nArr >= 1) {
+    nArr--;
+  }
+  return nArr;
+}
+
+function countExpectedAnswers(q) {
+  let variable;
+  let expectedAnswers = [];
+
+  if (q.answers[0].head.vars === undefined) {
+    variable = "boolean";
+    expectedAnswers.push(q.answers[0].boolean);
+  } else {
+    variable = q.answers[0].head.vars[0];
+    if (q.answers[0].results.bindings) {
+      for (let a of q.answers[0].results.bindings) {
+        expectedAnswers.push(a[variable].value);
+      }
+    }
+  }
+  return expectedAnswers;
+}
+
+function gatherGivenAnswers(question) {
+  let givenAnswers = [];
+  if (question.answers.length !== 0) {
+    let cond1 = Object.entries(question.answers[0]).length === 0; // answers array can contain an empty object, filter these
+
+    if (!cond1) {
+      // empty answers
+      let answer = question.answers[0];
+      if (answer.head.vars === undefined) {
+        givenAnswers.push(answer.boolean);
+      } else {
+        for (let vars of answer.head.vars) {
+          for (let s of answer.results.bindings) {
+            let i = 0;
+            if (givenAnswers.length === 0) {
+              givenAnswers.push(s[vars].value);
+            } else {
+              // Filter for answers that are already in the givenAnswers array
+              for (; i < givenAnswers.length; i++) {
+                if (givenAnswers[i] == s[vars].value) {
+                  break;
+                } else if (i === givenAnswers.length - 1) {
+                  givenAnswers.push(s[vars].value);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return givenAnswers;
+}
+
 function validateSystemToEvaluate(req, res, next) {
-  // schema for body validatino
+  // schema for body validation
   const schema = Joi.object().keys({
     systemUrl: Joi.string()
       .max(400)

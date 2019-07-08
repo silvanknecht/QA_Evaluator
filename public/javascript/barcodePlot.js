@@ -163,7 +163,7 @@ function fillCompareTable(questionId) {
             sparqlQuery = sparqlQuery.replace(/<|>/g, "");
             sparqlQuery = sparqlQuery.replace(/,/g, "");
           } else {
-            let string = "-";
+            let string = "not available";
             entities = string;
             properties = string;
             classes = string;
@@ -192,8 +192,11 @@ function addTdToTable(systemNr, data) {
 
 /* Count uris */
 function countUris(arr) {
-  let nArr = arr.split(" ");
-  return nArr.length;
+  let nArr = arr.split(",").length;
+  if (nArr >= 1) {
+    nArr--;
+  }
+  return nArr;
 }
 
 function findQuestionString(questionId) {

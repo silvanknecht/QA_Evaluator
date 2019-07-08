@@ -194,11 +194,11 @@ function addToFinEval(response) {
 
   // TODO: needs better solution
   if (evalResults !== undefined) {
-    tr.appendChild(createResultField(evalResults.grc));
-    tr.appendChild(createResultField(evalResults.gpr));
-    tr.appendChild(createResultField(evalResults.gfm));
-    tr.appendChild(createResultField(evalResults.QALDgpr));
-    tr.appendChild(createResultField(evalResults.QALDgfm));
+    tr.appendChild(createResultField(evalResults.metrics.grc));
+    tr.appendChild(createResultField(evalResults.metrics.gpr));
+    tr.appendChild(createResultField(evalResults.metrics.gfm));
+    tr.appendChild(createResultField(evalResults.metrics.QALDgpr));
+    tr.appendChild(createResultField(evalResults.metrics.QALDgfm));
   } else {
     tr.appendChild(createResultField("-"));
     tr.appendChild(createResultField("-"));

@@ -6,7 +6,7 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
-    // replace all 
+    // replace all caraters that are not allowed inside of a filname
     name = name.replace(/[/\\?%*:|"<>]/g, "-");
 
     let timestamp = Date.now();
@@ -22,13 +22,21 @@ module.exports = {
     io.sockets.emit("evalStarted", JSON.stringify(currentEval));
     res.json(currentEval);
 
+    // QUESTIONING
     currentEval.updateStatus("questioning...");
     while (currentEval.processedQuestions < currentEval.totalQuestions) {
       let { qId, questionUrl } = currentEval.findNextQuestion();
       try {
         let data = await currentEval.askQuestion(questionUrl);
-        //let data = await response.json();
 
+        // // Fix for TeBaQA, resultset looks different so it needs to be converted into the right one
+        // // ! BREAKS QANARY EVALUATION
+        // if (data.questions[0].question) {
+        //   console.log("TeBaQa");
+        //   answers = JSON.parse(data.questions[0].question.answers);
+        //   data.questions[0].answers = [];
+        //   data.questions[0].answers.push(answers);
+        // }
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
 
@@ -55,7 +63,8 @@ module.exports = {
     let dataToSave = JSON.stringify(currentEval.results);
     saveFile(filePath, dataToSave);
 
-    currentEval.updateStatus("evaluating");
+    // EVALUATING
+    currentEval.updateStatus("evaluating...");
     try {
       await currentEval.evaluateQuestions();
     } catch (error) {
@@ -66,8 +75,8 @@ module.exports = {
       return;
     }
 
+    // CALCULATING
     currentEval.updateStatus("calculating...");
-
     try {
       await currentEval.calculateSystemResult();
       let filePath = `./data/evaluatedAnswers/${currentEval.name}-${
@@ -82,16 +91,16 @@ module.exports = {
       delete runningEvals[String(currentEval.id)];
 
       console.log("========== Evaluation Result =========== ");
-      console.log("grc", currentEval.evalResults.grc);
-      console.log("gpr", currentEval.evalResults.gpr);
-      console.log("QALDgpr", currentEval.evalResults.QALDgpr);
-      console.log("gfm", currentEval.evalResults.gfm);
-      console.log("QALDgfm", currentEval.evalResults.QALDgfm);
+      console.log("grc", currentEval.evalResults.metrics.grc);
+      console.log("gpr", currentEval.evalResults.metrics.gpr);
+      console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
+      console.log("gfm", currentEval.evalResults.metrics.gfm);
+      console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
     } catch (error) {
       console.log("System Evaluation Failed: ", error);
     }
     return;
-  },
+  }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
 
@@ -212,11 +221,9 @@ module.exports = {
     } else {
       let jsonToReturn = runningEvals[String(id)];
       if (jsonToReturn === undefined) {
-        res
-          .status(404)
-          .json({
-            message: "not found, or the evaluations is already finished"
-          });
+        res.status(404).json({
+          message: "not found, or the evaluations is already finished"
+        });
       }
       res.json(runningEvals[String(id)]);
     }
