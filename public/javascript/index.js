@@ -47,15 +47,15 @@ const compareBtn = document.getElementById("compareBtn");
     };
 
     try {
-      let startedEval = await fetch(url + "evaluations/evaluate", {
+      let conductEval = await fetch(url + "evaluations/evaluate", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json"
         }
       });
-      startedEval = await startedEval.json();
-      if (startedEval) console.log("Evaluation started: ", startedEval);
+      conductEval = await conductEval.json();
+      if (conductEval) console.log("Evaluation ended: ", conductEval);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -100,11 +100,6 @@ socket.on("evalEnded", data => {
   }
 });
 
-socket.on("evalFailed", data => {
-  console.log("evalFailed");
-  let json = JSON.parse(data);
-  if (json.datasetKey === datasetFin.value) addToFinEval(json);
-});
 
 async function fillRunningTable() {
   try {

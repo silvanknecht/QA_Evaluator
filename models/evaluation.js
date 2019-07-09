@@ -41,7 +41,8 @@ class Evaluation {
   }
 
   // sends a question to QA system, requires the entire questionUrl for the system
-  async askQuestion(questionUrl) {
+  // id makes it easier for integration testing
+  async askQuestion(questionUrl, id) {
     if (typeof jest == "undefined") {
       console.log("============ Question asked ============");
       console.log("RequestUrl: ", questionUrl);
@@ -201,10 +202,21 @@ class Evaluation {
       /** Add global Recall, Precicion and FMeasure to the Pipeline */
       let totalResults = this.results.length; // don't consider errors
 
-      this.evalResults.metrics.grc = recallTot / totalResults;
-      this.evalResults.metrics.gpr = precisionTot / totalResults;
-      this.evalResults.metrics.QALDgpr = qaldPrecisionTot / totalResults;
-      this.evalResults.metrics.gfm = fMeasureTot / totalResults;
+      this.evalResults.metrics.grc = Number(
+        (recallTot / totalResults).toFixed(3)
+      );
+
+      this.evalResults.metrics.gpr = Number(
+        (precisionTot / totalResults).toFixed(3)
+      );
+
+      this.evalResults.metrics.QALDgpr = Number(
+        (qaldPrecisionTot / totalResults).toFixed(3)
+      );
+
+      this.evalResults.metrics.gfm = Number(
+        (fMeasureTot / totalResults).toFixed(3)
+      );
 
       if (
         this.evalResults.metrics.grc === 0 &&
@@ -212,11 +224,15 @@ class Evaluation {
       ) {
         this.evalResults.metrics.QALDgfm = 0;
       } else {
-        this.evalResults.metrics.QALDgfm =
-          (2 *
-            this.evalResults.metrics.grc *
-            this.evalResults.metrics.QALDgpr) /
-          (this.evalResults.metrics.grc + this.evalResults.metrics.QALDgpr);
+        this.evalResults.metrics.QALDgfm = Number(
+          (
+            (2 *
+              parseFloat(this.evalResults.metrics.grc) *
+              parseFloat(this.evalResults.metrics.QALDgpr)) /
+            (parseFloat(this.evalResults.metrics.grc) +
+              parseFloat(this.evalResults.metrics.QALDgpr))
+          ).toFixed(3)
+        );
       }
 
       if (
@@ -291,18 +307,21 @@ function gatherGivenAnswers(question) {
       if (answer.head.vars === undefined) {
         givenAnswers.push(answer.boolean);
       } else {
-        for (let vars of answer.head.vars) {
-          for (let s of answer.results.bindings) {
-            let i = 0;
-            if (givenAnswers.length === 0) {
-              givenAnswers.push(s[vars].value);
-            } else {
-              // Filter for answers that are already in the givenAnswers array
-              for (; i < givenAnswers.length; i++) {
-                if (givenAnswers[i] == s[vars].value) {
-                  break;
-                } else if (i === givenAnswers.length - 1) {
-                  givenAnswers.push(s[vars].value);
+        let cond2 = answer.results.bindings;
+        if (cond2) {
+          for (let vars of answer.head.vars) {
+            for (let s of answer.results.bindings) {
+              let i = 0;
+              if (givenAnswers.length === 0) {
+                givenAnswers.push(s[vars].value);
+              } else {
+                // Filter for answers that are already in the givenAnswers array
+                for (; i < givenAnswers.length; i++) {
+                  if (givenAnswers[i] == s[vars].value) {
+                    break;
+                  } else if (i === givenAnswers.length - 1) {
+                    givenAnswers.push(s[vars].value);
+                  }
                 }
               }
             }

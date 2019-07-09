@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 let Evaluation = require("../models/evaluation.js");
+let { saveFile } = require("../helpers/file");
 
 module.exports = {
   evaluateSystem: async function(req, res, next) {
@@ -18,16 +19,17 @@ module.exports = {
       totalQuestions
     );
     runningEvals[String(timestamp)] = currentEval;
-    console.log("Evaluation with dataset: " + dataset + " has started.");
+    if (jest === undefined) {
+      console.log("Evaluation with dataset: " + dataset + " has started.");
+    }
     io.sockets.emit("evalStarted", JSON.stringify(currentEval));
-    res.json(currentEval);
 
     // QUESTIONING
     currentEval.updateStatus("questioning...");
     while (currentEval.processedQuestions < currentEval.totalQuestions) {
       let { qId, questionUrl } = currentEval.findNextQuestion();
       try {
-        let data = await currentEval.askQuestion(questionUrl);
+        let data = await currentEval.askQuestion(questionUrl, qId);
 
         // // Fix for TeBaQA, resultset looks different so it needs to be converted into the right one
         // // ! BREAKS QANARY EVALUATION
@@ -40,10 +42,12 @@ module.exports = {
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
 
-        console.log(
-          "processedQuestions: ",
-          currentEval.processedQuestions + " / " + currentEval.totalQuestions
-        );
+        if (jest === undefined) {
+          console.log(
+            "processedQuestions: ",
+            currentEval.processedQuestions + " / " + currentEval.totalQuestions
+          );
+        }
       } catch (error) {
         console.log("Looks like there was a problem: xS " + error);
 
@@ -72,7 +76,7 @@ module.exports = {
       currentEval.updateEvalsFile();
 
       delete runningEvals[String(currentEval.id)];
-      return;
+      return res.status(500).json(currentEval);
     }
 
     // CALCULATING
@@ -89,17 +93,18 @@ module.exports = {
       currentEval.updateEvalsFile();
 
       delete runningEvals[String(currentEval.id)];
-
-      console.log("========== Evaluation Result =========== ");
-      console.log("grc", currentEval.evalResults.metrics.grc);
-      console.log("gpr", currentEval.evalResults.metrics.gpr);
-      console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
-      console.log("gfm", currentEval.evalResults.metrics.gfm);
-      console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
+      if (jest === undefined) {
+        console.log("========== Evaluation Result =========== ");
+        console.log("grc", currentEval.evalResults.metrics.grc);
+        console.log("gpr", currentEval.evalResults.metrics.gpr);
+        console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
+        console.log("gfm", currentEval.evalResults.metrics.gfm);
+        console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
+      }
     } catch (error) {
       console.log("System Evaluation Failed: ", error);
     }
-    return;
+    res.json(currentEval);
   }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
@@ -229,14 +234,3 @@ module.exports = {
     }
   }
 };
-
-function saveFile(filePath, content) {
-  let pathToSaveAt = filePath;
-  fs.access(pathToSaveAt, fs.F_OK, err => {
-    if (err) {
-      fs.writeFile(pathToSaveAt, content, () => {});
-      return;
-    }
-    console.log("File exists already!");
-  });
-}

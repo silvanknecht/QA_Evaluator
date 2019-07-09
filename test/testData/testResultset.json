@@ -446,75 +446,24 @@
     }
   },
   {
-    "id": "141",
+    "id": "124",
     "data": {
       "questions": [
         {
           "question": [{ "language": "en" }],
-          "query": "SELECT DISTINCT ?uri WHERE { ?uri <http://dbpedia.org/ontology/spokenIn> <http://dbpedia.org/resource/Estonia> }, ",
+          "query": "PREFIX res: <http://dbpedia.org/resource/> PREFIX dbp: <http://dbpedia.org/property/> SELECT DISTINCT xsd:date(?date) WHERE { res:Death_of_Carlo_Giuliani dbo:deathDate ?date }, ",
           "answers": [
             {
               "head": {
-                "vars": ["uri"]
+                "vars": ["date"]
               },
-              "results": {
-                "bindings": [
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Laiuse_Romani_language"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Estonian_Sign_Language"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Seto_dialect"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Russian_Sign_Language"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Baltic_Romani"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Võro_language"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Estonian_language"
-                    }
-                  },
-                  {
-                    "uri": {
-                      "type": "uri",
-                      "value": "http://dbpedia.org/resource/Modern_Swedish"
-                    }
-                  }
-                ]
-              }
+              "results": {}
             }
           ],
           "qanaryAnno": {
-            "entities": "http://dbpedia.org/resource/Estonia, ",
+            "entities": "http://dbpedia.org/resource/Death_of_Carlo_Giuliani, ",
             "classes": "",
-            "properties": "http://dbpedia.org/ontology/spokenIn, "
+            "properties": "http://dbpedia.org/property/deathDate, "
           }
         }
       ]
@@ -577,7 +526,7 @@
                   {
                     "v0": {
                       "type": "uri",
-                      "value": "http://dbpedia.org/resource/VÃµro_language"
+                      "value": "http://dbpedia.org/resource/Võro_language"
                     }
                   }
                 ]

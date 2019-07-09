@@ -4,6 +4,7 @@ const Evaluation = require("../../../models/evaluation");
 let mockTimestamp = 1434319925275;
 let mockEvaluation;
 let evaluatedQuestions;
+let evaluatedQuestionsP20;
 let emptyQuestion = [
   {
     head: {
@@ -97,6 +98,7 @@ beforeEach(() => {
     let dataset = require("../../testData/testDataset.json");
     let testResultset = require("../../testData/testResultset.json");
     evaluatedQuestions = require("../../testData/testEvaluatedQuestions.json");
+    evaluatedQuestionsP20 = require("../../testData/testEvaluatedQuestionsP20.json");
 
     datasets["testDataset"] = dataset;
     let timestamp = Date.now();
@@ -348,6 +350,12 @@ describe("calculateSystemResult with 100% correct Answers", () => {
 
     expect(mockEvaluation.evalResults.metrics.gfm).toBe(1);
   });
+  it("should add 1 as QALDgfm for the entire system", async () => {
+    mockEvaluation.results = evaluatedQuestions;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.QALDgfm).toBe(1);
+  });
 });
 
 describe("calculateSystemResult including wrong answers", () => {
@@ -404,5 +412,42 @@ describe("calculateSystemResult including wrong answers", () => {
     await mockEvaluation.calculateSystemResult();
 
     expect(mockEvaluation.results[0].calc[0].qaldPrecision).toBe(1);
+  });
+});
+
+describe("calculateSystemResult of the results from qanary pipeline 20 containing correct and wrong answers", () => {
+  // tests with custom values
+  it("should add 0.432 as recall from the quesiton", async () => {
+    mockEvaluation.results = evaluatedQuestionsP20;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.grc).toBe(0.432);
+  });
+
+  it("should add 0.400 as gpr for the entire system", async () => {
+    mockEvaluation.results = evaluatedQuestionsP20;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.gpr).toBe(0.4);
+  });
+  it("should add 0.650 as QALDgpr for the entire system", async () => {
+    mockEvaluation.results = evaluatedQuestionsP20;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.QALDgpr).toBe(0.65);
+  });
+
+  it("should add 0.386 as gfm for the entire system", async () => {
+    mockEvaluation.results = evaluatedQuestionsP20;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.gfm).toBe(0.386);
+  });
+
+  it("should add 1 as gfm for the entire system", async () => {
+    mockEvaluation.results = evaluatedQuestionsP20;
+    await mockEvaluation.calculateSystemResult();
+
+    expect(mockEvaluation.evalResults.metrics.gfm).toBe(0.386);
   });
 });
