@@ -47,7 +47,7 @@ const compareBtn = document.getElementById("compareBtn");
     };
 
     try {
-      let conductEval = await fetch(url + "evaluations/evaluate", {
+      let conductEval = await fetch(url + "evaluations/", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -123,7 +123,7 @@ async function fillFinishedTable(datasetKey) {
   finEvalsTableBody.innerHTML = "";
   try {
     let evals = await fetch(
-      url + "evaluations/finished?datasetKey=" + datasetKey,
+      url + "evaluations?datasetKey=" + datasetKey,
       {
         method: "GET",
         headers: {

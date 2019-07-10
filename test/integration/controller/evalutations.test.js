@@ -3,7 +3,6 @@ jest.mock("fs");
 const request = require("supertest");
 
 let Evaluation = require("../../../models/evaluation");
-let File = require("../../../helpers/file");
 
 let server;
 let resultset;
@@ -22,7 +21,7 @@ describe("start evaluation 100% correct answers", () => {
   let payload;
   const exec = () => {
     return request(server)
-      .post("/evaluations/evaluate")
+      .post("/evaluations/")
       .send(payload);
   };
 
@@ -68,7 +67,7 @@ describe("start evaluation 100% correct answers", () => {
       });
     payload = {
       systemUrl: "http://testurl.ch",
-      dataset: "testData20",
+      dataset: "testData",
       name: "testEvaluation"
     };
   });
@@ -162,7 +161,7 @@ describe("start evaluation 100% correct answers", () => {
   let payload;
   const exec = () => {
     return request(server)
-      .post("/evaluations/evaluate")
+      .post("/evaluations/")
       .send(payload);
   };
 
@@ -208,7 +207,7 @@ describe("start evaluation 100% correct answers", () => {
       });
     payload = {
       systemUrl: "http://testurl.ch",
-      dataset: "testData20",
+      dataset: "testData",
       name: "testEvaluation"
     };
   });

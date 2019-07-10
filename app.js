@@ -18,7 +18,7 @@ app.use(compression());
 // global variables
 global.runningEvals = {};
 global.evaluationUrl = `http://localhost:${port}/`;
-global.availableDatasets = ["qald-8", "qald-9", "testData20", "smallTest"];
+global.availableDatasets = ["qald-8", "qald-9", "testData", "smallTest"];
 global.datasets = {}; //datasets are loaded only when they were used at least once
 global.evaluatorVersion = "3.0.0";
 // 1.0.0: evaluation dublicated answers are also answers,
@@ -26,11 +26,11 @@ global.evaluatorVersion = "3.0.0";
 // 3.0.0: all vars are considered one answere
 
 // routes and routers
-const pages = require("./routes/pages");
+const views = require("./routes/views");
 const evaluations = require("./routes/evaluations");
 const datasets = require("./routes/datasets");
 
-app.use("/", pages);
+app.use("/", views);
 app.use("/evaluations", evaluations);
 app.use("/datasets", datasets);
 

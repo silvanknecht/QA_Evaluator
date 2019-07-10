@@ -4,36 +4,22 @@ let router = express.Router();
 
 const evaluationsController = require("../controllers/evaluations");
 const validate = require("../middleware/validate");
+const loadDataset = require("../middleware/loadDataset");
 const { validateSystemToEvaluate } = require("../models/evaluation");
 
 router.post(
-  "/evaluate",
+  "/",
   validate(validateSystemToEvaluate),
-  function(req, res, next) {
-    let choosenDataset = req.body.dataset;
-    if (!datasets.hasOwnProperty(choosenDataset)) {
-      try {
-        let dataset = require("../datasets/" + choosenDataset);
-        datasets[choosenDataset] = dataset;
-        if (typeof jest == "undefined") {
-          console.log("dataset has been loaded!");
-        }
-      } catch (error) {
-        console.log("Dataset couldn't be loaded", error);
-        return res.status(500);
-      }
-    } else {
-      console.log("dataset already loaded!");
-    }
-    next();
-  },
+  loadDataset,
   evaluationsController.evaluateSystem
 );
 
 router.delete("/", evaluationsController.deleteEvaluation);
+router.get("/", evaluationsController.getEvaluations);
 router.get("/evaluatedAnswers", evaluationsController.getEvaluatedAnswers);
-router.get("/systemAnswers", evaluationsController.getSystemAnswers);
-router.get("/finished", evaluationsController.getFinishedEvals);
 router.get("/running", evaluationsController.getRunningEvals);
+router.get("/systemAnswers", evaluationsController.getSystemAnswers);
+
+
 
 module.exports = router;

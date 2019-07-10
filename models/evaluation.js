@@ -106,7 +106,7 @@ class Evaluation {
               }
 
               // gather all the expected answers
-              let expectedAnswers = countExpectedAnswers(q);
+              let expectedAnswers = gatherExpectedAnswers(q);
 
               // count all classes, properties, entities and queries that are found by the system
               let question = r.data.questions[0];
@@ -278,7 +278,7 @@ function countUris(arr) {
   return nArr;
 }
 
-function countExpectedAnswers(q) {
+function gatherExpectedAnswers(q) {
   let variable;
   let expectedAnswers = [];
 
