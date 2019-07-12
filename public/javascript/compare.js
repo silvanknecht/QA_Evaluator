@@ -5,9 +5,14 @@ let answerTypesTot;
 
 const datasetPlot = document.getElementById("answerTypes");
 const datasetComp = document.getElementById("datasetComp");
-// Comparison
+
 const selectSystem1 = document.getElementById("selectSystem1");
 const selectSystem2 = document.getElementById("selectSystem2");
+
+const selectSystem1Same = document.getElementById("selectSystem1Same");
+const selectSystem2Same = document.getElementById("selectSystem2Same");
+let resultsBelongingTogether = {};
+
 const answerTypesDiv = [
   document.getElementById("answerTypes1"),
   document.getElementById("answerTypes2")
@@ -58,23 +63,88 @@ window.onresize = async function() {
 };
 
 async function buildPage() {
-  await buildDatasetVisual(datasetComp.value);
+  buildDatasetVisual(datasetComp.value);
   datasetComp.addEventListener("change", async e => {
-    await buildDatasetVisual(e.target.value);
+    buildDatasetVisual(e.target.value);
     await buildSystemSelection(datasetComp.value);
 
     refreshComparison();
   });
   await buildSystemSelection(datasetComp.value);
+
   if (localStorage.itemsToCompare) {
-    datasetComp.value = localStorage.dataset;
     let itemsToCompare = localStorage.itemsToCompare.split(",");
     if (itemsToCompare.length > 1) {
-      selectSystem1.value = itemsToCompare[0];
-      selectSystem2.value = itemsToCompare[1];
+      let ids = {};
+      for (let parentId in resultsBelongingTogether) {
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
+        ) {
+          ids["0"] = parentId;
+        }
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[1]) !== -1
+        ) {
+          ids["1"] = parentId;
+        }
+      }
+      await buildSystemSelection(datasetComp.value, ids["0"], ids["1"]);
+      selectSystem1Same.value = itemsToCompare[0];
+      selectSystem2Same.value = itemsToCompare[1];
     } else {
-      selectSystem1.value = itemsToCompare[0];
+      let id1;
+      for (let parentId in resultsBelongingTogether) {
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
+        ) {
+          id1 = parentId;
+          break;
+        }
+      }
+      await buildSystemSelection(datasetComp.value, id1);
+      selectSystem1Same.value = itemsToCompare[0];
     }
+  }
+}
+
+function buildSameResults(selectSystem, selectSystemSame) {
+  selectSystemSame.innerHTML = "";
+  let valueSelect = selectSystem.options[selectSystem.selectedIndex].value;
+  if (valueSelect !== "-- no results available --") {
+    if (resultsBelongingTogether[valueSelect].length > 1) {
+      for (let id of resultsBelongingTogether[valueSelect]) {
+        // if it is the first of the SAME Results it needs to be added first
+        if (selectSystemSame.length === 0) {
+          let gmt2 = evaluations[id].startTimestamp + 7200000;
+          let date = new Date(gmt2)
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " ");
+
+          selectSystemSame[selectSystemSame.options.length] = new Option(
+            date,
+            evaluations[id].id,
+            true
+          );
+        } else {
+          let gmt2 = evaluations[id].startTimestamp + 7200000;
+          let date = new Date(gmt2)
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " ");
+
+          selectSystemSame[selectSystemSame.options.length] = new Option(
+            date,
+            evaluations[id].id,
+            false
+          );
+        }
+      }
+    }
+  } else {
+    selectSystemSame[selectSystemSame.options.length] = new Option(
+      "-- no results available --"
+    );
   }
 }
 
@@ -87,20 +157,24 @@ async function buildPage() {
 
   selectSystem1.addEventListener("change", e => {
     hideCompareTable();
-    buildComparisons(
-      1,
-      e.target.value,
-      e.target.options[e.target.selectedIndex].text
-    );
+    buildSameResults(selectSystem1, selectSystem1Same);
+    buildComparisons(1, e.target.value);
+  });
+
+  selectSystem1Same.addEventListener("change", e => {
+    hideCompareTable();
+    buildComparisons(1, e.target.value);
   });
   selectSystem2.addEventListener("change", e => {
     hideCompareTable();
-    buildComparisons(
-      2,
-      e.target.value,
-      e.target.options[e.target.selectedIndex].text
-    );
+    buildSameResults(selectSystem2, selectSystem2Same);
+    buildComparisons(2, e.target.value);
   });
+  selectSystem2Same.addEventListener("change", e => {
+    hideCompareTable();
+    buildComparisons(2, e.target.value);
+  });
+
   closeTable.addEventListener("click", () => {
     hideCompareTable();
   });
@@ -136,20 +210,12 @@ function refreshComparison() {
   metricsDiv[1].innerHTML = "";
   answerTypesDiv[1].innerHTML = "";
   barcodeDivs[1].innerHTML = "";
-  buildComparisons(
-    1,
-    selectSystem1.value,
-    selectSystem1.options[selectSystem1.selectedIndex].text
-  );
-  buildComparisons(
-    2,
-    selectSystem2.value,
-    selectSystem2.options[selectSystem2.selectedIndex].text
-  );
+  buildComparisons(1, selectSystem1Same.value);
+  buildComparisons(2, selectSystem2Same.value);
   hideCompareTable();
 }
 
-async function buildComparisons(systemNr, id, name) {
+async function buildComparisons(systemNr, id) {
   metricsDiv[systemNr - 1].innerHTML = "";
   answerTypesDiv[systemNr - 1].innerHTML = "";
   barcodeDivs[systemNr - 1].innerHTML = "";
@@ -168,7 +234,7 @@ async function buildComparisons(systemNr, id, name) {
       evaluations[id].evalResults.totalFound
     );
     compareTotalFound(evaluations[id].isQanaryPipeline);
-    buildChars(systemNr, id, name);
+    buildChars(systemNr, id, evaluations[id].name);
   }
 }
 
@@ -367,7 +433,13 @@ function compareInformation() {
   }
 }
 
-async function buildSystemSelection(datasetKey) {
+// TODO: Split this function into 2 functions
+async function buildSystemSelection(
+  datasetKey,
+  idToSelect1 = undefined,
+  idToSelect2 = undefined
+) {
+  resultsBelongingTogether = {};
   try {
     evaluations = await fetch(url + "evaluations?datasetKey=" + datasetKey, {
       method: "GET",
@@ -388,20 +460,50 @@ async function buildSystemSelection(datasetKey) {
 
       selectSystem1.appendChild(opt.cloneNode(true));
       selectSystem2.appendChild(opt.cloneNode(true));
-    }
-    for (prop in evaluations) {
-      if (evaluations[prop].status !== "failed") {
-        let opt = document.createElement("option");
-        opt.value = evaluations[prop].id;
-        opt.innerHTML = evaluations[prop].name;
+    } else {
+      let evaluationsClone = JSON.parse(JSON.stringify(evaluations));
+      for (let id in evaluationsClone) {
+        if (evaluationsClone[id].status !== "failed") {
+          resultsBelongingTogether[id] = [id];
+          let opt = document.createElement("option");
+          opt.value = evaluationsClone[id].id;
+          opt.innerHTML = evaluationsClone[id].name;
 
-        selectSystem1.appendChild(opt.cloneNode(true));
-        selectSystem2.appendChild(opt.cloneNode(true));
+          selectSystem1.appendChild(opt.cloneNode(true));
+          selectSystem2.appendChild(opt.cloneNode(true));
+          delete evaluationsClone[id];
+
+          // check if there is another evaluation with the same name, version, and systemUrl
+          for (let id2 in evaluationsClone) {
+            if (
+              evaluations[id].name === evaluationsClone[id2].name &&
+              evaluations[id].evaluatorVersion ===
+                evaluationsClone[id2].evaluatorVersion &&
+              evaluations[id].systemUrl === evaluationsClone[id2].systemUrl
+            ) {
+              resultsBelongingTogether[id].push(id2);
+              delete evaluationsClone[id2];
+
+              console.log("This is the same System!");
+            }
+          }
+        } else {
+          delete evaluationsClone[id];
+        }
       }
+    }
+    if (idToSelect1 !== undefined) {
+      selectSystem1.value = idToSelect1;
+    }
+    if (idToSelect2 !== undefined) {
+      selectSystem2.value = idToSelect2;
     }
   } catch (error) {
     console.error("Error:", error);
   }
+
+  buildSameResults(selectSystem1, selectSystem1Same);
+  buildSameResults(selectSystem2, selectSystem2Same);
 }
 
 async function buildDatasetVisual(datasetKey) {

@@ -308,12 +308,8 @@ function createSimpleField(value, name = 0, id = 0) {
 
 function createDateField(startTimestamp, id) {
   // TODO: fix because old data doesn't have the startTimestamp value
-  let gmt2;
-  if (startTimestamp === undefined) {
-    gmt2 = id + 7200000;
-  } else {
-    gmt2 = startTimestamp + 7200000;
-  }
+  let gmt2 = startTimestamp + 7200000;
+  
   let text = document.createTextNode(
     new Date(gmt2)
       .toISOString()
