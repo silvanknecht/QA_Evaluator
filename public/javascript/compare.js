@@ -118,6 +118,7 @@ async function buildPage() {
 
 function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
   selectSystemSame.innerHTML = "";
+  document.getElementById(scatterPlotId).innerHTML = "";
   let valueSelect = selectSystem.options[selectSystem.selectedIndex].value;
   if (valueSelect !== "-- no results available --") {
     let QALDgfms = [];
