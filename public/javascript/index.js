@@ -20,6 +20,7 @@ const compareBtn = document.getElementById("compareBtn");
 let evaluations;
 
 (async function() {
+  localStorage.clear();
   fillDatasetsSelect();
   fillFinishedTable("qald-9");
   fillRunningTable();
