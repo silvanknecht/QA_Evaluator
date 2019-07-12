@@ -79,6 +79,7 @@ async function buildPage() {
 }
 
 (async function() {
+  await fillDatasetsSelect();
   if (localStorage.dataset) {
     datasetComp.value = localStorage.dataset;
   }
@@ -106,6 +107,27 @@ async function buildPage() {
 
   refreshComparison();
 })();
+
+async function fillDatasetsSelect() {
+  let datasets = await availableDatasets();
+  datasets = await datasets.json();
+
+  datasets.forEach(function(dataset, key) {
+    if (dataset == "qald-9") {
+      datasetComp[datasetComp.options.length] = new Option(
+        dataset,
+        dataset,
+        true
+      );
+    } else {
+      datasetComp[datasetComp.options.length] = new Option(
+        dataset,
+        dataset,
+        false
+      );
+    }
+  });
+}
 
 function refreshComparison() {
   metricsDiv[0].innerHTML = "";
@@ -195,7 +217,7 @@ function compareTotalFound() {
   let innerDivs1 = totalFoundDivs[0].getElementsByTagName("DIV");
   let innerDivs2 = totalFoundDivs[1].getElementsByTagName("DIV");
 
-  for (var i = 0; i < innerDivs1.length; i++) {
+  for (var i = 0; i < innerDivs1.length && innerDivs2.length > 0; i++) {
     let found1 = innerDivs1[i].querySelector("span");
     let found2 = innerDivs2[i].querySelector("span");
 
@@ -347,15 +369,12 @@ function compareInformation() {
 
 async function buildSystemSelection(datasetKey) {
   try {
-    evaluations = await fetch(
-      url + "evaluations/finished?datasetKey=" + datasetKey,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
+    evaluations = await fetch(url + "evaluations?datasetKey=" + datasetKey, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
       }
-    );
+    });
 
     evaluations = await evaluations.json();
     selectSystem1.innerHTML = "";
@@ -371,12 +390,14 @@ async function buildSystemSelection(datasetKey) {
       selectSystem2.appendChild(opt.cloneNode(true));
     }
     for (prop in evaluations) {
-      let opt = document.createElement("option");
-      opt.value = evaluations[prop].id;
-      opt.innerHTML = evaluations[prop].name;
+      if (evaluations[prop].status !== "failed") {
+        let opt = document.createElement("option");
+        opt.value = evaluations[prop].id;
+        opt.innerHTML = evaluations[prop].name;
 
-      selectSystem1.appendChild(opt.cloneNode(true));
-      selectSystem2.appendChild(opt.cloneNode(true));
+        selectSystem1.appendChild(opt.cloneNode(true));
+        selectSystem2.appendChild(opt.cloneNode(true));
+      }
     }
   } catch (error) {
     console.error("Error:", error);

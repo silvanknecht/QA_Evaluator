@@ -7,9 +7,7 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
-    // replace all caraters that are not allowed inside of a filname
-    name = name.replace(/[/\\?%*:|"<>]/g, "-");
-
+   
     let timestamp = Date.now();
     let currentEval = new Evaluation(
       timestamp,
@@ -39,10 +37,12 @@ module.exports = {
         // }
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
+        if(typeof jest == "undefined"){
         console.log(
           "processedQuestions: ",
           currentEval.processedQuestions + " / " + currentEval.totalQuestions
         );
+        }
       } catch (error) {
         console.log("Looks like there was a problem: xS " + error);
 
@@ -50,6 +50,15 @@ module.exports = {
           id: qId,
           error: error.message
         });
+
+        // if the system has 10 errors the evaluation is terminated
+        if (currentEval.errors.length > 9) {
+          currentEval.updateStatus("failed");
+          currentEval.updateEvalsFile();
+
+          delete runningEvals[String(currentEval.id)];
+          return res.status(500).json(currentEval);
+        }
 
         currentEval.updateProgress();
       }
@@ -87,14 +96,14 @@ module.exports = {
       currentEval.updateStatus("successful");
       currentEval.updateEvalsFile();
 
-
-
-      console.log("========== Evaluation Result =========== ");
-      console.log("grc", currentEval.evalResults.metrics.grc);
-      console.log("gpr", currentEval.evalResults.metrics.gpr);
-      console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
-      console.log("gfm", currentEval.evalResults.metrics.gfm);
-      console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
+      if (typeof jest == "undefined") {
+        console.log("========== Evaluation Result =========== ");
+        console.log("grc", currentEval.evalResults.metrics.grc);
+        console.log("gpr", currentEval.evalResults.metrics.gpr);
+        console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
+        console.log("gfm", currentEval.evalResults.metrics.gfm);
+        console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
+      }
     } catch (error) {
       console.log("System Evaluation Failed: ", error);
     }
@@ -139,7 +148,7 @@ module.exports = {
         });
 
         return res.status(200).json({
-          message: `Evaluation with name: ${name} and id: ${id} has been successfully deleted!`
+          message: `Evaluation with name: ${name} and id: ${id} has been deleted successfully!`
         });
       } catch (err) {
         console.error(err);
@@ -148,7 +157,7 @@ module.exports = {
     } else {
       return res
         .status(400)
-        .json({ message: "You must send a number as a query id!" });
+        .json({ message: "You must send a number as a query id and the name of the Experiment as query name!" });
     }
   },
   getEvaluatedAnswers: function(req, res, next) {

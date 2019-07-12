@@ -39,3 +39,21 @@ tr[id^="trFin"]:hover {
 tr.toCompare {
   background-color: lightgray;
 }
+
+@-webkit-keyframes demo {
+  0% {
+    background-color: lightgrey;
+    opacity: 1;
+  }
+
+  100% {
+    background-color: Red;
+  }
+}
+
+.demo {
+  -webkit-animation-name: demo;
+  -webkit-animation-duration: 900ms;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-in-out;
+}

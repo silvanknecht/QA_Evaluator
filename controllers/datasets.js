@@ -9,9 +9,7 @@ module.exports = {
         res.json({ message: "Requestd dataset not found!" });
       }
     } else {
-      res.status(404).json({
-        message: "You need to send your required dataset as query param!"
-      });
+      return res.json(availableDatasets);
     }
   }
 };

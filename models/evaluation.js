@@ -218,22 +218,12 @@ class Evaluation {
         (fMeasureTot / totalResults).toFixed(3)
       );
 
-      if (
-        this.evalResults.metrics.grc === 0 &&
-        this.evalResults.metrics.QALDgpr === 0
-      ) {
-        this.evalResults.metrics.QALDgfm = 0;
-      } else {
-        this.evalResults.metrics.QALDgfm = Number(
-          (
-            (2 *
-              parseFloat(this.evalResults.metrics.grc) *
-              parseFloat(this.evalResults.metrics.QALDgpr)) /
-            (parseFloat(this.evalResults.metrics.grc) +
-              parseFloat(this.evalResults.metrics.QALDgpr))
-          ).toFixed(3)
-        );
-      }
+      this.evalResults.metrics.QALDgfm = Number(
+        Metrics.calcFMeasure(
+          parseFloat(this.evalResults.metrics.grc),
+          parseFloat(this.evalResults.metrics.QALDgpr)
+        ).toFixed(3)
+      );
 
       if (
         (this.evalResults.metrics.grc || this.evalResults.metrics.grc === 0) &&

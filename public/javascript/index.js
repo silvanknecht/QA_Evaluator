@@ -17,7 +17,10 @@ let compareResults = [];
 const selectedResults = document.getElementById("selectedResults");
 const compareBtn = document.getElementById("compareBtn");
 
-(function() {
+let evaluations;
+
+(async function() {
+  fillDatasetsSelect();
   fillFinishedTable("qald-9");
   fillRunningTable();
 
@@ -47,13 +50,21 @@ const compareBtn = document.getElementById("compareBtn");
     };
 
     try {
+      // Since Pipelines with including Sina can be evaluating up to two hours, the abort time is set highter to two hours
+      const controller = new AbortController();
+      const signal = controller.signal;
+
       let conductEval = await fetch(url + "evaluations/", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        signal
       });
+
+      // 5 second timeout:
+      setTimeout(() => controller.abort(), 7200000);
       conductEval = await conductEval.json();
       if (conductEval) console.log("Evaluation ended: ", conductEval);
     } catch (error) {
@@ -100,7 +111,6 @@ socket.on("evalEnded", data => {
   }
 });
 
-
 async function fillRunningTable() {
   try {
     let runningEvals = await fetch(url + "evaluations/running", {
@@ -110,7 +120,6 @@ async function fillRunningTable() {
       }
     });
     runningEvals = await runningEvals.json();
-    console.log(runningEvals);
     for (let id in runningEvals) {
       addToRunEval(runningEvals[id]);
     }
@@ -122,23 +131,41 @@ async function fillRunningTable() {
 async function fillFinishedTable(datasetKey) {
   finEvalsTableBody.innerHTML = "";
   try {
-    let evals = await fetch(
-      url + "evaluations?datasetKey=" + datasetKey,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
+    evaluations = await fetch(url + "evaluations?datasetKey=" + datasetKey, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
       }
-    );
-    evals = await evals.json();
-    console.log(evals);
-    for (let id in evals) {
-      addToFinEval(evals[id]);
+    });
+    evaluations = await evaluations.json();
+    for (let id in evaluations) {
+      addToFinEval(evaluations[id]);
     }
   } catch (error) {
     console.error("Error:", error);
   }
+}
+async function fillDatasetsSelect() {
+  let datasets = await availableDatasets();
+  datasets = await datasets.json();
+
+  datasets.forEach(function(dataset, key) {
+    if (dataset == "qald-9") {
+      exDataset[exDataset.options.length] = new Option(dataset, dataset, true);
+      datasetFin[datasetFin.options.length] = new Option(
+        dataset,
+        dataset,
+        true
+      );
+    } else {
+      exDataset[exDataset.options.length] = new Option(dataset, dataset, false);
+      datasetFin[datasetFin.options.length] = new Option(
+        dataset,
+        dataset,
+        false
+      );
+    }
+  });
 }
 
 // Table column functions
@@ -164,17 +191,7 @@ function addToRunEval(response) {
 }
 
 function addToFinEval(response) {
-  let {
-    id,
-    evaluatorVersion,
-    startTimestamp,
-    name,
-    datasetKey,
-    dataset,
-    status,
-    errors,
-    evalResults
-  } = response;
+  let { id, startTimestamp, name, status, errors, evalResults } = response;
   let tr = document.createElement("tr");
   tr.setAttribute("id", `trFin${id}`);
 
@@ -261,8 +278,15 @@ function addToFinEval(response) {
         }
         compareResults.splice(0, 1);
       }
-      compareResults.push(id);
-      finTr.classList += "toCompare";
+      if (evaluations[id].status !== "failed") {
+        compareResults.push(id);
+        finTr.classList += "toCompare";
+      } else {
+        finTr.classList.remove("demo");
+        setTimeout(() => {
+          finTr.classList += "demo";
+        }, 1);
+      }
     } else {
       compareResults.splice(compareResults.indexOf(id), 1);
       finTr.classList.remove("toCompare");

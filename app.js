@@ -18,7 +18,7 @@ app.use(compression());
 // global variables
 global.runningEvals = {};
 global.evaluationUrl = `http://localhost:${port}/`;
-global.availableDatasets = ["qald-8", "qald-9", "testData", "smallTest"];
+global.availableDatasets = ["qald-9", "qald-8", "testData", "smallTest"];
 global.datasets = {}; //datasets are loaded only when they were used at least once
 global.evaluatorVersion = "3.0.0";
 // 1.0.0: evaluation dublicated answers are also answers,

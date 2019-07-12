@@ -13,12 +13,11 @@ router.post(
   loadDataset,
   evaluationsController.evaluateSystem
 );
-
-router.delete("/", evaluationsController.deleteEvaluation);
 router.get("/", evaluationsController.getEvaluations);
-router.get("/evaluatedAnswers", evaluationsController.getEvaluatedAnswers);
+router.delete("/", evaluationsController.deleteEvaluation);
 router.get("/running", evaluationsController.getRunningEvals);
 router.get("/systemAnswers", evaluationsController.getSystemAnswers);
+router.get("/evaluatedAnswers", evaluationsController.getEvaluatedAnswers);
 
 
 
