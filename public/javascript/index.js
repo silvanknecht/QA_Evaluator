@@ -65,7 +65,7 @@ let evaluations;
       });
 
       // 5 second timeout:
-      setTimeout(() => controller.abort(), 7200000);
+      setTimeout(() => controller.abort(), 10800000);
       conductEval = await conductEval.json();
       if (conductEval) console.log("Evaluation ended: ", conductEval);
     } catch (error) {
@@ -309,7 +309,7 @@ function createSimpleField(value, name = 0, id = 0) {
 function createDateField(startTimestamp, id) {
   // TODO: fix because old data doesn't have the startTimestamp value
   let gmt2 = startTimestamp + 7200000;
-  
+
   let text = document.createTextNode(
     new Date(gmt2)
       .toISOString()

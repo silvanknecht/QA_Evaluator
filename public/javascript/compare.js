@@ -11,6 +11,12 @@ const selectSystem2 = document.getElementById("selectSystem2");
 
 const selectSystem1Same = document.getElementById("selectSystem1Same");
 const selectSystem2Same = document.getElementById("selectSystem2Same");
+const selectSystem1SameScatter = document.getElementById(
+  "selectSystem1SameScatter"
+);
+const selectSystem2SameScatter = document.getElementById(
+  "selectSystem2SameScatter"
+);
 let resultsBelongingTogether = {};
 
 const answerTypesDiv = [
@@ -59,6 +65,9 @@ const tableTrs = [
 
 window.onresize = async function() {
   Plotly.Plots.resize(datasetPlot);
+  Plotly.Plots.resize(selectSystem1SameScatter);
+  Plotly.Plots.resize(selectSystem2SameScatter);
+
   refreshComparison();
 };
 
@@ -107,39 +116,47 @@ async function buildPage() {
   }
 }
 
-function buildSameResults(selectSystem, selectSystemSame) {
+function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
   selectSystemSame.innerHTML = "";
   let valueSelect = selectSystem.options[selectSystem.selectedIndex].value;
   if (valueSelect !== "-- no results available --") {
-    if (resultsBelongingTogether[valueSelect].length > 1) {
-      for (let id of resultsBelongingTogether[valueSelect]) {
-        // if it is the first of the SAME Results it needs to be added first
-        if (selectSystemSame.length === 0) {
-          let gmt2 = evaluations[id].startTimestamp + 7200000;
-          let date = new Date(gmt2)
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " ");
+    let QALDgfms = [];
+    let dates = [];
+    let ids = [];
+    for (let id of resultsBelongingTogether[valueSelect].reverse()) {
+      QALDgfms.push(evaluations[id].evalResults.metrics.QALDgfm);
+      ids.push(id);
+      // if it is the first of the SAME Results it needs to be added first
+      if (selectSystemSame.length === 0) {
+        let gmt2 = evaluations[id].startTimestamp + 7200000;
+        let date = new Date(gmt2)
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " ");
+        dates.push(date);
 
-          selectSystemSame[selectSystemSame.options.length] = new Option(
-            date,
-            evaluations[id].id,
-            true
-          );
-        } else {
-          let gmt2 = evaluations[id].startTimestamp + 7200000;
-          let date = new Date(gmt2)
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " ");
+        selectSystemSame[selectSystemSame.options.length] = new Option(
+          date,
+          evaluations[id].id,
+          true
+        );
+      } else {
+        let gmt2 = evaluations[id].startTimestamp + 7200000;
+        let date = new Date(gmt2)
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " ");
+        dates.push(date);
 
-          selectSystemSame[selectSystemSame.options.length] = new Option(
-            date,
-            evaluations[id].id,
-            false
-          );
-        }
+        selectSystemSame[selectSystemSame.options.length] = new Option(
+          date,
+          evaluations[id].id,
+          false
+        );
       }
+    }
+    if (dates.length > 1) {
+      plotScatter(scatterPlotId, QALDgfms, dates, ids);
     }
   } else {
     selectSystemSame[selectSystemSame.options.length] = new Option(
@@ -157,7 +174,11 @@ function buildSameResults(selectSystem, selectSystemSame) {
 
   selectSystem1.addEventListener("change", e => {
     hideCompareTable();
-    buildSameResults(selectSystem1, selectSystem1Same);
+    buildSameResults(
+      selectSystem1,
+      selectSystem1Same,
+      "selectSystem1SameScatter"
+    );
     buildComparisons(1, e.target.value);
   });
 
@@ -167,7 +188,11 @@ function buildSameResults(selectSystem, selectSystemSame) {
   });
   selectSystem2.addEventListener("change", e => {
     hideCompareTable();
-    buildSameResults(selectSystem2, selectSystem2Same);
+    buildSameResults(
+      selectSystem2,
+      selectSystem2Same,
+      "selectSystem2SameScatter"
+    );
     buildComparisons(2, e.target.value);
   });
   selectSystem2Same.addEventListener("change", e => {
@@ -502,8 +527,16 @@ async function buildSystemSelection(
     console.error("Error:", error);
   }
 
-  buildSameResults(selectSystem1, selectSystem1Same);
-  buildSameResults(selectSystem2, selectSystem2Same);
+  buildSameResults(
+    selectSystem1,
+    selectSystem1Same,
+    "selectSystem1SameScatter"
+  );
+  buildSameResults(
+    selectSystem2,
+    selectSystem2Same,
+    "selectSystem2SameScatter"
+  );
 }
 
 async function buildDatasetVisual(datasetKey) {

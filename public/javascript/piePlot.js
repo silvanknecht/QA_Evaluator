@@ -1,5 +1,5 @@
 function plotPie(answerTypes, datasetKey, countOfQuestions) {
-  var data = [
+  let data = [
     {
       values: Object.values(answerTypes),
       labels: Object.keys(answerTypes),
@@ -7,7 +7,7 @@ function plotPie(answerTypes, datasetKey, countOfQuestions) {
     }
   ];
 
-  var layout = {
+  let layout = {
     title: {
       text: "Answertypes included in " + datasetKey,
       font: {

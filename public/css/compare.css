@@ -1,6 +1,8 @@
 h2 {
   font-size: 20px;
   text-align: center;
+  font-weight: bold;
+  border: 1px solid black;
 }
 
 h3 {
@@ -31,8 +33,17 @@ caption {
   color: red;
 }
 
-.piePlot {
+.piePlot,
+.scatterPlot {
   margin: auto;
+}
+
+.scatterPlot {
+  margin-top: -50px;
+}
+
+.placeInFront {
+  z-index: 9;
 }
 
 .answertype {
