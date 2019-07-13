@@ -205,19 +205,16 @@ function addToFinEval(response) {
   tr.appendChild(td);
   tr.appendChild(createSimpleField(name));
 
-  // TODO: needs better solution
-  if (evalResults !== undefined) {
+  if (evalResults.metrics.QALDgfm !== undefined) {
     tr.appendChild(createResultField(evalResults.metrics.grc));
     tr.appendChild(createResultField(evalResults.metrics.gpr));
     tr.appendChild(createResultField(evalResults.metrics.gfm));
     tr.appendChild(createResultField(evalResults.metrics.QALDgpr));
     tr.appendChild(createResultField(evalResults.metrics.QALDgfm));
   } else {
-    tr.appendChild(createResultField("-"));
-    tr.appendChild(createResultField("-"));
-    tr.appendChild(createResultField("-"));
-    tr.appendChild(createResultField("-"));
-    tr.appendChild(createResultField("-"));
+    for (let i = 0; i < 5; i++) {
+      tr.appendChild(createResultField("-"));
+    }
   }
 
   tr.appendChild(createSimpleField(errors.length));
@@ -297,7 +294,6 @@ function addToFinEval(response) {
 }
 
 // Table funtions
-
 function createSimpleField(value, name = 0, id = 0) {
   let td = document.createElement("td");
   if (name !== 0 && id !== 0) td.setAttribute("id", `${name}${id}`);
@@ -306,10 +302,8 @@ function createSimpleField(value, name = 0, id = 0) {
   return td;
 }
 
-function createDateField(startTimestamp, id) {
-  // TODO: fix because old data doesn't have the startTimestamp value
+function createDateField(startTimestamp) {
   let gmt2 = startTimestamp + 7200000;
-
   let text = document.createTextNode(
     new Date(gmt2)
       .toISOString()

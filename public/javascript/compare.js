@@ -63,58 +63,13 @@ const tableTrs = [
   document.getElementById("tr2")
 ];
 
-window.onresize = async function() {
+window.onresize = function() {
   Plotly.Plots.resize(datasetPlot);
   Plotly.Plots.resize(selectSystem1SameScatter);
   Plotly.Plots.resize(selectSystem2SameScatter);
 
-  refreshComparison();
+  buildComparisons();
 };
-
-async function buildPage() {
-  buildDatasetVisual(datasetComp.value);
-  datasetComp.addEventListener("change", async e => {
-    buildDatasetVisual(e.target.value);
-    await buildSystemSelection(datasetComp.value);
-
-    refreshComparison();
-  });
-  await buildSystemSelection(datasetComp.value);
-
-  if (localStorage.itemsToCompare) {
-    let itemsToCompare = localStorage.itemsToCompare.split(",");
-    if (itemsToCompare.length > 1) {
-      let ids = {};
-      for (let parentId in resultsBelongingTogether) {
-        if (
-          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
-        ) {
-          ids["0"] = parentId;
-        }
-        if (
-          resultsBelongingTogether[parentId].indexOf(itemsToCompare[1]) !== -1
-        ) {
-          ids["1"] = parentId;
-        }
-      }
-      await buildSystemSelection(datasetComp.value, ids["0"], ids["1"]);
-      selectSystem1Same.value = itemsToCompare[0];
-      selectSystem2Same.value = itemsToCompare[1];
-    } else {
-      let id1;
-      for (let parentId in resultsBelongingTogether) {
-        if (
-          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
-        ) {
-          id1 = parentId;
-          break;
-        }
-      }
-      await buildSystemSelection(datasetComp.value, id1);
-      selectSystem1Same.value = itemsToCompare[0];
-    }
-  }
-}
 
 function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
   selectSystemSame.innerHTML = "";
@@ -167,11 +122,115 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
 }
 
 (async function() {
-  await fillDatasetsSelect();
+  try {
+    await fillDatasetsSelect();
+  } catch (error) {
+    console.log(error);
+  }
+
   if (localStorage.dataset) {
     datasetComp.value = localStorage.dataset;
   }
-  await buildPage();
+  buildDatasetVisual(datasetComp.value);
+  datasetComp.addEventListener("change", async e => {
+    buildDatasetVisual(e.target.value);
+    try {
+      await buildSystemSelection(datasetComp.value);
+    } catch (error) {
+      console.log(error);
+    }
+
+    buildSameResults(
+      selectSystem1,
+      selectSystem1Same,
+      "selectSystem1SameScatter"
+    );
+    buildSameResults(
+      selectSystem2,
+      selectSystem2Same,
+      "selectSystem2SameScatter"
+    );
+
+    buildComparisons();
+  });
+
+  try {
+    await buildSystemSelection(datasetComp.value);
+  } catch (error) {
+    console.log(error);
+  }
+  buildSameResults(
+    selectSystem1,
+    selectSystem1Same,
+    "selectSystem1SameScatter"
+  );
+  buildSameResults(
+    selectSystem2,
+    selectSystem2Same,
+    "selectSystem2SameScatter"
+  );
+
+  if (localStorage.itemsToCompare) {
+    let itemsToCompare = localStorage.itemsToCompare.split(",");
+    if (itemsToCompare.length > 1) {
+      let ids = {};
+      for (let parentId in resultsBelongingTogether) {
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
+        ) {
+          ids["0"] = parentId;
+        }
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[1]) !== -1
+        ) {
+          ids["1"] = parentId;
+        }
+      }
+      try {
+        await buildSystemSelection(datasetComp.value, ids["0"], ids["1"]);
+      } catch (error) {
+        console.log(error);
+      }
+      buildSameResults(
+        selectSystem1,
+        selectSystem1Same,
+        "selectSystem1SameScatter"
+      );
+      buildSameResults(
+        selectSystem2,
+        selectSystem2Same,
+        "selectSystem2SameScatter"
+      );
+      selectSystem1Same.value = itemsToCompare[0];
+      selectSystem2Same.value = itemsToCompare[1];
+    } else {
+      let id1;
+      for (let parentId in resultsBelongingTogether) {
+        if (
+          resultsBelongingTogether[parentId].indexOf(itemsToCompare[0]) !== -1
+        ) {
+          id1 = parentId;
+          break;
+        }
+      }
+      try {
+        await buildSystemSelection(datasetComp.value, id1);
+      } catch (error) {
+        console.log(error);
+      }
+      buildSameResults(
+        selectSystem1,
+        selectSystem1Same,
+        "selectSystem1SameScatter"
+      );
+      buildSameResults(
+        selectSystem2,
+        selectSystem2Same,
+        "selectSystem2SameScatter"
+      );
+      selectSystem1Same.value = itemsToCompare[0];
+    }
+  }
 
   selectSystem1.addEventListener("change", e => {
     hideCompareTable();
@@ -180,12 +239,14 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
       selectSystem1Same,
       "selectSystem1SameScatter"
     );
-    buildComparisons(1, e.target.value);
+    buildComparison(1, e.target.value);
+    refreshComparison();
   });
 
   selectSystem1Same.addEventListener("change", e => {
     hideCompareTable();
-    buildComparisons(1, e.target.value);
+    buildComparison(1, e.target.value);
+    refreshComparison();
   });
   selectSystem2.addEventListener("change", e => {
     hideCompareTable();
@@ -194,93 +255,105 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
       selectSystem2Same,
       "selectSystem2SameScatter"
     );
-    buildComparisons(2, e.target.value);
+    buildComparison(2, e.target.value);
+    refreshComparison();
   });
   selectSystem2Same.addEventListener("change", e => {
     hideCompareTable();
-    buildComparisons(2, e.target.value);
+    buildComparison(2, e.target.value);
+    refreshComparison();
   });
 
   closeTable.addEventListener("click", () => {
     hideCompareTable();
   });
 
-  refreshComparison();
+  buildComparisons();
 })();
 
-async function fillDatasetsSelect() {
-  let datasets = await availableDatasets();
-  datasets = await datasets.json();
+function fillDatasetsSelect() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let datasets = await availableDatasets();
+      datasets = await datasets.json();
 
-  datasets.forEach(function(dataset, key) {
-    if (dataset == "qald-9") {
-      datasetComp[datasetComp.options.length] = new Option(
-        dataset,
-        dataset,
-        true
-      );
-    } else {
-      datasetComp[datasetComp.options.length] = new Option(
-        dataset,
-        dataset,
-        false
-      );
+      datasets.forEach(function(dataset, key) {
+        if (dataset == "qald-9") {
+          datasetComp[datasetComp.options.length] = new Option(
+            dataset,
+            dataset,
+            true
+          );
+        } else {
+          datasetComp[datasetComp.options.length] = new Option(
+            dataset,
+            dataset,
+            false
+          );
+        }
+      });
+
+      resolve();
+    } catch (error) {
+      reject(error);
     }
   });
 }
 
-function refreshComparison() {
-  metricsDiv[0].innerHTML = "";
-  answerTypesDiv[0].innerHTML = "";
-  barcodeDivs[0].innerHTML = "";
-  metricsDiv[1].innerHTML = "";
-  answerTypesDiv[1].innerHTML = "";
-  barcodeDivs[1].innerHTML = "";
-  buildComparisons(1, selectSystem1Same.value);
-  buildComparisons(2, selectSystem2Same.value);
-  hideCompareTable();
-}
-
-async function buildComparisons(systemNr, id) {
+function buildComparison(systemNr, id) {
+  informationDivs[systemNr - 1].innerHTML = "";
   metricsDiv[systemNr - 1].innerHTML = "";
   answerTypesDiv[systemNr - 1].innerHTML = "";
   barcodeDivs[systemNr - 1].innerHTML = "";
-  informationDivs[systemNr - 1].innerHTML = "";
   totalFoundDivs[systemNr - 1].innerHTML = "";
+
   if (evaluations[id] !== undefined) {
-    await buildAnswerTypes(systemNr, evaluations[id].evalResults.answerTypes);
-    compareAnswertypes();
-    await buildMetrics(systemNr, evaluations[id].evalResults);
-    compareMetrics();
-    await buildInformation(systemNr, evaluations[id]);
-    compareInformation();
-    await buildTotalFound(
+    buildAnswerTypes(systemNr, evaluations[id].evalResults.answerTypes);
+    buildMetrics(systemNr, evaluations[id].evalResults);
+    buildInformation(systemNr, evaluations[id]);
+    buildTotalFound(
       evaluations[id].isQanaryPipeline,
       systemNr,
       evaluations[id].evalResults.totalFound
     );
-    compareTotalFound(evaluations[id].isQanaryPipeline);
     buildChars(systemNr, id, evaluations[id].name);
   }
 }
 
-async function buildChars(systemNr, id, name) {
-  let evaluatedAnswers = await fetch(
-    url + "evaluations/evaluatedAnswers?name=" + name + "&id=" + id,
-    { method: "GET" }
-  );
-  evaluatedAnswers = await evaluatedAnswers.json();
-  evaluatedAnswers = evaluatedAnswers.concat(evaluations[id].errors);
+function buildComparisons() {
+  buildComparison(1, selectSystem1Same.value);
+  buildComparison(2, selectSystem2Same.value);
+  refreshComparison();
+}
 
-  evaluatedAnswers.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1));
-  drawChart(
-    dataset.questions.length,
-    "barcode" + systemNr,
-    evaluatedAnswers,
-    evaluations[id].name,
-    evaluations[id].evalResults
-  );
-  answers[systemNr - 1] = evaluatedAnswers;
+function refreshComparison() {
+  compareAnswertypes();
+  compareMetrics();
+  compareInformation();
+  compareTotalFound();
+  hideCompareTable();
+}
+
+async function buildChars(systemNr, id, name) {
+  try {
+    let evaluatedAnswers = await fetch(
+      url + "evaluations/evaluatedAnswers?name=" + name + "&id=" + id,
+      { method: "GET" }
+    );
+    evaluatedAnswers = await evaluatedAnswers.json();
+    evaluatedAnswers = evaluatedAnswers.concat(evaluations[id].errors);
+    evaluatedAnswers.sort((a, b) => (Number(a.id) > Number(b.id) ? 1 : -1));
+    drawChart(
+      dataset.questions.length,
+      "barcode" + systemNr,
+      evaluatedAnswers,
+      evaluations[id].name,
+      evaluations[id].evalResults
+    );
+    answers[systemNr - 1] = evaluatedAnswers;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function buildTotalFound(isQanaryPipeline, systemNr, totalFound) {
@@ -316,17 +389,7 @@ function compareTotalFound() {
     if (found1 !== undefined && found2 !== undefined) {
       let num1 = Number(found1.innerText);
       let num2 = Number(found2.innerText);
-
-      if (num1 > num2) {
-        found1.setAttribute("class", "green");
-        found2.setAttribute("class", "red");
-      } else if (num2 > num1) {
-        found2.setAttribute("class", "green");
-        found1.setAttribute("class", "red");
-      } else {
-        found2.classList.remove("green", "red");
-        found1.classList.remove("green", "red");
-      }
+      coloringComparison(num1, num2, found1, found2);
     }
   }
 }
@@ -407,16 +470,7 @@ function compareAnswertypes() {
       let num1 = Number(answertype1.innerText.replace("%", ""));
       let num2 = Number(answertype2.innerText.replace("%", ""));
 
-      if (num1 > num2) {
-        answertype1.setAttribute("class", "green");
-        answertype2.setAttribute("class", "red");
-      } else if (num2 > num1) {
-        answertype2.setAttribute("class", "green");
-        answertype1.setAttribute("class", "red");
-      } else {
-        answertype2.classList.remove("green", "red");
-        answertype1.classList.remove("green", "red");
-      }
+      coloringComparison(num1, num2, answertype1, answertype2);
     }
   }
 }
@@ -440,115 +494,101 @@ function buildInformation(systemNr, evalResults) {
 function compareInformation() {
   let innerDivs1 = informationDivs[0].getElementsByTagName("DIV");
   let innerDivs2 = informationDivs[1].getElementsByTagName("DIV");
+  if (innerDivs1[0] !== undefined && innerDivs2[0] !== undefined) {
+    let time1 = innerDivs1[0].querySelector("span");
+    let time2 = innerDivs2[0].querySelector("span");
+    let num1 = Number(time1.innerText.replace("s", ""));
+    let num2 = Number(time2.innerText.replace("s", ""));
 
-  let time1 = innerDivs1[0].querySelector("span");
-  let time2 = innerDivs2[0].querySelector("span");
-  let num1 = Number(time1.innerText.replace("s", ""));
-  let num2 = Number(time2.innerText.replace("s", ""));
-
-  // TODO: replace doublicated code, careful this one is diffrent thant the others!
-  if (num1 < num2) {
-    time1.setAttribute("class", "green");
-    time2.setAttribute("class", "red");
-  } else if (num2 < num1) {
-    time2.setAttribute("class", "green");
-    time1.setAttribute("class", "red");
-  } else {
-    time2.classList.remove("green", "red");
-    time1.classList.remove("green", "red");
+    coloringComparison(num2, num1, time1, time2);
   }
 }
 
 // TODO: Split this function into 2 functions
-async function buildSystemSelection(
+function buildSystemSelection(
   datasetKey,
   idToSelect1 = undefined,
   idToSelect2 = undefined
 ) {
-  resultsBelongingTogether = {};
-  try {
-    evaluations = await fetch(url + "evaluations?datasetKey=" + datasetKey, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+  return new Promise(async (resolve, reject) => {
+    resultsBelongingTogether = {};
+    try {
+      evaluations = await fetch(url + "evaluations?datasetKey=" + datasetKey, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
 
-    evaluations = await evaluations.json();
-    selectSystem1.innerHTML = "";
-    selectSystem2.innerHTML = "";
-    if (
-      Object.entries(evaluations).length === 0 &&
-      evaluations.constructor === Object
-    ) {
-      let opt = document.createElement("option");
-      opt.innerHTML = "-- no results available --";
+      evaluations = await evaluations.json();
+      selectSystem1.innerHTML = "";
+      selectSystem2.innerHTML = "";
+      if (
+        Object.entries(evaluations).length === 0 &&
+        evaluations.constructor === Object
+      ) {
+        let opt = document.createElement("option");
+        opt.innerHTML = "-- no results available --";
 
-      selectSystem1.appendChild(opt.cloneNode(true));
-      selectSystem2.appendChild(opt.cloneNode(true));
-    } else {
-      let evaluationsClone = JSON.parse(JSON.stringify(evaluations));
-      for (let id in evaluationsClone) {
-        if (evaluationsClone[id].status !== "failed") {
-          resultsBelongingTogether[id] = [id];
-          let opt = document.createElement("option");
-          opt.value = evaluationsClone[id].id;
-          opt.innerHTML = evaluationsClone[id].name;
+        selectSystem1.appendChild(opt.cloneNode(true));
+        selectSystem2.appendChild(opt.cloneNode(true));
+      } else {
+        let evaluationsClone = JSON.parse(JSON.stringify(evaluations));
+        for (let id in evaluationsClone) {
+          if (evaluationsClone[id].status !== "failed") {
+            resultsBelongingTogether[id] = [id];
+            let opt = document.createElement("option");
+            opt.value = evaluationsClone[id].id;
+            opt.innerHTML = evaluationsClone[id].name;
 
-          selectSystem1.appendChild(opt.cloneNode(true));
-          selectSystem2.appendChild(opt.cloneNode(true));
-          delete evaluationsClone[id];
+            selectSystem1.appendChild(opt.cloneNode(true));
+            selectSystem2.appendChild(opt.cloneNode(true));
+            delete evaluationsClone[id];
 
-          // check if there is another evaluation with the same name, version, and systemUrl
-          for (let id2 in evaluationsClone) {
-            if (
-              evaluations[id].name === evaluationsClone[id2].name &&
-              evaluations[id].evaluatorVersion ===
-                evaluationsClone[id2].evaluatorVersion &&
-              evaluations[id].systemUrl === evaluationsClone[id2].systemUrl
-            ) {
-              resultsBelongingTogether[id].push(id2);
-              delete evaluationsClone[id2];
-
-              console.log("This is the same System!");
+            // check if there is another evaluation with the same name, version, and systemUrl
+            for (let id2 in evaluationsClone) {
+              if (
+                evaluations[id].name === evaluationsClone[id2].name &&
+                evaluations[id].evaluatorVersion ===
+                  evaluationsClone[id2].evaluatorVersion &&
+                evaluations[id].systemUrl === evaluationsClone[id2].systemUrl
+              ) {
+                resultsBelongingTogether[id].push(id2);
+                delete evaluationsClone[id2];
+              }
             }
+          } else {
+            delete evaluationsClone[id];
           }
-        } else {
-          delete evaluationsClone[id];
         }
       }
+      if (idToSelect1 !== undefined) {
+        selectSystem1.value = idToSelect1;
+      }
+      if (idToSelect2 !== undefined) {
+        selectSystem2.value = idToSelect2;
+      }
+      resolve(resultsBelongingTogether);
+    } catch (error) {
+      console.error("Error:", error);
+      reject(error);
     }
-    if (idToSelect1 !== undefined) {
-      selectSystem1.value = idToSelect1;
-    }
-    if (idToSelect2 !== undefined) {
-      selectSystem2.value = idToSelect2;
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-
-  buildSameResults(
-    selectSystem1,
-    selectSystem1Same,
-    "selectSystem1SameScatter"
-  );
-  buildSameResults(
-    selectSystem2,
-    selectSystem2Same,
-    "selectSystem2SameScatter"
-  );
+  });
 }
 
 async function buildDatasetVisual(datasetKey) {
-  dataset = await fetch(url + "datasets?dataset=" + datasetKey, {
-    method: "GET"
-  });
-  dataset = await dataset.json();
-  /* Analyze Questions*/
-  let { answerTypes, countOfQuestions } = analyzeQuestions(dataset);
-  answerTypesTot = answerTypes;
-  plotPie(answerTypes, datasetKey, countOfQuestions);
+  try {
+    dataset = await fetch(url + "datasets?dataset=" + datasetKey, {
+      method: "GET"
+    });
+    dataset = await dataset.json();
+    /* Analyze Questions*/
+    let { answerTypes, countOfQuestions } = analyzeQuestions(dataset);
+    answerTypesTot = answerTypes;
+    plotPie(answerTypes, datasetKey, countOfQuestions);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function analyzeQuestions(qald) {
@@ -565,6 +605,8 @@ function analyzeQuestions(qald) {
   return { answerTypes, countOfQuestions };
 }
 
+// Helpers
+
 function showCompareTable() {
   compareSystemTable.style.display = "table";
   closeTable.style.display = "block";
@@ -573,4 +615,17 @@ function showCompareTable() {
 function hideCompareTable() {
   compareSystemTable.style.display = "none";
   closeTable.style.display = "none";
+}
+
+function coloringComparison(num1, num2, found1, found2) {
+  if (num1 > num2) {
+    found1.setAttribute("class", "green");
+    found2.setAttribute("class", "red");
+  } else if (num2 > num1) {
+    found2.setAttribute("class", "green");
+    found1.setAttribute("class", "red");
+  } else {
+    found2.classList.remove("green", "red");
+    found1.classList.remove("green", "red");
+  }
 }
