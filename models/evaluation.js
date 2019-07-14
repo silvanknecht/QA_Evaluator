@@ -12,7 +12,7 @@ class Evaluation {
     this.endTimestamp = null;
     this.datasetKey = dataset;
     this.systemUrl = systemUrl;
-    this.isQanaryPipeline = false;
+    this.isQanaryPipeline = null;
     this.evaluatorVersion = evaluatorVersion;
     this.results = [];
     this.errors = [];
@@ -78,6 +78,7 @@ class Evaluation {
         io.sockets.emit("evalEnded", JSON.stringify(this));
         break;
       case "successful":
+        // console.log("success!!!", io);
         this.endTimestamp = Date.now();
         io.sockets.emit("evalEnded", JSON.stringify(this));
         break;
@@ -124,6 +125,8 @@ class Evaluation {
                 this.evalResults.totalFound.queries += countUris(
                   question.query
                 );
+              } else {
+                this.isQanaryPipeline = false;
               }
 
               // gather all the given answers

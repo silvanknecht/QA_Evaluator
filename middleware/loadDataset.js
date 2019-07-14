@@ -4,7 +4,7 @@ module.exports = function(req, res, next) {
     try {
       let dataset = require("../datasets/" + choosenDataset);
       datasets[choosenDataset] = dataset;
-      if (typeof jest == "undefined") {
+      if (typeof jest === "undefined") {
         console.log("dataset has been loaded!");
       }
     } catch (error) {
@@ -12,7 +12,9 @@ module.exports = function(req, res, next) {
       return res.status(500);
     }
   } else {
-    console.log("dataset already loaded!");
+    if (typeof jest === "undefined") {
+      console.log("dataset already loaded!");
+    }
   }
   next();
 };

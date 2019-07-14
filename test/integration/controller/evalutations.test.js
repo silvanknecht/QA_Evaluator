@@ -1,20 +1,45 @@
+const ioBack = require("socket.io");
 // do not allow writing to a file during tests
 jest.mock("fs");
 const request = require("supertest");
 
 let Evaluation = require("../../../models/evaluation");
 
+let socket;
 let server;
+let result;
 let resultset;
 let resultset20;
 
-beforeEach(() => {
+beforeAll(() => {
   server = require("../../../app");
+  //global.io = ioBack(server);
+});
+
+afterAll(() => {
+  server.close();
+});
+
+beforeEach(done => {
   resultset = require("../../testData/testResultset.json");
   resultset20 = require("../../testData/testResultset20.json");
+  try {
+    socket = require("socket.io-client")("http://localhost:3000");
+    socket.on("connect", () => {
+      socket.on("evalEnded", message => {
+        result = JSON.parse(message);
+        // Check that the message matches
+      });
+      done();
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
-afterEach(async () => {
-  await server.close();
+afterEach(() => {
+  if (socket.connected) {
+    socket.disconnect();
+  }
 });
 
 describe("start evaluation 100% correct answers", () => {
@@ -96,68 +121,93 @@ describe("start evaluation 100% correct answers", () => {
     expect(res.status).toBe(400);
   });
 
-  it("should add number:2 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.number).toBe(2);
-  });
-  it("should add resource:2 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.resource).toBe(5);
-  });
-  it("should add boolean:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.boolean).toBe(1);
-  });
-  it("should add date:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.date).toBe(2);
-  });
-  it("should add string:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.string).toBe(2);
-  });
-  it("should add 1 to every metric", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
+  it("should add number:2 to the answerTypes property", async done => {
+    let res = await exec();
 
-    expect(result.evalResults.metrics.grc).toBe(1);
-    expect(result.evalResults.metrics.gpr).toBe(1);
-    expect(result.evalResults.metrics.QALDgpr).toBe(1);
-    expect(result.evalResults.metrics.gfm).toBe(1);
-    expect(result.evalResults.metrics.QALDgfm).toBe(1);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.number).toBe(2);
+      done();
+    }, 50);
   });
-  it("should add entities:12 to the totalFound property", async () => {
+  it("should add resource:5 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.entities).toBe(12);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.resource).toBe(5);
+      done();
+    }, 50);
   });
-  it("should add properties:11 to the totalFound property", async () => {
+  it("should add boolean:1 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.properties).toBe(11);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.boolean).toBe(1);
+      done();
+    }, 50);
   });
-  it("should add classes:3 to the totalFound property", async () => {
+  it("should add date:1 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.classes).toBe(3);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.date).toBe(2);
+      done();
+    }, 50);
   });
-  it("should add queries:12 to the totalFound property", async () => {
+  it("should add string:1 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.queries).toBe(12);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.string).toBe(2);
+      done();
+    }, 50);
+  });
+  it("should add 1 to every metric", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.metrics.grc).toBe(1);
+      expect(result.evalResults.metrics.gpr).toBe(1);
+      expect(result.evalResults.metrics.QALDgpr).toBe(1);
+      expect(result.evalResults.metrics.gfm).toBe(1);
+      expect(result.evalResults.metrics.QALDgfm).toBe(1);
+      done();
+    }, 50);
+  });
+  it("should add entities:12 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.entities).toBe(12);
+      done();
+    }, 50);
+  });
+  it("should add properties:11 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.properties).toBe(11);
+      done();
+    }, 50);
+  });
+  it("should add classes:3 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.classes).toBe(3);
+      done();
+    }, 50);
+  });
+  it("should add queries:12 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.queries).toBe(12);
+      done();
+    }, 50);
   });
 });
 
-describe("start evaluation 100% correct answers", () => {
+describe("start evaluation answers from Pipeline 20, some are wrong, some right", () => {
   let payload;
   const exec = () => {
     return request(server)
@@ -212,84 +262,122 @@ describe("start evaluation 100% correct answers", () => {
     };
   });
 
-  it("should add number:2 to the answerTypes property", async () => {
+  it("should add number:2 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
-    console.log(result);
-    expect(result.evalResults.answerTypes.number).toBe(1);
-  });
-  it("should add resource:2 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.resource).toBe(3);
-  });
-  it("should add boolean:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.boolean).toBeUndefined();
-  });
-  it("should add date:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.date).toBe(1);
-  });
-  it("should add string:1 to the answerTypes property", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
-    expect(result.evalResults.answerTypes.string).toBeUndefined();
-  });
-  it("should add 0.432 as grp to the metrics", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.metrics.grc).toBe(0.432);
-  });
-  it("should add 0.4 as gpr to the metrics", async () => {
-    const res = await exec();
-    const result = JSON.parse(res.text);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.number).toBe(1);
 
-    expect(result.evalResults.metrics.gpr).toBe(0.4);
+      done();
+    }, 50);
   });
-  it("should add 0.65 as QALDgpr to the metrics", async () => {
+  it("should add resource:2 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.metrics.QALDgpr).toBe(0.65);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.resource).toBe(3);
+
+      done();
+    }, 50);
   });
-  it("should add 0.386 as gfm to the metrics", async () => {
+  it("should add boolean: undefined to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.metrics.gfm).toBe(0.386);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.boolean).toBeUndefined();
+      done();
+    }, 50);
   });
-  it("should add 0.519 as QALDgfm to the metrics", async () => {
+  it("should add date:1 to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.metrics.QALDgfm).toBe(0.519);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.date).toBe(1);
+
+      done();
+    }, 50);
   });
-  it("should add entities:12 to the totalFound property", async () => {
+  it("should add string:undefined to the answerTypes property", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.entities).toBe(13);
+    setTimeout(function() {
+      expect(result.evalResults.answerTypes.string).toBeUndefined();
+      done();
+    }, 50);
   });
-  it("should add properties:11 to the totalFound property", async () => {
+  it("should add 0.432 as grp to the metrics", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.properties).toBe(12);
+    setTimeout(function() {
+      expect(result.evalResults.metrics.grc).toBe(0.432);
+      done();
+    }, 50);
   });
-  it("should add classes:3 to the totalFound property", async () => {
+  it("should add 0.4 as gpr to the metrics", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.classes).toBe(1);
+    setTimeout(function() {
+      expect(result.evalResults.metrics.gpr).toBe(0.4);
+      done();
+    }, 50);
   });
-  it("should add queries:12 to the totalFound property", async () => {
+  it("should add 0.65 as QALDgpr to the metrics", async done => {
     const res = await exec();
-    const result = JSON.parse(res.text);
 
-    expect(result.evalResults.totalFound.queries).toBe(11);
+    setTimeout(function() {
+      expect(result.evalResults.metrics.QALDgpr).toBe(0.65);
+      done();
+    }, 50);
+  });
+  it("should add 0.386 as gfm to the metrics", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.metrics.gfm).toBe(0.386);
+
+      done();
+    }, 50);
+  });
+  it("should add 0.519 as QALDgfm to the metrics", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.metrics.QALDgfm).toBe(0.519);
+
+      done();
+    }, 50);
+  });
+  it("should add entities:13 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.entities).toBe(13);
+
+      done();
+    }, 50);
+  });
+  it("should add properties:12 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.properties).toBe(12);
+      done();
+    }, 50);
+  });
+  it("should add classes:1 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.classes).toBe(1);
+      done();
+    }, 50);
+  });
+  it("should add queries:11 to the totalFound property", async done => {
+    const res = await exec();
+
+    setTimeout(function() {
+      expect(result.evalResults.totalFound.queries).toBe(11);
+      done();
+    }, 50);
   });
 });

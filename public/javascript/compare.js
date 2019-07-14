@@ -485,8 +485,8 @@ function buildInformation(systemNr, evalResults) {
   let span = document.createElement("span");
   span.innerText =
     (
-      Number(evalResults.endTimestamp - evalResults.startTimestamp) / 1000
-    ).toFixed(0) + "s";
+      Number(evalResults.endTimestamp - evalResults.startTimestamp) / 3600000
+    ).toFixed(1) + "h";
   div.appendChild(span);
   informationDivs[systemNr - 1].appendChild(div);
 }

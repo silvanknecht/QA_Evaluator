@@ -20,8 +20,9 @@
   },
   "devDependencies": {
     "jest": "^24.5.0",
-    "supertest": "^4.0.2",
-    "mockdate": "^2.0.3"
+    "mockdate": "^2.0.3",
+    "socket.io-client": "^2.2.0",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": "8.9.1"
@@ -30,7 +31,8 @@
     "globals": {
       "evaluationUrl": "http://testurl.ch",
       "evaluatorVersion": "testVersion",
-      "datasets": {}
+      "datasets": {},
+      "io": "will be overwritten in tests"
     }
   }
 }

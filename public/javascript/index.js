@@ -51,23 +51,16 @@ let evaluations;
     };
 
     try {
-      // Since Pipelines with including Sina can be evaluating up to two hours, the abort time is set highter to two hours
-      const controller = new AbortController();
-      const signal = controller.signal;
-
-      let conductEval = await fetch(url + "evaluations/", {
+      let startEval = await fetch(url + "evaluations/", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json"
-        },
-        signal
+        }
       });
 
-      // 5 second timeout:
-      setTimeout(() => controller.abort(), 10800000);
-      conductEval = await conductEval.json();
-      if (conductEval) console.log("Evaluation ended: ", conductEval);
+      startEval = await startEval.json();
+      if (startEval) console.log("Evaluation accepted: ", startEval);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -87,7 +80,7 @@ let evaluations;
 // Live data
 let socket = io.connect(url, { reconnection: true });
 socket.on("update", data => {
-  console.log(JSON.parse(data));
+  console.log("update", JSON.parse(data));
   let json = JSON.parse(data);
   const progBar = document.getElementById(`progBar${json.id}`);
   const statRun = document.getElementById(`statRun${json.id}`);
@@ -100,11 +93,14 @@ socket.on("update", data => {
 });
 socket.on("evalStarted", data => {
   let json = JSON.parse(data);
+  console.log("evalStarted", json);
   addToRunEval(json);
 });
 
 socket.on("evalEnded", data => {
   let json = JSON.parse(data);
+  console.log("evalEnded", json);
+  evaluations[json.id] = json;
   const trRun = document.getElementById(`trRun${json.id}`);
   trRun.parentNode.removeChild(trRun);
   if (json.datasetKey === datasetFin.value) {

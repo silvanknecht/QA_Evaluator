@@ -7,7 +7,7 @@ module.exports = {
   evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
-   
+
     let timestamp = Date.now();
     let currentEval = new Evaluation(
       timestamp,
@@ -17,7 +17,10 @@ module.exports = {
       totalQuestions
     );
     runningEvals[String(timestamp)] = currentEval;
-    console.log("Evaluation with dataset: " + dataset + " has started.");
+    res.status(202).json(currentEval);
+    if (typeof jest === "undefined") {
+      console.log("Evaluation with dataset: " + dataset + " has started.");
+    }
     io.sockets.emit("evalStarted", JSON.stringify(currentEval));
 
     // QUESTIONING
@@ -37,11 +40,11 @@ module.exports = {
         // }
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
-        if(typeof jest == "undefined"){
-        console.log(
-          "processedQuestions: ",
-          currentEval.processedQuestions + " / " + currentEval.totalQuestions
-        );
+        if (typeof jest == "undefined") {
+          console.log(
+            "processedQuestions: ",
+            currentEval.processedQuestions + " / " + currentEval.totalQuestions
+          );
         }
       } catch (error) {
         console.log("Looks like there was a problem: xS " + error);
@@ -56,8 +59,7 @@ module.exports = {
           currentEval.updateStatus("failed");
           currentEval.updateEvalsFile();
 
-          delete runningEvals[String(currentEval.id)];
-          return res.status(500).json(currentEval);
+          return delete runningEvals[String(currentEval.id)];
         }
 
         currentEval.updateProgress();
@@ -79,8 +81,7 @@ module.exports = {
       currentEval.updateStatus("failed");
       currentEval.updateEvalsFile();
 
-      delete runningEvals[String(currentEval.id)];
-      return res.status(500).json(currentEval);
+      return delete runningEvals[String(currentEval.id)];
     }
 
     // CALCULATING
@@ -105,10 +106,12 @@ module.exports = {
         console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
       }
     } catch (error) {
+      currentEval.updateStatus("failed");
+      currentEval.updateEvalsFile();
       console.log("System Evaluation Failed: ", error);
+      return delete runningEvals[String(currentEval.id)];
     }
-    res.json(currentEval);
-    delete runningEvals[String(currentEval.id)];
+    return delete runningEvals[String(currentEval.id)];
   }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
@@ -155,9 +158,10 @@ module.exports = {
         return res.status(404).json({ message: "File not found!" });
       }
     } else {
-      return res
-        .status(400)
-        .json({ message: "You must send a number as a query id and the name of the Experiment as query name!" });
+      return res.status(400).json({
+        message:
+          "You must send a number as a query id and the name of the Experiment as query name!"
+      });
     }
   },
   getEvaluatedAnswers: function(req, res, next) {
