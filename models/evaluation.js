@@ -106,9 +106,6 @@ class Evaluation {
                 );
               }
 
-              // gather all the expected answers
-              let expectedAnswers = gatherExpectedAnswers(q);
-
               // count all classes, properties, entities and queries that are found by the system
               let question = r.data.questions[0];
               if (question.qanaryAnno !== undefined) {
@@ -129,6 +126,9 @@ class Evaluation {
                 this.isQanaryPipeline = false;
               }
 
+              // gather all the expected answers
+              let expectedAnswers = gatherExpectedAnswers(q);
+
               // gather all the given answers
               let givenAnswers = gatherGivenAnswers(question);
 
@@ -141,10 +141,11 @@ class Evaluation {
                 for (let g of givenAnswers) {
                   if (e == g) {
                     r.NrCorrect++;
+                    break;
                   }
                 }
               }
-              if (r.NrCorrect === r.NrExpected) {
+              if (r.NrCorrect === r.NrExpected && r.NrSystem === r.NrCorrect) {
                 let answerTypeToUpdate = this.evalResults.answerTypes[
                   q.answertype
                 ];
@@ -189,17 +190,17 @@ class Evaluation {
         let precision = Metrics.calcPrecision(q, false);
         let fMeasure = Metrics.calcFMeasure(recall, precision);
 
-        recallTot += recall;
-        precisionTot += precision;
-        qaldPrecisionTot += qaldPrecision;
-        fMeasureTot += fMeasure;
-
         q.calc.push({
           recall,
           precision,
           qaldPrecision,
           fMeasure
         });
+
+        recallTot += recall;
+        precisionTot += precision;
+        qaldPrecisionTot += qaldPrecision;
+        fMeasureTot += fMeasure;
       }
 
       /** Add global Recall, Precicion and FMeasure to the Pipeline */

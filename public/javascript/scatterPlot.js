@@ -28,8 +28,20 @@ function plotScatter(divId, QALDgfms, dates, ids) {
   ];
   let layout = {
     hovermode: "closest",
-    title: { text: "Result Timeline", y: titleOffset },
-    showlegend: true
+    title: { text: "Results timeline", y: titleOffset },
+    yaxis: {
+      rangemode: 'tozero',
+      autorange: true,
+      title: {
+        text: 'QALDgfm',
+        font: {
+          family: 'Courier New, monospace',
+          size: 18,
+          color: '#7f7f7f'
+        }
+      },
+    },
+    showlegend: false
   };
 
   Plotly.newPlot(divId, data, layout, { displayModeBar: false });

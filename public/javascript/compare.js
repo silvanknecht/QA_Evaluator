@@ -497,8 +497,8 @@ function compareInformation() {
   if (innerDivs1[0] !== undefined && innerDivs2[0] !== undefined) {
     let time1 = innerDivs1[0].querySelector("span");
     let time2 = innerDivs2[0].querySelector("span");
-    let num1 = Number(time1.innerText.replace("s", ""));
-    let num2 = Number(time2.innerText.replace("s", ""));
+    let num1 = Number(time1.innerText.replace("h", ""));
+    let num2 = Number(time2.innerText.replace("h", ""));
 
     coloringComparison(num2, num1, time1, time2);
   }
