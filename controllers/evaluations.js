@@ -4,7 +4,7 @@ let Evaluation = require("../models/evaluation.js");
 let { saveFile } = require("../helpers/file");
 
 module.exports = {
-  evaluateSystem: async function(req, res, next) {
+  evaluateSystem: async function (req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
 
@@ -17,6 +17,8 @@ module.exports = {
       totalQuestions
     );
     runningEvals[String(timestamp)] = currentEval;
+
+    // send accepted to the user
     res.status(202).json(currentEval);
     if (typeof jest === "undefined") {
       console.log("Evaluation with dataset: " + dataset + " has started.");
@@ -61,7 +63,6 @@ module.exports = {
 
           return delete runningEvals[String(currentEval.id)];
         }
-
         currentEval.updateProgress();
       }
     }
@@ -69,51 +70,47 @@ module.exports = {
     // save system answers before evaluation (in case something goes wrong with the evaluation)
     let filePath = `./data/systemAnswers/${currentEval.name}-${
       currentEval.id
-    }.json`;
+      }.json`;
     let dataToSave = JSON.stringify(currentEval.results);
     saveFile(filePath, dataToSave);
 
     // EVALUATING
     currentEval.updateStatus("evaluating...");
-    try {
-      await currentEval.evaluateQuestions();
-    } catch (error) {
-      currentEval.updateStatus("failed");
-      currentEval.updateEvalsFile();
-
-      return delete runningEvals[String(currentEval.id)];
+    if (!currentEval.evaluateQuestions()) {
+      return delete runningEvals[String(this.id)];
     }
 
     // CALCULATING
     currentEval.updateStatus("calculating...");
-    try {
-      await currentEval.calculateSystemResult();
+
+
+    // Save the evaluated answers
+    if (currentEval.calculateSystemResult()) {
       let filePath = `./data/evaluatedAnswers/${currentEval.name}-${
         currentEval.id
-      }.json`;
+        }.json`;
       let dataToSave = JSON.stringify(currentEval.results);
       saveFile(filePath, dataToSave);
 
       currentEval.updateStatus("successful");
       currentEval.updateEvalsFile();
-
-      if (typeof jest == "undefined") {
-        console.log("========== Evaluation Result =========== ");
-        console.log("grc", currentEval.evalResults.metrics.grc);
-        console.log("gpr", currentEval.evalResults.metrics.gpr);
-        console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
-        console.log("gfm", currentEval.evalResults.metrics.gfm);
-        console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
-      }
-    } catch (error) {
-      currentEval.updateStatus("failed");
-      currentEval.updateEvalsFile();
-      console.log("System Evaluation Failed: ", error);
+    } else {
       return delete runningEvals[String(currentEval.id)];
     }
+
+
+    if (typeof jest == "undefined") {
+      console.log("========== Evaluation Result =========== ");
+      console.log("grc", currentEval.evalResults.metrics.grc);
+      console.log("gpr", currentEval.evalResults.metrics.gpr);
+      console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
+      console.log("gfm", currentEval.evalResults.metrics.gfm);
+      console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
+    }
+
     return delete runningEvals[String(currentEval.id)];
   }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
-  deleteEvaluation: function(req, res, next) {
+  deleteEvaluation: function (req, res, next) {
     let { id, name } = req.query;
 
     if (id !== undefined && name !== undefined) {
@@ -145,7 +142,7 @@ module.exports = {
               "./data/evaluations.json",
               JSON.stringify(evaluations),
               "utf8",
-              () => {}
+              () => { }
             );
           }
         });
@@ -164,7 +161,7 @@ module.exports = {
       });
     }
   },
-  getEvaluatedAnswers: function(req, res, next) {
+  getEvaluatedAnswers: function (req, res, next) {
     let { name, id } = req.query;
     if ((name !== undefined) & (id !== undefined)) {
       try {
@@ -181,7 +178,7 @@ module.exports = {
         .json({ message: "You need to add the query parameters id and name" });
     }
   },
-  getSystemAnswers: function(req, res, next) {
+  getSystemAnswers: function (req, res, next) {
     let { name, id } = req.query;
     if ((name !== undefined) & (id !== undefined)) {
       try {
@@ -198,7 +195,7 @@ module.exports = {
         .json({ message: "You need to add the query parameters id and name" });
     }
   },
-  getEvaluations: function(req, res, next) {
+  getEvaluations: function (req, res, next) {
     let evaluations;
     let { datasetKey } = req.query;
     fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
@@ -227,7 +224,7 @@ module.exports = {
       }
     });
   },
-  getRunningEvals: function(req, res, next) {
+  getRunningEvals: function (req, res, next) {
     let { id } = req.query;
     if (id === undefined) {
       res.json(runningEvals);

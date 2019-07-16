@@ -78,7 +78,6 @@ class Evaluation {
         io.sockets.emit("evalEnded", JSON.stringify(this));
         break;
       case "successful":
-        // console.log("success!!!", io);
         this.endTimestamp = Date.now();
         io.sockets.emit("evalEnded", JSON.stringify(this));
         break;
@@ -89,160 +88,161 @@ class Evaluation {
   }
 
   evaluateQuestions() {
-    return new Promise((resolve, reject) => {
-      if (this.results.length > 0) {
-        if (typeof jest == "undefined") {
-          console.log("=== Evaluation started ===");
-        }
-        let evalCount = 0;
-        for (let r of this.results) {
-          for (let q of datasets[this.datasetKey].questions) {
-            if (r.id === q.id) {
-              evalCount++;
-              if (typeof jest == "undefined") {
-                console.log(
-                  "Eval Progress: ",
-                  evalCount + " / " + this.results.length
-                );
-              }
-
-              // count all classes, properties, entities and queries that are found by the system
-              let question = r.data.questions[0];
-              if (question.qanaryAnno !== undefined) {
-                this.isQanaryPipeline = true;
-                this.evalResults.totalFound.properties += countUris(
-                  question.qanaryAnno.properties
-                );
-                this.evalResults.totalFound.classes += countUris(
-                  question.qanaryAnno.classes
-                );
-                this.evalResults.totalFound.entities += countUris(
-                  question.qanaryAnno.entities
-                );
-                this.evalResults.totalFound.queries += countUris(
-                  question.query
-                );
-              } else {
-                this.isQanaryPipeline = false;
-              }
-
-              // gather all the expected answers
-              let expectedAnswers = gatherExpectedAnswers(q);
-
-              // gather all the given answers
-              let givenAnswers = gatherGivenAnswers(question);
-
-              // summery and figure out how many answers were correct
-              r.NrExpected = expectedAnswers.length;
-              r.NrSystem = givenAnswers.length;
-              r.NrCorrect = 0;
-
-              for (let e of expectedAnswers) {
-                for (let g of givenAnswers) {
-                  if (e == g) {
-                    r.NrCorrect++;
-                    break;
-                  }
-                }
-              }
-              if (r.NrCorrect === r.NrExpected && r.NrSystem === r.NrCorrect) {
-                let answerTypeToUpdate = this.evalResults.answerTypes[
-                  q.answertype
-                ];
-                if (answerTypeToUpdate) {
-                  this.evalResults.answerTypes[q.answertype]++;
-                } else {
-                  this.evalResults.answerTypes[q.answertype] = 1;
-                }
-              }
-              if (typeof jest == "undefined") {
-                console.log("========================================");
-                console.log("Evaluated Question: ", r);
-              }
-
-              break;
+    if (this.results.length > 0) {
+      if (typeof jest == "undefined") {
+        console.log("=== Evaluation started ===");
+      }
+      let evalCount = 0;
+      for (let r of this.results) {
+        for (let q of datasets[this.datasetKey].questions) {
+          if (r.id === q.id) {
+            evalCount++;
+            if (typeof jest == "undefined") {
+              console.log(
+                "Eval Progress: ",
+                evalCount + " / " + this.results.length
+              );
             }
+
+            // count all classes, properties, entities and queries that are found by the system
+            let question = r.data.questions[0];
+            if (question.qanaryAnno !== undefined) {
+              this.isQanaryPipeline = true;
+              this.evalResults.totalFound.properties += countUris(
+                question.qanaryAnno.properties
+              );
+              this.evalResults.totalFound.classes += countUris(
+                question.qanaryAnno.classes
+              );
+              this.evalResults.totalFound.entities += countUris(
+                question.qanaryAnno.entities
+              );
+              this.evalResults.totalFound.queries += countUris(
+                question.query
+              );
+            } else {
+              this.isQanaryPipeline = false;
+            }
+
+            // gather all the expected answers
+            let expectedAnswers = gatherExpectedAnswers(q);
+
+            // gather all the given answers
+            let givenAnswers = gatherGivenAnswers(question);
+
+            // summery and figure out how many answers were correct
+            r.NrExpected = expectedAnswers.length;
+            r.NrSystem = givenAnswers.length;
+            r.NrCorrect = 0;
+
+            for (let e of expectedAnswers) {
+              for (let g of givenAnswers) {
+                if (e == g) {
+                  r.NrCorrect++;
+                  break;
+                }
+              }
+            }
+            if (r.NrCorrect === r.NrExpected && r.NrSystem === r.NrCorrect) {
+              let answerTypeToUpdate = this.evalResults.answerTypes[
+                q.answertype
+              ];
+              if (answerTypeToUpdate) {
+                this.evalResults.answerTypes[q.answertype]++;
+              } else {
+                this.evalResults.answerTypes[q.answertype] = 1;
+              }
+            }
+            if (typeof jest == "undefined") {
+              console.log("========================================");
+              console.log("Evaluated Question: ", r);
+            }
+
+            break;
           }
         }
-
-        resolve("Questions evaluated!");
-      } else {
-        console.log("Evaluation aborted, no restults found");
-        reject("Evaluation aborted, no restults found");
       }
-    });
+      return true;
+
+    } else {
+      console.log("Evaluation aborted, no restults found");
+      this.updateStatus("failed");
+      this.updateEvalsFile();
+      return false;
+    }
   }
 
   /** Calculate recall, precision and f-measure for every question.
                 Calculate F-measure for the entire pipeline*/
 
   calculateSystemResult() {
-    return new Promise((resolve, reject) => {
-      let recallTot = 0;
-      let qaldPrecisionTot = 0;
-      let precisionTot = 0;
-      let fMeasureTot = 0;
+    let recallTot = 0;
+    let qaldPrecisionTot = 0;
+    let precisionTot = 0;
+    let fMeasureTot = 0;
 
-      for (let q of this.results) {
-        q.calc = [];
-        let recall = Metrics.calcRecall(q);
-        let qaldPrecision = Metrics.calcPrecision(q, true);
-        let precision = Metrics.calcPrecision(q, false);
-        let fMeasure = Metrics.calcFMeasure(recall, precision);
+    for (let q of this.results) {
+      q.calc = [];
+      let recall = Metrics.calcRecall(q);
+      let qaldPrecision = Metrics.calcPrecision(q, true);
+      let precision = Metrics.calcPrecision(q, false);
+      let fMeasure = Metrics.calcFMeasure(recall, precision);
 
-        q.calc.push({
-          recall,
-          precision,
-          qaldPrecision,
-          fMeasure
-        });
+      q.calc.push({
+        recall,
+        precision,
+        qaldPrecision,
+        fMeasure
+      });
 
-        recallTot += recall;
-        precisionTot += precision;
-        qaldPrecisionTot += qaldPrecision;
-        fMeasureTot += fMeasure;
-      }
+      recallTot += recall;
+      precisionTot += precision;
+      qaldPrecisionTot += qaldPrecision;
+      fMeasureTot += fMeasure;
+    }
 
-      /** Add global Recall, Precicion and FMeasure to the Pipeline */
-      let totalResults = this.results.length; // don't consider errors
+    /** Add global Recall, Precicion and FMeasure to the Pipeline */
+    let totalResults = this.results.length; // don't consider errors
 
-      this.evalResults.metrics.grc = Number(
-        (recallTot / totalResults).toFixed(3)
-      );
+    this.evalResults.metrics.grc = Number(
+      (recallTot / totalResults).toFixed(3)
+    );
 
-      this.evalResults.metrics.gpr = Number(
-        (precisionTot / totalResults).toFixed(3)
-      );
+    this.evalResults.metrics.gpr = Number(
+      (precisionTot / totalResults).toFixed(3)
+    );
 
-      this.evalResults.metrics.QALDgpr = Number(
-        (qaldPrecisionTot / totalResults).toFixed(3)
-      );
+    this.evalResults.metrics.QALDgpr = Number(
+      (qaldPrecisionTot / totalResults).toFixed(3)
+    );
 
-      this.evalResults.metrics.gfm = Number(
-        (fMeasureTot / totalResults).toFixed(3)
-      );
+    this.evalResults.metrics.gfm = Number(
+      (fMeasureTot / totalResults).toFixed(3)
+    );
 
-      this.evalResults.metrics.QALDgfm = Number(
-        Metrics.calcFMeasure(
-          parseFloat(this.evalResults.metrics.grc),
-          parseFloat(this.evalResults.metrics.QALDgpr)
-        ).toFixed(3)
-      );
+    this.evalResults.metrics.QALDgfm = Number(
+      Metrics.calcFMeasure(
+        parseFloat(this.evalResults.metrics.grc),
+        parseFloat(this.evalResults.metrics.QALDgpr)
+      ).toFixed(3)
+    );
 
-      if (
-        (this.evalResults.metrics.grc || this.evalResults.metrics.grc === 0) &&
-        (this.evalResults.metrics.gpr || this.evalResults.metrics.gpr === 0) &&
-        (this.evalResults.metrics.QALDgpr ||
-          this.evalResults.metrics.QALDgpr === 0) &&
-        (this.evalResults.metrics.gfm || this.evalResults.metrics.gfm === 0) &&
-        (this.evalResults.metrics.QALDgfm ||
-          this.evalResults.metrics.QALDgfm === 0)
-      ) {
-        resolve();
-      } else {
-        reject("Calculate system results failed! ");
-      }
-    });
+    if (
+      (this.evalResults.metrics.grc || this.evalResults.metrics.grc === 0) &&
+      (this.evalResults.metrics.gpr || this.evalResults.metrics.gpr === 0) &&
+      (this.evalResults.metrics.QALDgpr ||
+        this.evalResults.metrics.QALDgpr === 0) &&
+      (this.evalResults.metrics.gfm || this.evalResults.metrics.gfm === 0) &&
+      (this.evalResults.metrics.QALDgfm ||
+        this.evalResults.metrics.QALDgfm === 0)
+    ) {
+      return true;
+    } else {
+      this.updateStatus("failed");
+      this.updateEvalsFile();
+      console.log("System Evaluation Failed: ", error);
+      return false;
+    }
   }
 
   updateEvalsFile() {
@@ -257,7 +257,7 @@ class Evaluation {
           "./data/evaluations.json",
           JSON.stringify(evaluations),
           "utf8",
-          () => {}
+          () => { }
         );
       }
     });
