@@ -145,7 +145,7 @@ describe("start evaluation 100% correct answers", () => {
       done();
     }, 50);
   });
-  it("should add date:1 to the answerTypes property", async done => {
+  it("should add date:2 to the answerTypes property", async done => {
     const res = await exec();
 
     setTimeout(function() {
@@ -153,7 +153,7 @@ describe("start evaluation 100% correct answers", () => {
       done();
     }, 50);
   });
-  it("should add string:1 to the answerTypes property", async done => {
+  it("should add string:2 to the answerTypes property", async done => {
     const res = await exec();
 
     setTimeout(function() {
@@ -262,7 +262,7 @@ describe("start evaluation answers from Pipeline 20, some are wrong, some right"
     };
   });
 
-  it("should add number:2 to the answerTypes property", async done => {
+  it("should add number:1 to the answerTypes property", async done => {
     const res = await exec();
 
     setTimeout(function() {
@@ -271,11 +271,11 @@ describe("start evaluation answers from Pipeline 20, some are wrong, some right"
       done();
     }, 50);
   });
-  it("should add resource:2 to the answerTypes property", async done => {
+  it("should add resource:1 to the answerTypes property", async done => {
     const res = await exec();
 
     setTimeout(function() {
-      expect(result.evalResults.answerTypes.resource).toBe(3);
+      expect(result.evalResults.answerTypes.resource).toBe(1);
 
       done();
     }, 50);

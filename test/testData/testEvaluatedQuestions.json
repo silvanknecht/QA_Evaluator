@@ -267,6 +267,27 @@
     "NrExpected": 1,
     "NrSystem": 1,
     "NrCorrect": 1
+  },{
+    "id": "124",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": {},
+          "answers": [
+            {
+              "head": {
+                "vars": ["date"]
+              },
+              "results": {}
+            }
+          ]
+        }
+      ]
+    },
+    "NrExpected": 0,
+    "NrSystem": 0,
+    "NrCorrect": 0
   },
   {
     "id": "198",

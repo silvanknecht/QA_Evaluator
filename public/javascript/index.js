@@ -337,7 +337,7 @@ function createResultField(value) {
   let td = document.createElement("td");
   let text;
   if (value !== "-") {
-    text = document.createTextNode(Number(value).toFixed(3));
+    text = document.createTextNode(Number(value));
   } else {
     text = document.createTextNode("-");
   }

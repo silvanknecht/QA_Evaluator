@@ -117,9 +117,7 @@ class Evaluation {
               this.evalResults.totalFound.entities += countUris(
                 question.qanaryAnno.entities
               );
-              this.evalResults.totalFound.queries += countUris(
-                question.query
-              );
+              this.evalResults.totalFound.queries += countUris(question.query);
             } else {
               this.isQanaryPipeline = false;
             }
@@ -163,7 +161,6 @@ class Evaluation {
         }
       }
       return true;
-
     } else {
       console.log("Evaluation aborted, no restults found");
       this.updateStatus("failed");
@@ -257,7 +254,7 @@ class Evaluation {
           "./data/evaluations.json",
           JSON.stringify(evaluations),
           "utf8",
-          () => { }
+          () => {}
         );
       }
     });

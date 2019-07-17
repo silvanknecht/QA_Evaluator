@@ -30,7 +30,7 @@ function plotScatter(divId, QALDgfms, dates, ids) {
     hovermode: "closest",
     title: { text: "Results timeline", y: titleOffset },
     yaxis: {
-      rangemode: 'tozero',
+      rangemode: 'nonenegative',
       autorange: true,
       title: {
         text: 'QALDgfm',
