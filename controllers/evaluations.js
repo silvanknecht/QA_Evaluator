@@ -4,7 +4,7 @@ let Evaluation = require("../models/evaluation.js");
 let { saveFile } = require("../helpers/file");
 
 module.exports = {
-  evaluateSystem: async function (req, res, next) {
+  evaluateSystem: async function(req, res, next) {
     let { dataset, systemUrl, name } = req.body;
     let totalQuestions = datasets[dataset].questions.length;
 
@@ -32,14 +32,22 @@ module.exports = {
       try {
         let data = await currentEval.askQuestion(questionUrl, qId);
 
-        // // Fix for TeBaQA, resultset looks different so it needs to be converted into the right one
-        // // ! BREAKS QANARY EVALUATION
-        // if (data.questions[0].question) {
-        //   console.log("TeBaQa");
-        //   answers = JSON.parse(data.questions[0].question.answers);
-        //   data.questions[0].answers = [];
-        //   data.questions[0].answers.push(answers);
-        // }
+        // some QA systems give the answer back in a string as property of the question, this is not correct but can be fixt with the following code
+        if (data.questions[0].question) {
+          if (typeof data.questions[0].question.answers === "string") {
+            console.log(
+              "Answers is a string --> converted to Object and placed at the right position"
+            );
+            answers = JSON.parse(data.questions[0].question.answers);
+            data.questions[0].answers = [];
+            data.questions[0].answers.push(answers);
+          } else if (typeof data.questions[0].question.answers === "object") {
+            console.log(
+              "Answers is a string --> converted to Object and placed at the right position"
+            );
+            data.questions[0].answers = [];
+          }
+        }
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
         if (typeof jest == "undefined") {
@@ -70,7 +78,7 @@ module.exports = {
     // save system answers before evaluation (in case something goes wrong with the evaluation)
     let filePath = `./data/systemAnswers/${currentEval.name}-${
       currentEval.id
-      }.json`;
+    }.json`;
     let dataToSave = JSON.stringify(currentEval.results);
     saveFile(filePath, dataToSave);
 
@@ -83,12 +91,11 @@ module.exports = {
     // CALCULATING
     currentEval.updateStatus("calculating...");
 
-
     // Save the evaluated answers
     if (currentEval.calculateSystemResult()) {
       let filePath = `./data/evaluatedAnswers/${currentEval.name}-${
         currentEval.id
-        }.json`;
+      }.json`;
       let dataToSave = JSON.stringify(currentEval.results);
       saveFile(filePath, dataToSave);
 
@@ -97,7 +104,6 @@ module.exports = {
     } else {
       return delete runningEvals[String(currentEval.id)];
     }
-
 
     if (typeof jest == "undefined") {
       console.log("========== Evaluation Result =========== ");
@@ -110,7 +116,7 @@ module.exports = {
 
     return delete runningEvals[String(currentEval.id)];
   }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
-  deleteEvaluation: function (req, res, next) {
+  deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
 
     if (id !== undefined && name !== undefined) {
@@ -142,7 +148,7 @@ module.exports = {
               "./data/evaluations.json",
               JSON.stringify(evaluations),
               "utf8",
-              () => { }
+              () => {}
             );
           }
         });
@@ -161,12 +167,21 @@ module.exports = {
       });
     }
   },
-  getEvaluatedAnswers: function (req, res, next) {
-    let { name, id } = req.query;
+  getEvaluatedAnswers: function(req, res, next) {
+    let { name, id, qid } = req.query;
     if ((name !== undefined) & (id !== undefined)) {
       try {
         let evaluatedAnswers = require(`../data/evaluatedAnswers/${name}-${id}.json`);
-        res.json(evaluatedAnswers);
+        if (qid === undefined) {
+          res.json(evaluatedAnswers);
+        } else {
+          for (answer of evaluatedAnswers) {
+            if (answer.id === qid) {
+              return res.json(answer);
+            }
+          }
+          res.json({message:"Question with id " + qid+ " is not part of the resultset!"});
+        }
       } catch (error) {
         res.status(404).json({
           message: "File not found!"
@@ -178,7 +193,7 @@ module.exports = {
         .json({ message: "You need to add the query parameters id and name" });
     }
   },
-  getSystemAnswers: function (req, res, next) {
+  getSystemAnswers: function(req, res, next) {
     let { name, id } = req.query;
     if ((name !== undefined) & (id !== undefined)) {
       try {
@@ -195,7 +210,7 @@ module.exports = {
         .json({ message: "You need to add the query parameters id and name" });
     }
   },
-  getEvaluations: function (req, res, next) {
+  getEvaluations: function(req, res, next) {
     let evaluations;
     let { datasetKey } = req.query;
     fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
@@ -224,7 +239,7 @@ module.exports = {
       }
     });
   },
-  getRunningEvals: function (req, res, next) {
+  getRunningEvals: function(req, res, next) {
     let { id } = req.query;
     if (id === undefined) {
       res.json(runningEvals);

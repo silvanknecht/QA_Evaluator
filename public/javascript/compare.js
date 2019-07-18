@@ -348,7 +348,7 @@ async function buildChars(systemNr, id, name) {
       "barcode" + systemNr,
       evaluatedAnswers,
       evaluations[id].name,
-      evaluations[id].evalResults
+      id
     );
     answers[systemNr - 1] = evaluatedAnswers;
   } catch (error) {

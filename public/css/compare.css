@@ -17,6 +17,10 @@ caption {
 #compareSystemsTable {
   display: none;
 }
+.pressable {
+  cursor: pointer;
+}
+
 
 #closeTable {
   float: right;

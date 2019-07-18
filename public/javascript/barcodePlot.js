@@ -1,5 +1,5 @@
 /* Barcodechart*/
-function drawChart(numQuestions, divId, data) {
+function drawChart(numQuestions, divId, data, systemName, systemId) {
   let questions = numQuestions,
     chartWidth = window.innerWidth - 100,
     chartHeight = 35,
@@ -127,12 +127,12 @@ function drawChart(numQuestions, divId, data) {
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function(d) {
-      fillCompareTable(d.id);
+      fillCompareTable(d.id, systemName,systemId);
       showCompareTable();
     });
 }
 
-function fillCompareTable(questionId) {
+function fillCompareTable(questionId, systemName,systemId) {
   let questionString = findQuestionString(questionId);
   for (let i = 0; i < 2; i++) {
     tableTrs[i].innerHTML = "";
@@ -170,12 +170,16 @@ function fillCompareTable(questionId) {
             sparqlQuery = string;
           }
 
-          addTdToTable(i + 1, sparqlQuery);
-          addTdToTable(i + 1, d.NrSystem);
-          addTdToTable(i + 1, d.NrCorrect);
-          addTdToTable(i + 1, entities);
-          addTdToTable(i + 1, properties);
-          addTdToTable(i + 1, classes);
+          addTdToTable(i , sparqlQuery);
+          addTdToTable(i , d.NrSystem);
+          addTdToTable(i , d.NrCorrect);
+          addTdToTable(i , entities);
+          addTdToTable(i , properties);
+          addTdToTable(i , classes);
+          tableTrs[i].addEventListener("click", () => {
+          
+            window.open(url + "evaluations/evaluatedAnswers?name="+systemName+"&id="+systemId+"&qid="+d.id);
+          });
           break;
         }
       }
@@ -185,9 +189,10 @@ function fillCompareTable(questionId) {
 
 function addTdToTable(systemNr, data) {
   let td = document.createElement("td");
+
   let text = document.createTextNode(data);
   td.appendChild(text);
-  tableTrs[systemNr - 1].appendChild(td);
+  tableTrs[systemNr ].appendChild(td);
 }
 
 /* Count uris */
