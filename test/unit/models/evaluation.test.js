@@ -1,4 +1,6 @@
-var MockDate = require("mockdate");
+// do not allow writing to a file during tests
+jest.mock("fs");
+let MockDate = require("mockdate");
 const Evaluation = require("../../../models/evaluation");
 
 let mockTimestamp = 1434319925275;

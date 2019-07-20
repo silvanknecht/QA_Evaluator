@@ -1,4 +1,3 @@
-const ioBack = require("socket.io");
 // do not allow writing to a file during tests
 jest.mock("fs");
 const request = require("supertest");
@@ -13,7 +12,6 @@ let resultset20;
 
 beforeAll(() => {
   server = require("../../../app");
-  //global.io = ioBack(server);
 });
 
 afterAll(() => {

@@ -403,7 +403,7 @@ function buildMetrics(systemNr, evalResults) {
     h3.innerText = metric;
     div.appendChild(h3);
     let span = document.createElement("span");
-    span.innerText = evalResults.metrics[metric].toFixed(4);
+    span.innerText = evalResults.metrics[metric].toFixed(3);
     div.appendChild(span);
     metricsDiv[systemNr - 1].appendChild(div);
   }

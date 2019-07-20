@@ -3,6 +3,7 @@ const fs = require("fs");
 let Joi = require("joi");
 
 const Metrics = require("../helpers/metrics");
+let { saveFile } = require("../helpers/file");
 
 class Evaluation {
   constructor(timestamp, name, dataset, systemUrl, totalQuestions) {
@@ -67,6 +68,12 @@ class Evaluation {
     this.processedQuestions++;
     this.progress =
       ((this.processedQuestions * 100) / this.totalQuestions).toFixed(0) + "%";
+    if (typeof jest == "undefined") {
+      console.log(
+        "processedQuestions: ",
+        this.processedQuestions + " / " + this.totalQuestions
+      );
+    }
     io.sockets.emit("update", JSON.stringify(this));
   }
 
@@ -75,11 +82,16 @@ class Evaluation {
     this.status = status;
     switch (status) {
       case "failed":
+        this.updateEvalsFile();
         io.sockets.emit("evalEnded", JSON.stringify(this));
+        delete runningEvals[String(this.id)];
         break;
       case "successful":
         this.endTimestamp = Date.now();
         io.sockets.emit("evalEnded", JSON.stringify(this));
+        this.updateEvalsFile();
+        delete runningEvals[String(this.id)];
+
         break;
       default:
         io.sockets.emit("update", JSON.stringify(this));
@@ -88,6 +100,11 @@ class Evaluation {
   }
 
   evaluateQuestions() {
+    // save system answers before evaluation (in case something goes wrong with the evaluation)
+    let filePath = `./data/systemAnswers/${this.name}-${this.id}.json`;
+    let dataToSave = JSON.stringify(this.results);
+    saveFile(filePath, dataToSave);
+
     if (this.results.length > 0) {
       if (typeof jest == "undefined") {
         console.log("=== Evaluation started ===");
@@ -163,8 +180,6 @@ class Evaluation {
       return true;
     } else {
       console.log("Evaluation aborted, no restults found");
-      this.updateStatus("failed");
-      this.updateEvalsFile();
       return false;
     }
   }
@@ -233,10 +248,22 @@ class Evaluation {
       (this.evalResults.metrics.QALDgfm ||
         this.evalResults.metrics.QALDgfm === 0)
     ) {
+      // Save the evaluated answers
+      let filePath = `./data/evaluatedAnswers/${this.name}-${this.id}.json`;
+      let dataToSave = JSON.stringify(this.results);
+      saveFile(filePath, dataToSave);
+
+      if (typeof jest == "undefined") {
+        console.log("========== Evaluation Result =========== ");
+        console.log("grc", this.evalResults.metrics.grc);
+        console.log("gpr", this.evalResults.metrics.gpr);
+        console.log("QALDgpr", this.evalResults.metrics.QALDgpr);
+        console.log("gfm", this.evalResults.metrics.gfm);
+        console.log("QALDgfm", this.evalResults.metrics.QALDgfm);
+      }
+
       return true;
     } else {
-      this.updateStatus("failed");
-      this.updateEvalsFile();
       console.log("System Evaluation Failed: ", error);
       return false;
     }

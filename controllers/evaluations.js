@@ -1,7 +1,6 @@
 const fs = require("fs");
 
 let Evaluation = require("../models/evaluation.js");
-let { saveFile } = require("../helpers/file");
 
 module.exports = {
   evaluateSystem: async function(req, res, next) {
@@ -18,7 +17,7 @@ module.exports = {
     );
     runningEvals[String(timestamp)] = currentEval;
 
-    // send accepted to the user
+    // send accepted and the started eval to the user
     res.status(202).json(currentEval);
     if (typeof jest === "undefined") {
       console.log("Evaluation with dataset: " + dataset + " has started.");
@@ -32,7 +31,7 @@ module.exports = {
       try {
         let data = await currentEval.askQuestion(questionUrl, qId);
 
-        // some QA systems give the answer back in a string as property of the question, this is not correct but can be fixt with the following code
+        // some QA systems (TeBaQA, WDAqua) give the answer back in a string as property of the question, this is not correct but can be fixt with the following code
         if (data.questions[0].question) {
           if (typeof data.questions[0].question.answers === "string") {
             console.log(
@@ -50,14 +49,8 @@ module.exports = {
         }
         currentEval.results.push({ id: qId, data: data });
         currentEval.updateProgress();
-        if (typeof jest == "undefined") {
-          console.log(
-            "processedQuestions: ",
-            currentEval.processedQuestions + " / " + currentEval.totalQuestions
-          );
-        }
       } catch (error) {
-        console.log("Looks like there was a problem: xS " + error);
+        console.log("Asking the question failed: " + error);
 
         currentEval.errors.push({
           id: qId,
@@ -66,56 +59,26 @@ module.exports = {
 
         // if the system has 10 errors the evaluation is terminated
         if (currentEval.errors.length > 9) {
-          currentEval.updateStatus("failed");
-          currentEval.updateEvalsFile();
-
-          return delete runningEvals[String(currentEval.id)];
+          return currentEval.updateStatus("failed");
         }
         currentEval.updateProgress();
       }
     }
 
-    // save system answers before evaluation (in case something goes wrong with the evaluation)
-    let filePath = `./data/systemAnswers/${currentEval.name}-${
-      currentEval.id
-    }.json`;
-    let dataToSave = JSON.stringify(currentEval.results);
-    saveFile(filePath, dataToSave);
-
     // EVALUATING
     currentEval.updateStatus("evaluating...");
     if (!currentEval.evaluateQuestions()) {
-      return delete runningEvals[String(this.id)];
+      return currentEval.updateStatus("failed");
     }
 
     // CALCULATING
     currentEval.updateStatus("calculating...");
-
-    // Save the evaluated answers
-    if (currentEval.calculateSystemResult()) {
-      let filePath = `./data/evaluatedAnswers/${currentEval.name}-${
-        currentEval.id
-      }.json`;
-      let dataToSave = JSON.stringify(currentEval.results);
-      saveFile(filePath, dataToSave);
-
-      currentEval.updateStatus("successful");
-      currentEval.updateEvalsFile();
+    if (!currentEval.calculateSystemResult()) {
+      return currentEval.updateStatus("failed");
     } else {
-      return delete runningEvals[String(currentEval.id)];
+      return currentEval.updateStatus("successful");
     }
-
-    if (typeof jest == "undefined") {
-      console.log("========== Evaluation Result =========== ");
-      console.log("grc", currentEval.evalResults.metrics.grc);
-      console.log("gpr", currentEval.evalResults.metrics.gpr);
-      console.log("QALDgpr", currentEval.evalResults.metrics.QALDgpr);
-      console.log("gfm", currentEval.evalResults.metrics.gfm);
-      console.log("QALDgfm", currentEval.evalResults.metrics.QALDgfm);
-    }
-
-    return delete runningEvals[String(currentEval.id)];
-  }, //this function will delete all files and its insert (evaluations.js), if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
+  }, //this function will delete all files and its insert in ./data/evaluations.json, if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
 
@@ -180,7 +143,10 @@ module.exports = {
               return res.json(answer);
             }
           }
-          res.json({message:"Question with id " + qid+ " is not part of the resultset!"});
+          res.json({
+            message:
+              "Question with id " + qid + " is not part of the resultset!"
+          });
         }
       } catch (error) {
         res.status(404).json({

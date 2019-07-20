@@ -54,6 +54,8 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
       } else {
         if (d.NrCorrect === d.NrExpected && d.NrExpected === d.NrSystem) {
           return "#00FF00";
+        } else if (d.NrCorrect === d.NrSystem && d.NrSystem !== d.NrExpected && d.NrSystem !== 0) {
+          return "#ffff00"
         } else if (d.NrCorrect !== d.NrSystem && d.NrCorrect !== 0) {
           return "#FFA500";
         } else if (d.NrSystem > 0 && d.NrCorrect === 0) {
@@ -127,12 +129,12 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
       return tooltip.style("visibility", "hidden");
     })
     .on("click", function(d) {
-      fillCompareTable(d.id, systemName,systemId);
+      fillCompareTable(d.id, systemName, systemId);
       showCompareTable();
     });
 }
 
-function fillCompareTable(questionId, systemName,systemId) {
+function fillCompareTable(questionId, systemName, systemId) {
   let questionString = findQuestionString(questionId);
   for (let i = 0; i < 2; i++) {
     tableTrs[i].innerHTML = "";
@@ -170,15 +172,22 @@ function fillCompareTable(questionId, systemName,systemId) {
             sparqlQuery = string;
           }
 
-          addTdToTable(i , sparqlQuery);
-          addTdToTable(i , d.NrSystem);
-          addTdToTable(i , d.NrCorrect);
-          addTdToTable(i , entities);
-          addTdToTable(i , properties);
-          addTdToTable(i , classes);
+          addTdToTable(i, sparqlQuery);
+          addTdToTable(i, d.NrSystem);
+          addTdToTable(i, d.NrCorrect);
+          addTdToTable(i, entities);
+          addTdToTable(i, properties);
+          addTdToTable(i, classes);
           tableTrs[i].addEventListener("click", () => {
-          
-            window.open(url + "evaluations/evaluatedAnswers?name="+systemName+"&id="+systemId+"&qid="+d.id);
+            window.open(
+              url +
+                "evaluations/evaluatedAnswers?name=" +
+                systemName +
+                "&id=" +
+                systemId +
+                "&qid=" +
+                d.id
+            );
           });
           break;
         }
@@ -192,7 +201,7 @@ function addTdToTable(systemNr, data) {
 
   let text = document.createTextNode(data);
   td.appendChild(text);
-  tableTrs[systemNr ].appendChild(td);
+  tableTrs[systemNr].appendChild(td);
 }
 
 /* Count uris */
