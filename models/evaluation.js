@@ -355,5 +355,19 @@ function validateSystemToEvaluate(req, res, next) {
   return Joi.validate(req, schema);
 }
 
+function validateResultsetToEvaluate(req, res, next) {
+  // schema for body validation
+  const schema = Joi.object().keys({
+    resultset: Joi.required(),
+    name: Joi.string()
+      .min(3)
+      .max(25)
+      .required(),
+    dataset: Joi.valid(availableDatasets)
+  });
+  return Joi.validate(req, schema);
+}
+
 module.exports = Evaluation;
 module.exports.validateSystemToEvaluate = validateSystemToEvaluate;
+module.exports.validateResultsetToEvaluate = validateResultsetToEvaluate;

@@ -4,6 +4,11 @@ const exDataset = document.getElementById("exDataset");
 const exSystemUrl = document.getElementById("exSystemUrl");
 const exQASystems = document.getElementById("exQASystems");
 
+const exResForm = document.getElementById("exResForm");
+const exResName = document.getElementById("exResName");
+const exResDataset = document.getElementById("exResDataset");
+const exResultset = document.getElementById("exResultset");
+
 const datasetFin = document.getElementById("datasetFin");
 
 const runEvalsTableBody = document
@@ -21,7 +26,8 @@ let evaluations;
 
 (async function() {
   localStorage.clear();
-  fillDatasetsSelect();
+  fillDatasetsSelect(exDataset);
+  fillDatasetsSelect(exResDataset);
   fillFinishedTable("qald-9");
   fillRunningTable();
 
@@ -42,7 +48,7 @@ let evaluations;
     fillFinishedTable(e.target.value);
   });
 
-  // Start an evaluation
+  // Start a system evaluation
   exForm.addEventListener("submit", async () => {
     let data = {
       name: exName.value.replace(" ", ""),
@@ -66,8 +72,50 @@ let evaluations;
     }
   });
 
+  // Start a resultset evaluation
+  exResForm.addEventListener("submit", async () => {
+    if (exResultset.files.length <= 0) {
+      console.log("no file selected");
+      return false;
+    }
+    let fr = new FileReader();
+    fr.onload = async function(e) {
+      console.log(e);
+
+      let resultset = e.target.result;
+      let data = {
+        name: exResName.value.replace(" ", ""),
+        dataset: exResDataset.value,
+        resultset
+      };
+
+      try {
+        let startEval = await fetch(url + "evaluations/resultset", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        startEval = await startEval.json();
+        if (startEval) console.log("Evaluation accepted: ", startEval);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+
+    };
+
+    fr.readAsText(exResultset.files.item(0));
+
+
+  });
+
   // POPOVERS
   $(".pop-me-over").popover({ trigger: "hover" });
+
+  // File imput
+  bsCustomFileInput.init();
 
   // compare button
   compareBtn.addEventListener("click", () => {
@@ -142,20 +190,28 @@ async function fillFinishedTable(datasetKey) {
     console.error("Error:", error);
   }
 }
-async function fillDatasetsSelect() {
+async function fillDatasetsSelect(datasetSelect) {
   let datasets = await availableDatasets();
   datasets = await datasets.json();
 
   datasets.forEach(function(dataset, key) {
     if (dataset == "qald-9") {
-      exDataset[exDataset.options.length] = new Option(dataset, dataset, true);
+      datasetSelect[datasetSelect.options.length] = new Option(
+        dataset,
+        dataset,
+        true
+      );
       datasetFin[datasetFin.options.length] = new Option(
         dataset,
         dataset,
         true
       );
     } else {
-      exDataset[exDataset.options.length] = new Option(dataset, dataset, false);
+      datasetSelect[datasetSelect.options.length] = new Option(
+        dataset,
+        dataset,
+        false
+      );
       datasetFin[datasetFin.options.length] = new Option(
         dataset,
         dataset,

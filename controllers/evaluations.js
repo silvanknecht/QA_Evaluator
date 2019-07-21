@@ -88,7 +88,65 @@ module.exports = {
     } else {
       return currentEval.updateStatus("successful");
     }
-  }, //this function will delete all files and its insert in ./data/evaluations.json, if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
+  },
+  evaluateResultset: async function(req, res, next) {
+    let { dataset, resultset, name } = req.body;
+    let totalQuestions = datasets[dataset].questions.length;
+
+    let timestamp = Date.now();
+    let currentEval = new Evaluation(
+      timestamp,
+      name,
+      dataset,
+      "Resultset-Evaluation: " + name,
+      totalQuestions
+    );
+    currentEval.results = JSON.parse(resultset);
+    currentEval.processedQuestions = 0;
+    currentEval.progress = "0%";
+    runningEvals[String(timestamp)] = currentEval;
+
+    // send accepted and the started eval to the user
+    res.status(202).json(currentEval);
+    if (typeof jest === "undefined") {
+      console.log(
+        "Resultset evaluation with dataset: " + dataset + " has started."
+      );
+    }
+    io.sockets.emit("evalStarted", JSON.stringify(currentEval));
+
+    // EVALUATING
+    currentEval.updateStatus("evaluating...");
+    if (!currentEval.evaluateQuestions()) {
+      return currentEval.updateStatus("failed");
+    }
+
+    if (currentEval.results.length !== totalQuestions) {
+      console.log("testing for errors");
+      for (let  q of datasets[dataset].questions) {
+
+
+        for (let [i,a] of currentEval.results.entries()) {
+          if (q.id === a.id) break;
+          if (i === currentEval.results.length-1) {
+            currentEval.errors.push({
+              id: q.id,
+              error: "Not part of the resultset"
+            });
+          }
+        }
+      }
+    }
+
+    // CALCULATING
+    currentEval.updateStatus("calculating...");
+    if (!currentEval.calculateSystemResult()) {
+      return currentEval.updateStatus("failed");
+    } else {
+      return currentEval.updateStatus("successful");
+    }
+  },
+  //this function will delete all files and its insert in ./data/evaluations.json, if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
     let { id, name } = req.query;
 
