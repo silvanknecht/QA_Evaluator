@@ -11,7 +11,7 @@ server.listen(port, () => console.log(`App listening on port ${port}!`));
 app.set("view engine", "ejs");
 
 // middleware
-app.use(express.json());
+app.use(express.json({limit:"10mb"}));
 app.use(express.static(__dirname + "/public"));
 app.use(compression());
 

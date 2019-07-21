@@ -5,13 +5,19 @@ let router = express.Router();
 const evaluationsController = require("../controllers/evaluations");
 const validate = require("../middleware/validate");
 const loadDataset = require("../middleware/loadDataset");
-const { validateSystemToEvaluate } = require("../models/evaluation");
+const { validateSystemToEvaluate,validateResultsetToEvaluate  } = require("../models/evaluation");
 
 router.post(
   "/",
   validate(validateSystemToEvaluate),
   loadDataset,
   evaluationsController.evaluateSystem
+);
+router.post(
+  "/resultset",
+  validate(validateResultsetToEvaluate),
+  loadDataset,
+  evaluationsController.evaluateResultset
 );
 router.get("/", evaluationsController.getEvaluations);
 router.delete("/", evaluationsController.deleteEvaluation);

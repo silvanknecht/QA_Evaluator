@@ -49,7 +49,40 @@
     </nav>
 
     <div class="container-fluid">
-      <div class="row">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            id="systemEvaluation-tab"
+            data-toggle="tab"
+            href="#systemEvaluation"
+            role="tab"
+            aria-controls="systemEvaluation"
+            aria-selected="true"
+            >System Evaluation</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="resultsetEvaluation-tab"
+            data-toggle="tab"
+            href="#resultsetEvaluation"
+            role="tab"
+            aria-controls="resultsetEvaluation"
+            aria-selected="false"
+            >Resultset Evaluation</a
+          >
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div
+          class="tab-pane fade show active"
+          id="systemEvaluation"
+          role="tabpanel"
+          aria-labelledby="system-tab"
+        >
+         <div class="row">
         <form id="exForm" class="col-md-12" onsubmit="return false;">
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -67,8 +100,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="exDataset">Dataset</label>
-              <select class="form-control" id="exDataset">
-              </select>
+              <select class="form-control" id="exDataset"> </select>
             </div>
             <div class="form-group col-md-3">
               <label for="exQASystems"
@@ -182,9 +214,7 @@
                 <option value="http://ganswer.gstore-pku.com/api/qald.jsp"
                   >gAnswer2</option
                 >
-                <option value="http://139.18.2.39:8187/qa"
-                  >TeBaQA</option
-                >
+                <option value="http://139.18.2.39:8187/qa">TeBaQA</option>
               </select>
             </div>
             <div class="form-group col-md-9">
@@ -216,6 +246,49 @@
           </button>
         </form>
       </div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="resultsetEvaluation"
+          role="tabpanel"
+          aria-labelledby="resultsetEvaluation-tab"
+        >
+        <div class="row">
+            <form id="exResForm" class="col-md-12" onsubmit="return false;">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="exResName">Experiment Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="exResName"
+                    placeholder="insert an experiment name"
+                    minlength="3"
+                    maxlength="25"
+                    value="TestEx"
+                    required
+                  />
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="exResDataset">Dataset</label>
+                    <select class="form-control" id="exResDataset"> </select>
+                  </div>
+                <div class="form-group col-md-6">
+                    <label for="exResName">Upload Resultset</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exResultset" required>
+                        <label class="custom-file-label" for="exResultset">Choose file with systemanswers...</label>
+                      </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Start evaluation
+              </button>
+            </form>
+          </div>
+        </div>
+
+
       <div class="row">
         <div class="col-md-12 table-responsive">
           <h2>Running</h2>
@@ -273,8 +346,7 @@
               <div class="form-group col-md-3">
                 <label for="datasetFin" class="col-form-label">Dataset</label>
 
-                <select id="datasetFin" class="form-control">
-                </select>
+                <select id="datasetFin" class="form-control"> </select>
               </div>
               <div class="form-group col-md-12">
                 <button id="compareBtn" class="btn btn-primary">
@@ -600,8 +672,8 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <script src="../javascript/global.js"></script>
-
     <script src="../javascript/index.js"></script>
   </body>
 </html>
