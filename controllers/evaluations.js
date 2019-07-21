@@ -28,6 +28,10 @@ module.exports = {
     currentEval.updateStatus("questioning...");
     while (currentEval.processedQuestions < currentEval.totalQuestions) {
       let { qId, questionUrl } = currentEval.findNextQuestion();
+      if (typeof jest == "undefined") {
+        console.log("============ Question asked ============");
+        console.log("RequestUrl: ", questionUrl);
+      }
       try {
         let data = await currentEval.askQuestion(questionUrl, qId);
 
@@ -62,6 +66,12 @@ module.exports = {
           return currentEval.updateStatus("failed");
         }
         currentEval.updateProgress();
+      }
+      if (typeof jest == "undefined") {
+        console.log(
+          "processedQuestions: ",
+          currentEval.processedQuestions + " / " + currentEval.totalQuestions
+        );
       }
     }
 

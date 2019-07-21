@@ -6,17 +6,19 @@ let answerTypesTot;
 const datasetPlot = document.getElementById("answerTypes");
 const datasetComp = document.getElementById("datasetComp");
 
-const selectSystem1 = document.getElementById("selectSystem1");
-const selectSystem2 = document.getElementById("selectSystem2");
+const selectSystem = [
+  document.getElementById("selectSystem1"),
+  document.getElementById("selectSystem2")
+];
 
-const selectSystem1Same = document.getElementById("selectSystem1Same");
-const selectSystem2Same = document.getElementById("selectSystem2Same");
-const selectSystem1SameScatter = document.getElementById(
-  "selectSystem1SameScatter"
-);
-const selectSystem2SameScatter = document.getElementById(
-  "selectSystem2SameScatter"
-);
+const selectSystemSame = [
+  document.getElementById("selectSystem1Same"),
+  document.getElementById("selectSystem2Same")
+];
+const selectSystemSameScatter = [
+  document.getElementById("selectSystem1SameScatter"),
+  document.getElementById("selectSystem2SameScatter")
+];
 let resultsBelongingTogether = {};
 
 const answerTypesDiv = [
@@ -65,8 +67,8 @@ const tableTrs = [
 
 window.onresize = function() {
   Plotly.Plots.resize(datasetPlot);
-  Plotly.Plots.resize(selectSystem1SameScatter);
-  Plotly.Plots.resize(selectSystem2SameScatter);
+  Plotly.Plots.resize(selectSystemSameScatter[0]);
+  Plotly.Plots.resize(selectSystemSameScatter[1]);
 
   buildComparisons();
 };
@@ -141,13 +143,13 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
     }
 
     buildSameResults(
-      selectSystem1,
-      selectSystem1Same,
+      selectSystem[0],
+      selectSystemSame[0],
       "selectSystem1SameScatter"
     );
     buildSameResults(
-      selectSystem2,
-      selectSystem2Same,
+      selectSystem[1],
+      selectSystemSame[1],
       "selectSystem2SameScatter"
     );
 
@@ -160,13 +162,13 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
     console.log(error);
   }
   buildSameResults(
-    selectSystem1,
-    selectSystem1Same,
+    selectSystem[0],
+    selectSystemSame[0],
     "selectSystem1SameScatter"
   );
   buildSameResults(
-    selectSystem2,
-    selectSystem2Same,
+    selectSystem[1],
+    selectSystemSame[1],
     "selectSystem2SameScatter"
   );
 
@@ -192,17 +194,17 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
         console.log(error);
       }
       buildSameResults(
-        selectSystem1,
-        selectSystem1Same,
+        selectSystem[0],
+        selectSystemSame[0],
         "selectSystem1SameScatter"
       );
       buildSameResults(
-        selectSystem2,
-        selectSystem2Same,
+        selectSystem[1],
+        selectSystemSame[1],
         "selectSystem2SameScatter"
       );
-      selectSystem1Same.value = itemsToCompare[0];
-      selectSystem2Same.value = itemsToCompare[1];
+      selectSystemSame[0].value = itemsToCompare[0];
+      selectSystemSame[1].value = itemsToCompare[1];
     } else {
       let id1;
       for (let parentId in resultsBelongingTogether) {
@@ -219,46 +221,46 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
         console.log(error);
       }
       buildSameResults(
-        selectSystem1,
-        selectSystem1Same,
+        selectSystem[0],
+        selectSystemSame[0],
         "selectSystem1SameScatter"
       );
       buildSameResults(
-        selectSystem2,
-        selectSystem2Same,
+        selectSystem[1],
+        selectSystemSame[1],
         "selectSystem2SameScatter"
       );
-      selectSystem1Same.value = itemsToCompare[0];
+      selectSystemSame[0].value = itemsToCompare[0];
     }
   }
 
-  selectSystem1.addEventListener("change", e => {
+  selectSystem[0].addEventListener("change", e => {
     hideCompareTable();
     buildSameResults(
-      selectSystem1,
-      selectSystem1Same,
+      selectSystem[0],
+      selectSystemSame[0],
       "selectSystem1SameScatter"
     );
     buildComparison(1, e.target.value);
     refreshComparison();
   });
 
-  selectSystem1Same.addEventListener("change", e => {
+  selectSystemSame[0].addEventListener("change", e => {
     hideCompareTable();
     buildComparison(1, e.target.value);
     refreshComparison();
   });
-  selectSystem2.addEventListener("change", e => {
+  selectSystem[1].addEventListener("change", e => {
     hideCompareTable();
     buildSameResults(
-      selectSystem2,
-      selectSystem2Same,
+      selectSystem[1],
+      selectSystemSame[1],
       "selectSystem2SameScatter"
     );
     buildComparison(2, e.target.value);
     refreshComparison();
   });
-  selectSystem2Same.addEventListener("change", e => {
+  selectSystemSame[1].addEventListener("change", e => {
     hideCompareTable();
     buildComparison(2, e.target.value);
     refreshComparison();
@@ -269,6 +271,9 @@ function buildSameResults(selectSystem, selectSystemSame, scatterPlotId) {
   });
 
   buildComparisons();
+
+  // POPOVERS
+  $(".pop-me-over").popover({ trigger: "hover" });
 })();
 
 function fillDatasetsSelect() {
@@ -321,8 +326,8 @@ function buildComparison(systemNr, id) {
 }
 
 function buildComparisons() {
-  buildComparison(1, selectSystem1Same.value);
-  buildComparison(2, selectSystem2Same.value);
+  buildComparison(1, selectSystemSame[0].value);
+  buildComparison(2, selectSystemSame[1].value);
   refreshComparison();
 }
 
@@ -521,8 +526,8 @@ function buildSystemSelection(
       });
 
       evaluations = await evaluations.json();
-      selectSystem1.innerHTML = "";
-      selectSystem2.innerHTML = "";
+      selectSystem[0].innerHTML = "";
+      selectSystem[1].innerHTML = "";
       if (
         Object.entries(evaluations).length === 0 &&
         evaluations.constructor === Object
@@ -530,8 +535,8 @@ function buildSystemSelection(
         let opt = document.createElement("option");
         opt.innerHTML = "-- no results available --";
 
-        selectSystem1.appendChild(opt.cloneNode(true));
-        selectSystem2.appendChild(opt.cloneNode(true));
+        selectSystem[0].appendChild(opt.cloneNode(true));
+        selectSystem[1].appendChild(opt.cloneNode(true));
       } else {
         let evaluationsClone = JSON.parse(JSON.stringify(evaluations));
         for (let id in evaluationsClone) {
@@ -541,8 +546,8 @@ function buildSystemSelection(
             opt.value = evaluationsClone[id].id;
             opt.innerHTML = evaluationsClone[id].name;
 
-            selectSystem1.appendChild(opt.cloneNode(true));
-            selectSystem2.appendChild(opt.cloneNode(true));
+            selectSystem[0].appendChild(opt.cloneNode(true));
+            selectSystem[1].appendChild(opt.cloneNode(true));
             delete evaluationsClone[id];
 
             // check if there is another evaluation with the same name, version, and systemUrl
@@ -563,10 +568,10 @@ function buildSystemSelection(
         }
       }
       if (idToSelect1 !== undefined) {
-        selectSystem1.value = idToSelect1;
+        selectSystem[0].value = idToSelect1;
       }
       if (idToSelect2 !== undefined) {
-        selectSystem2.value = idToSelect2;
+        selectSystem[1].value = idToSelect2;
       }
       resolve(resultsBelongingTogether);
     } catch (error) {

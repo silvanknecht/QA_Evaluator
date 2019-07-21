@@ -105,12 +105,24 @@
       </div>
       <div class="row">
         <div class="col-md-12 table-responsive">
+          <label
+            >System URL
+            <i
+              class="material-icons pop-me-over"
+              data-container="body"
+              data-toggle="popover"
+              data-placement="right"
+              data-content="green: all answers are correct
+              yellow: all answers are correct, but not all answers were found orange: some answers are wrong red: all answers are wrong black: system answered with an error white: no answer was found"
+            >
+              info
+            </i>
+          </label>
           <table id="compareSystemsTable" class="table">
             <span id="closeTable">Close table X</span>
             <caption></caption>
-
             <thead class="thead-light">
-              <tr >
+              <tr>
                 <th scope="col">SPARQL Query</th>
                 <th scope="col">NrSystem</th>
                 <th scope="col">NrCorrect</th>
@@ -126,7 +138,7 @@
               <tr id="tr2" class="pressable"></tr>
             </tbody>
             <thead class="thead-light">
-              <tr >
+              <tr>
                 <th scope="col">SPARQL Query</th>
                 <th scope="col">NrSystem</th>
                 <th scope="col">NrCorrect</th>

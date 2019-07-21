@@ -43,13 +43,8 @@ class Evaluation {
 
   // sends a question to QA system, requires the entire questionUrl for the system
   // id makes it easier for integration testing
-  async askQuestion(questionUrl, id) {
-    if (typeof jest == "undefined") {
-      console.log("============ Question asked ============");
-      console.log("RequestUrl: ", questionUrl);
-    }
-
-    return fetch_retry(questionUrl, {
+  async askQuestion(questionUrl) {
+      return fetch_retry(questionUrl, {
       method: "POST",
       retry: 3
     }).then(res => {
@@ -68,13 +63,7 @@ class Evaluation {
     this.processedQuestions++;
     this.progress =
       ((this.processedQuestions * 100) / this.totalQuestions).toFixed(0) + "%";
-    if (typeof jest == "undefined") {
-      console.log(
-        "processedQuestions: ",
-        this.processedQuestions + " / " + this.totalQuestions
-      );
-    }
-    io.sockets.emit("update", JSON.stringify(this));
+       io.sockets.emit("update", JSON.stringify(this));
   }
 
   // updates the status of the evaluation progress
@@ -152,7 +141,7 @@ class Evaluation {
 
             for (let e of expectedAnswers) {
               for (let g of givenAnswers) {
-                if (e == g) {
+                if (e === g) {
                   r.NrCorrect++;
                   break;
                 }

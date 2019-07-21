@@ -54,8 +54,12 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
       } else {
         if (d.NrCorrect === d.NrExpected && d.NrExpected === d.NrSystem) {
           return "#00FF00";
-        } else if (d.NrCorrect === d.NrSystem && d.NrSystem !== d.NrExpected && d.NrSystem !== 0) {
-          return "#ffff00"
+        } else if (
+          d.NrCorrect === d.NrSystem &&
+          d.NrSystem !== d.NrExpected &&
+          d.NrSystem !== 0
+        ) {
+          return "#ffff00";
         } else if (d.NrCorrect !== d.NrSystem && d.NrCorrect !== 0) {
           return "#FFA500";
         } else if (d.NrSystem > 0 && d.NrCorrect === 0) {
@@ -146,12 +150,13 @@ function fillCompareTable(questionId, systemName, systemId) {
           d.NrExpected
         }`;
         if (d.error) {
-          addTdToTable(i + 1, "error");
-          addTdToTable(i + 1, "error");
-          addTdToTable(i + 1, "error");
-          addTdToTable(i + 1, "error");
-          addTdToTable(i + 1, "error");
-          addTdToTable(i + 1, "error");
+          for (let t = 0; t < 6; t++) {
+            addTdToTable(i, "error");
+          }
+          $("#tr" + (i + 1)).off();
+          $("#tr" + (i + 1)).click(() => {
+            alert("No additional information for questions with an error");
+          });
         } else {
           if (d.data.questions[0].qanaryAnno !== undefined) {
             entities = d.data.questions[0].qanaryAnno.entities;
@@ -178,13 +183,15 @@ function fillCompareTable(questionId, systemName, systemId) {
           addTdToTable(i, entities);
           addTdToTable(i, properties);
           addTdToTable(i, classes);
-          tableTrs[i].addEventListener("click", () => {
+
+          $("#tr" + (i + 1)).off();
+          $("#tr" + (i + 1)).click(() => {
             window.open(
               url +
                 "evaluations/evaluatedAnswers?name=" +
-                systemName +
+                selectSystem[i].options[selectSystem[i].selectedIndex].label +
                 "&id=" +
-                systemId +
+                selectSystemSame[i].value +
                 "&qid=" +
                 d.id
             );
