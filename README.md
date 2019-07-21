@@ -1,6 +1,5 @@
 # QA_Evaluator
-This evaluator was created to evaluate Question Answering Systems with the QALD datasets. Since it was part of a bachelorsthesis that included Qanary, the evaluaor works best with 
-these Pipelines.
+This evaluator was created to evaluate Question Answering Systems with the JSON Qald datasets. Since it was part of a bachelorsthesis that included Qanary, the evaluator works best with [those Pipelines](https://github.com/jannlemm0913/BA_QuestionAnswering).
 
 ## Getting Started
 First install all the Node_Modules.
@@ -49,6 +48,8 @@ If you want to evaluate your own system make sure that it returns the correct Fo
 ## Running the tests
 To ensure the functionnality, 87 unit and integration tests have been developed and can be found in the test/ directory. 
 
+The interface was only tested with Google Chrome.
+
 ## Built With
 
 * [NodeJs](https://nodejs.org/en/) 
@@ -59,7 +60,7 @@ To ensure the functionnality, 87 unit and integration tests have been developed 
 
 ## Authors
 
-* [**Silvan Knecht**](https://github.com/enjoymrban)
+* [**Silvan Knecht**](https://github.com/silvanknecht)
 * [**Jann Lemm**](https://github.com/jannlemm0913)
 
 See also the list of [contributors](https://github.com/enjoymrban/JKL_Fitbuddy/graphs/contributors) who participated in this project.
