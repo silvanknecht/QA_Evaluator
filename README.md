@@ -13,7 +13,7 @@ npm install
 
 The app should now be available on: http://localhost:3000
 
-## Running an evaluation
+## Running a system evaluation
 If you want to evaluate your own system make sure that it returns the correct Format. The answers value follows the [W3C](https://www.w3.org/TR/sparql11-results-json/) defined standard. 
 ```JSON
 {
@@ -43,6 +43,34 @@ If you want to evaluate your own system make sure that it returns the correct Fo
 		}]
 	}]
 }
+```
+
+## Running a resultset evaluation
+If you want to evaluate your own system make sure that it returns the correct Format. The answers value follows the [W3C](https://www.w3.org/TR/sparql11-results-json/) defined standard. If the answerset wasn't created with this evaluator, then you want have the "qanaryAnno" property. 
+```JSON
+[
+  {
+    "id": "99",
+    "data": {
+      "questions": [
+        {
+          "question": [{ "language": "en" }],
+          "query": "select * where {     <http://dbpedia.org/resource/Time_zone>   <http://dbpedia.org/ontology/timeZone>   <http://dbpedia.org/resource/Salt_Lake_City>.  }, ",
+          "answers": [
+            {
+              "head": { "vars": ["_star_fake"] },
+              "results": { "bindings": [] }
+            }
+          ],
+          "qanaryAnno": {
+            "entities": "http://dbpedia.org/resource/Time_zone, http://dbpedia.org/resource/Salt_Lake_City, ",
+            "classes": "",
+            "properties": "http://dbpedia.org/ontology/timeZone, "
+          }
+        }
+      ]
+    }
+  },...]
 ```
 
 ## Running the tests
