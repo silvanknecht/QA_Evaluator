@@ -20,10 +20,10 @@ router.post(
   evaluationsController.evaluateResultset
 );
 router.get("/", evaluationsController.getEvaluations);
-router.delete("/", evaluationsController.deleteEvaluation);
+router.delete("/:id/:name", evaluationsController.deleteEvaluation);
 router.get("/running", evaluationsController.getRunningEvals);
-router.get("/systemAnswers", evaluationsController.getSystemAnswers);
-router.get("/evaluatedAnswers", evaluationsController.getEvaluatedAnswers);
+router.get("/systemAnswers/:id/:name", evaluationsController.getSystemAnswers);
+router.get("/evaluatedAnswers/:id/:name", evaluationsController.getEvaluatedAnswers); //query Parame qid to filter for certain question
 
 
 

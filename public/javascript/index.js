@@ -26,6 +26,7 @@ let evaluations;
 
 (async function() {
   localStorage.clear();
+  fillDatasetsSelect(datasetFin)
   fillDatasetsSelect(exDataset);
   fillDatasetsSelect(exResDataset);
   fillFinishedTable("qald-9");
@@ -200,19 +201,9 @@ async function fillDatasetsSelect(datasetSelect) {
         dataset,
         dataset,
         true
-      );
-      datasetFin[datasetFin.options.length] = new Option(
-        dataset,
-        dataset,
-        true
-      );
+      )
     } else {
       datasetSelect[datasetSelect.options.length] = new Option(
-        dataset,
-        dataset,
-        false
-      );
-      datasetFin[datasetFin.options.length] = new Option(
         dataset,
         dataset,
         false
@@ -287,7 +278,7 @@ function addToFinEval(response) {
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
-        fetch(url + `evaluations?id=${id}&name=${name}`, {
+        fetch(url + `evaluations/${id}/${name}`, {
           method: "DELETE"
         })
           .then(res => res.json())

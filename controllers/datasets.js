@@ -1,6 +1,6 @@
 module.exports = {
   dataset: function(req, res, next) {
-    let { dataset } = req.query;
+    let { dataset } = req.params;
     if (dataset) {
       try {
         let data = require(`../datasets/${dataset}.json`);

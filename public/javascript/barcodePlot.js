@@ -41,8 +41,12 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
     .enter()
     .append("rect")
     .attr("class", function(d) {
-      return "grp" + d.id;
+      let question = dataset.questions.filter(function(el) {
+        return el.id == d.id;
+      });
+      return "grp" + d.id + " grp" + question[0].answertype;
     })
+
     .attr("width", barWidth)
     .attr("height", chartHeight)
     .attr("stroke-width", 1)
@@ -73,9 +77,10 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
       return i * barWidth;
     })
     .on("mouseover", function(d) {
-      var qToHighlight = document.querySelectorAll(".grp" + d.id);
-      qToHighlight[0].setAttribute("stroke-width", 3);
-      qToHighlight[1].setAttribute("stroke-width", 3);
+      let qToHighlightArr = document.querySelectorAll(".grp" + d.id);
+      for (let qToHighlight of qToHighlightArr) {
+        qToHighlight.setAttribute("stroke-width", 3);
+      }
 
       let entities;
       let properties;
@@ -126,9 +131,10 @@ function drawChart(numQuestions, divId, data, systemName, systemId) {
       return tooltip.style("top", d + "px").style("left", d + "px");
     })
     .on("mouseout", function(d) {
-      var qToHighlight = document.querySelectorAll(".grp" + d.id);
-      qToHighlight[0].setAttribute("stroke-width", 1);
-      qToHighlight[1].setAttribute("stroke-width", 1);
+      let qToHighlightArr = document.querySelectorAll(".grp" + d.id);
+      for (let qToHighlight of qToHighlightArr) {
+        qToHighlight.setAttribute("stroke-width", 1);
+      }
 
       return tooltip.style("visibility", "hidden");
     })
@@ -188,12 +194,9 @@ function fillCompareTable(questionId, systemName, systemId) {
           $("#tr" + (i + 1)).click(() => {
             window.open(
               url +
-                "evaluations/evaluatedAnswers?name=" +
-                selectSystem[i].options[selectSystem[i].selectedIndex].label +
-                "&id=" +
-                selectSystemSame[i].value +
-                "&qid=" +
-                d.id
+                `evaluations/evaluatedAnswers/${selectSystemSame[i].value}/${
+                  selectSystem[i].options[selectSystem[i].selectedIndex].label
+                }?qid=${d.id}`
             );
           });
           break;

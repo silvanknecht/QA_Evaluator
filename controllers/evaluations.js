@@ -123,12 +123,10 @@ module.exports = {
 
     if (currentEval.results.length !== totalQuestions) {
       console.log("testing for errors");
-      for (let  q of datasets[dataset].questions) {
-
-
-        for (let [i,a] of currentEval.results.entries()) {
+      for (let q of datasets[dataset].questions) {
+        for (let [i, a] of currentEval.results.entries()) {
           if (q.id === a.id) break;
-          if (i === currentEval.results.length-1) {
+          if (i === currentEval.results.length - 1) {
             currentEval.errors.push({
               id: q.id,
               error: "Not part of the resultset"
@@ -148,7 +146,7 @@ module.exports = {
   },
   //this function will delete all files and its insert in ./data/evaluations.json, if the file is not available it will print an error. The file evaluatedAnswers can be unavailable if the evaluation already failed at some point!
   deleteEvaluation: function(req, res, next) {
-    let { id, name } = req.query;
+    let { id, name } = req.params;
 
     if (id !== undefined && name !== undefined) {
       let path = name + "-" + id + ".json";
@@ -199,7 +197,9 @@ module.exports = {
     }
   },
   getEvaluatedAnswers: function(req, res, next) {
-    let { name, id, qid } = req.query;
+    let { name, id } = req.params;
+    let { qid } = req.query;
+
     if ((name !== undefined) & (id !== undefined)) {
       try {
         let evaluatedAnswers = require(`../data/evaluatedAnswers/${name}-${id}.json`);
@@ -228,7 +228,7 @@ module.exports = {
     }
   },
   getSystemAnswers: function(req, res, next) {
-    let { name, id } = req.query;
+    let { name, id } = req.params;
     if ((name !== undefined) & (id !== undefined)) {
       try {
         let systemAnswers = require(`../data/systemAnswers/${name}-${id}.json`);
@@ -246,21 +246,21 @@ module.exports = {
   },
   getEvaluations: function(req, res, next) {
     let evaluations;
-    let { datasetKey } = req.query;
+    let { datasetKey, id } = req.query;
     fs.readFile("./data/evaluations.json", "utf8", (err, data) => {
       if (err) {
         console.log(err);
       } else {
         evaluations = JSON.parse(data);
-        if (datasetKey === undefined && req.params.id === undefined) {
+        if (datasetKey === undefined && id === undefined) {
           res.json(evaluations);
-        } else if (req.params.id !== undefined) {
-          let jsonToReturn = evaluations[String(req.params.id)];
+        } else if (id !== undefined) {
+          let jsonToReturn = evaluations[String(id)];
           if (jsonToReturn === undefined)
             res.status(404).json({
-              message: "Evaluation with Id: " + req.params.id + " not found!"
+              message: "Evaluation with Id: " + id + " not found!"
             });
-          res.json(evaluations[String(req.params.id)]);
+          res.json(evaluations[String(id)]);
         } else if (datasetKey !== undefined) {
           let filteredEvals = {};
           for (let i in evaluations) {

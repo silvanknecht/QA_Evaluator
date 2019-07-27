@@ -342,7 +342,7 @@ function refreshComparison() {
 async function buildChars(systemNr, id, name) {
   try {
     let evaluatedAnswers = await fetch(
-      url + "evaluations/evaluatedAnswers?name=" + name + "&id=" + id,
+      url + `evaluations/evaluatedAnswers/${id}/${name}`,
       { method: "GET" }
     );
     evaluatedAnswers = await evaluatedAnswers.json();
@@ -446,7 +446,7 @@ function buildAnswerTypes(systemNr, answerTypes) {
   } else {
     for (answ in answerTypesTot) {
       let div = document.createElement("div");
-      div.setAttribute("class", "col-sm-2 answertype");
+      div.setAttribute("class", "col-sm-2 answertype hoverable");
 
       let h3 = document.createElement("h3");
       h3.innerText = answ;
@@ -459,7 +459,26 @@ function buildAnswerTypes(systemNr, answerTypes) {
         span.innerText = "0%";
       }
       div.appendChild(span);
+
       answerTypesDiv[systemNr - 1].appendChild(div);
+    }
+    for (let el of answerTypesDiv[systemNr - 1].children) {
+      let answ = el.children[0].innerText;
+      el.addEventListener("mouseover", () => {
+        var qToHighlightArr = document.querySelectorAll(".grp" + answ);
+        el.children[0].setAttribute("style", "font-weight: bold");
+
+        for (let qToHighlight of qToHighlightArr) {
+          qToHighlight.setAttribute("stroke-width", 3);
+        }
+      });
+      el.addEventListener("mouseout", () => {
+        let qToHighlightArr = document.querySelectorAll(".grp" + answ);
+        el.children[0].setAttribute("style", "font-weight: 500");
+        for (let qToHighlight of qToHighlightArr) {
+          qToHighlight.setAttribute("stroke-width", 1);
+        }
+      });
     }
   }
 }
@@ -583,7 +602,7 @@ function buildSystemSelection(
 
 async function buildDatasetVisual(datasetKey) {
   try {
-    dataset = await fetch(url + "datasets?dataset=" + datasetKey, {
+    dataset = await fetch(url + `datasets/${datasetKey}`, {
       method: "GET"
     });
     dataset = await dataset.json();

@@ -26,6 +26,15 @@ body {
     padding: 0 50px 0 50px;
   }
 }
+.tableFixHead {
+  overflow-y: auto;
+  max-height: 800px;
+  margin-bottom: 15px;
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+}
 
 td[id^="del"] {
   color: red;
