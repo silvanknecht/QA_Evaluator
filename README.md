@@ -73,6 +73,9 @@ If you want to evaluate your own system make sure that it returns the correct Fo
   },...]
 ```
 
+## API Documentation
+[Documentation](https://documenter.getpostman.com/view/6959951/SVYovL7i) 
+
 ## Running the tests
 To ensure the functionnality, 87 unit and integration tests have been developed and can be found in the test/ directory. 
 
