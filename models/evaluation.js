@@ -37,14 +37,20 @@ class Evaluation {
       }
     })();
 
-    let questionUrl = this.systemUrl + "?query=" + encodeURI(question);
+    let questionUrl;
+
+    if (this.systemUrl.includes("?")) {
+      questionUrl = this.systemUrl + `&query=` + encodeURI(question);
+    } else {
+      questionUrl = this.systemUrl + `?query=` + encodeURI(question);
+    }
     return { qId: q.id, questionUrl };
   }
 
   // sends a question to QA system, requires the entire questionUrl for the system
   // id makes it easier for integration testing
   async askQuestion(questionUrl) {
-      return fetch_retry(questionUrl, {
+    return fetch_retry(questionUrl, {
       method: "POST",
       retry: 3
     }).then(res => {
@@ -63,7 +69,7 @@ class Evaluation {
     this.processedQuestions++;
     this.progress =
       ((this.processedQuestions * 100) / this.totalQuestions).toFixed(0) + "%";
-       io.sockets.emit("update", JSON.stringify(this));
+    io.sockets.emit("update", JSON.stringify(this));
   }
 
   // updates the status of the evaluation progress
@@ -324,10 +330,12 @@ function gatherGivenAnswers(question) {
               } else {
                 // Filter for answers that are already in the givenAnswers array
                 for (; i < givenAnswers.length; i++) {
-                  if (givenAnswers[i] == s[vars].value) {
-                    break;
-                  } else if (i === givenAnswers.length - 1) {
-                    givenAnswers.push(s[vars].value);
+                  if (s[vars]) {
+                    if (givenAnswers[i] == s[vars].value) {
+                      break;
+                    } else if (i === givenAnswers.length - 1) {
+                      givenAnswers.push(s[vars].value);
+                    }
                   }
                 }
               }
