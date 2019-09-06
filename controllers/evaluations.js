@@ -1,4 +1,5 @@
 const fs = require("fs");
+const fetch_retry = require("node-fetch-retry");
 
 let Evaluation = require("../models/evaluation.js");
 
@@ -286,5 +287,76 @@ module.exports = {
       }
       res.json(runningEvals[String(id)]);
     }
+  },
+
+  askQuestion: async function(req, res, next) {
+    const { question, systemUrl } = req.body;
+
+    let questionUrl;
+
+    if (systemUrl.includes("?")) {
+      questionUrl = systemUrl + `&query=` + encodeURI(question);
+    } else {
+      questionUrl = systemUrl + `?query=` + encodeURI(question);
+    }
+
+    let data = await fetch_retry(questionUrl, {
+      method: "POST"
+    });
+    data = await data.json();
+    if (data.questions[0].question) {
+      if (typeof data.questions[0].question.answers === "string") {
+        console.log(
+          "Answers is a string --> converted to Object and placed at the right position"
+        );
+        answers = JSON.parse(data.questions[0].question.answers);
+        data.questions[0].answers = [];
+        data.questions[0].answers.push(answers);
+      } else if (typeof data.questions[0].question.answers === "object") {
+        console.log(
+          "Answers is a string --> converted to Object and placed at the right position"
+        );
+        data.questions[0].answers = [];
+      }
+    }
+
+    let givenAnswers = [];
+    let questionAnswered = data.questions[0];
+    if (questionAnswered.answers.length !== 0) {
+      let cond1 = Object.entries(questionAnswered.answers[0]).length === 0; // answers array can contain an empty object, filter these
+
+      if (!cond1) {
+        // empty answers
+        let answer = questionAnswered.answers[0];
+        if (answer.head.vars === undefined) {
+          givenAnswers.push(answer.boolean);
+        } else {
+          let cond2 = answer.results.bindings;
+          if (cond2) {
+            for (let vars of answer.head.vars) {
+              for (let s of answer.results.bindings) {
+                let i = 0;
+                if (givenAnswers.length === 0) {
+                  givenAnswers.push(s[vars].value);
+                } else {
+                  // Filter for answers that are already in the givenAnswers array
+                  for (; i < givenAnswers.length; i++) {
+                    if (s[vars]) {
+                      if (givenAnswers[i] == s[vars].value) {
+                        break;
+                      } else if (i === givenAnswers.length - 1) {
+                        givenAnswers.push(s[vars].value);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return res.status(200).json(givenAnswers);
   }
 };

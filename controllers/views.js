@@ -4,5 +4,8 @@ module.exports = {
   },
   compare: function(req, res, next) {
     res.render("compare");
+  },
+  askquestion: function(req, res, next) {
+    res.render("askquestion");
   }
 };
